@@ -1,0 +1,23 @@
+<div ng-controller="HomeController" class="container-fluid">
+  <div id="searchGroup" class="input-group input-group-lg">
+    <span class="input-group-addon" id="sizing-addon1"><span class="glyphicon glyphicon-search"></span></span>
+    <input type="text" class="form-control" ng-model="searchKeyword" ng-keypress="checkEnter($event)">
+        <span class="input-group-btn">
+            <button type="button" ng-click="goSearch()" id="goSearchBtn" class="btn btn-default">검색</button>
+        </span>
+  </div>
+
+  <!-- result group -->
+  <div id="articleGroup" class="list-group">
+    <a class='list-group-item item' ng-repeat="item in resultArticles" ng-href="{{item.url}}" target="_blank">
+      <h4 class="list-group-item-heading title">
+        <span>{{item.title}}</span>
+        <span class="media">{{item.media}}</span>
+        <span class="media">{{item.article_at}}</span>
+      </h4>
+      <p class="list-group-item-text item-summary" ng-bind-html="item.summary"></p>
+    </a>
+  </div>
+  <!-- result group -->
+
+</div>

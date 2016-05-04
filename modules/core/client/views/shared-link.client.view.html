@@ -1,0 +1,14 @@
+<section data-ng-controller="HomeController" data-ng-init="goSearch()">
+    <!-- result group -->
+    <div id="articleGroup" class="list-group">
+        <a class='list-group-item item' ng-repeat="item in resultArticles" ng-href="{{item.url}}" target="_blank">
+            <h4 class="list-group-item-heading title">
+                <span>{{item.title}}</span>
+                <span class="media">{{item.media}}</span>
+                <span class="media">{{item.article_at | date:'yyyy-MM-DD HH:mm'}}</span>
+            </h4>
+            <p class="list-group-item-text item-summary" ng-bind-html="item.summary"></p>
+        </a>
+    </div>
+    <!-- result group -->
+</section>

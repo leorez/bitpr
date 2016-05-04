@@ -1,0 +1,50 @@
+<section data-ng-controller="ArticleSendersController" data-ng-init="findOne()">
+
+    <div class="page-header">
+        <h2>보도자료 수정</h2>
+    </div>
+
+    <div class="col-md-12">
+        <form name="articleSenderForm" class="form-horizontal" data-ng-submit="update()" novalidate>
+            <fieldset>
+                <div class="form-group">
+                    <label class="control-label" for="title">제목</label>
+                    <div class="controls">
+                        <input type="text" name="title" id="title" data-ng-model="articleSender.title" class="form-control" placeholder="제목을 입력하세요" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="content">내용</label>
+                    <div class="controls">
+                        <textarea data-ng-model="articleSender.content" class="form-control" cols="30" rows="10" placeholder="내용을 입력하세요" name="content" id="content"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="reserveTime">발송시점</label>
+                    <div class="controls">
+                        <select data-ng-model="articleSender.reserveTime" id="reserveTime" ng-options="t as t+'시간후' for t in reserveTimes"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="beToChart" class="checkbox-inline">
+                        <input type="checkbox" data-ng-model="articleSender.beToDart" id="beToChart"> 공시여부
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">희망보도 갯수 : {{articleSender.sendCount}}</label>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-lg">수정</button>
+                    <button type="reset" class="btn btn-default btn-lg">취소</button>
+                </div>
+
+                <div data-ng-show="error" class="text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>
+
+            </fieldset>
+        </form>
+    </div>
+
+</section>

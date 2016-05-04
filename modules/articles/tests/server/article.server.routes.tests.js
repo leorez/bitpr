@@ -487,7 +487,7 @@ describe('Article CRUD tests', function () {
       firstName: 'Full',
       lastName: 'Name',
       displayName: 'Full Name',
-      email: 'temp@test.com',
+      email: 'tmp@test.com',
       username: _creds.username,
       password: _creds.password,
       provider: 'local'

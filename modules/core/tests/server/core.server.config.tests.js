@@ -505,7 +505,7 @@ describe('Configuration Tests:', function () {
     });
 
     it('should confirm that the log directory is created if it does not already exist', function () {
-      var _dir = process.cwd() + '/temp-logs';
+      var _dir = process.cwd() + '/tmp-logs';
       var _filename = 'unit-test-access.log';
 
       // manually set the config stream fileName option to an empty string
@@ -569,7 +569,7 @@ describe('Configuration Tests:', function () {
     });
 
     it('should confirm that the rotating log directory is created if it does not already exist', function () {
-      var _dir = process.cwd() + '/temp-rotating-logs';
+      var _dir = process.cwd() + '/tmp-rotating-logs';
       var _filename = 'unit-test-rotating-access-%DATE%.log';
 
       // enable rotating logs

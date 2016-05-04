@@ -10,6 +10,8 @@
   function ArticleSendersController($scope, $state, articleSender, $location, Authentication, ArticleSendersService, Upload) {
     var vm = this;
 
+    vm.error = null;
+    vm.form = {};
     vm.articleSender = articleSender;
     vm.authentication = Authentication;
     vm.articleSender.reserveTimes = _.range(1, 24);
@@ -55,9 +57,12 @@
           method: 'POST',
           data: vm.articleSender
         }).then(function (resp) {
-          $location.path(resp.data._id);
+          console.log(resp);
           vm.articleSender.title = '';
           vm.articleSender.content = '';
+          $state.go('article-senders.preview', {
+            articleSenderId: resp.data._id
+          });
         }, function (resp) {
           console.log('Error status: ' + resp.status);
           console.log(resp.data.message);

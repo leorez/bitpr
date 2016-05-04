@@ -72,3 +72,6 @@ mongod
 *.ntvs*
 *.njsproj
 *.sln
+
+# upload files
+modules/article-senders/server/routes/tmp/*

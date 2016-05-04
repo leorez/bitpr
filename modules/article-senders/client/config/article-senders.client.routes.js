@@ -35,7 +35,7 @@
       })
       .state('article-senders.edit', {
         url: '/:articleSenderId/edit',
-        templateUrl: 'modules/article-senders/views/edit-article-sender.client.view.html',
+        templateUrl: 'modules/article-senders/client/views/edit-article-sender.client.view.html',
         controller: 'ArticleSendersController',
         controllerAs: 'vm',
         resolve: {
@@ -47,7 +47,7 @@
       })
       .state('article-senders.preview', {
         url: '/:articleSenderId',
-        templateUrl: 'modules/article-senders/views/preveiw-article-sender.client.view.html',
+        templateUrl: 'modules/article-senders/client/views/preveiw-article-sender.client.view.html',
         controller: 'ArticleSendersController',
         controllerAs: 'vm',
         resolve: {

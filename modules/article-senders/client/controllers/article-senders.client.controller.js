@@ -5,9 +5,9 @@
     .module('article-senders')
     .controller('ArticleSendersController', ArticleSendersController);
 
-  ArticleSendersController.$inject = ['$scope', '$state', 'articleSenderResolve', '$stateParams', '$location', 'Authentication', 'ArticleSendersService', 'Upload'];
+  ArticleSendersController.$inject = ['$scope', '$state', 'articleSenderResolve', '$location', 'Authentication', 'ArticleSendersService', 'Upload'];
 
-  function ArticleSendersController($scope, $state, articleSender, $stateParams, $location, Authentication, ArticleSendersService, Upload) {
+  function ArticleSendersController($scope, $state, articleSender, $location, Authentication, ArticleSendersService, Upload) {
     var vm = this;
 
     vm.articleSender = articleSender;
@@ -47,26 +47,17 @@
         vm.articleSender.content = '';
       }
 
-      var articleSenders = new ArticleSendersService({
-        title: vm.articleSender.title,
-        reserveTime: vm.articleSender.reserveTime,
-        beToDart: vm.articleSender.beToDart,
-        sendCount: vm.articleSender.sendCount,
-        fare: vm.articleSender.fare
-      });
-
       if (isValid && vm.articleSender.file) {
-        articleSenders.file = vm.articleSender.file;
-        articleSenders.user = Authentication.user._id;
+        vm.articleSender.user = Authentication.user._id;
 
         Upload.upload({
           url: '/api/article-senders',
           method: 'POST',
-          data: articleSenders
+          data: vm.articleSender
         }).then(function (resp) {
           $location.path(resp.data._id);
-          vm.title = '';
-          vm.content = '';
+          vm.articleSender.title = '';
+          vm.articleSender.content = '';
         }, function (resp) {
           console.log('Error status: ' + resp.status);
           console.log(resp.data.message);
@@ -77,25 +68,29 @@
         });
 
       } else {
-        articleSenders.content = vm.articleSender.content.replace(/\n/g, "<br />");
-        articleSenders.$save(function (response) {
-          $location.path(response._id);
+        vm.articleSender.content = vm.articleSender.content.replace(/\n/g, "<br />");
+        vm.articleSender.$save(function (response) {
           vm.articleSender.title = '';
           vm.articleSender.content = '';
+          $state.go('article-senders.preview', {
+            articleSenderId: response._id
+          });
         }, function (err) {
           vm.error = err.data.message;
         });
       }
     }
 
-    function update() {
-      var articleSender = vm.articleSender;
-
-      articleSender.$update(function () {
-        $location.path(articleSender._id);
-      }, function (err) {
-        vm.error = err.data.message;
-      });
+    function update(isValid) {
+      if(isValid) {
+        vm.articleSender.$update(function (response) {
+          $state.go('article-senders.preview', {
+            articleSenderId: vm.articleSender._id
+          });
+        }, function (err) {
+          vm.error = err.data.message;
+        });
+      }
     }
 
     function remove(articleSender) {

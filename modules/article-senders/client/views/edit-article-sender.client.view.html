@@ -1,40 +1,43 @@
-<section data-ng-controller="ArticleSendersController" data-ng-init="findOne()">
+<section>
 
   <div class="page-header">
     <h2>보도자료 수정</h2>
   </div>
 
   <div class="col-md-12">
-    <form name="articleSenderForm" class="form-horizontal" data-ng-submit="update()" novalidate>
+    <form name="vm.form.articleSenderForm" class="form-horizontal" ng-submit="vm.update(vm.form.articleSenderForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group">
           <label class="control-label" for="title">제목</label>
           <div class="controls">
-            <input type="text" name="title" id="title" data-ng-model="articleSender.title" class="form-control"
+            <input type="text" name="title" id="title" ng-model="vm.articleSender.title" class="form-control"
                    placeholder="제목을 입력하세요" required>
+          </div>
+          <div ng-messages="vm.form.articleSenderForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">제목은 필수항목입니다.</p>
           </div>
         </div>
         <div class="form-group">
           <label class="control-label" for="content">내용</label>
           <div class="controls">
-            <textarea data-ng-model="articleSender.content" class="form-control" cols="30" rows="10"
+            <textarea ng-model="vm.articleSender.content" class="form-control" cols="30" rows="10"
                       placeholder="내용을 입력하세요" name="content" id="content"></textarea>
           </div>
         </div>
         <div class="form-group">
           <label class="control-label" for="reserveTime">발송시점</label>
           <div class="controls">
-            <select data-ng-model="articleSender.reserveTime" id="reserveTime"
-                    ng-options="t as t+'시간후' for t in reserveTimes"></select>
+            <select ng-model="vm.articleSender.reserveTime" id="reserveTime"
+                    ng-options="t as t+'시간후' for t in vm.articleSender.reserveTimes"></select>
           </div>
         </div>
         <div class="form-group">
           <label class="control-label" for="beToChart" class="checkbox-inline">
-            <input type="checkbox" data-ng-model="articleSender.beToDart" id="beToChart"> 공시여부
+            <input type="checkbox" ng-model="vm.articleSender.beToDart" id="beToChart"> 공시여부
           </label>
         </div>
         <div class="form-group">
-          <label class="control-label">희망보도 갯수 : {{articleSender.sendCount}}</label>
+          <label class="control-label">희망보도 갯수 : {{vm.articleSender.sendCount}}</label>
         </div>
 
         <div class="form-group">
@@ -42,12 +45,11 @@
           <button type="reset" class="btn btn-default btn-lg">취소</button>
         </div>
 
-        <div data-ng-show="error" class="text-danger">
-          <strong data-ng-bind="error"></strong>
+        <div data-ng-show="vm.error" class="text-danger">
+          <strong data-ng-bind="vm.error"></strong>
         </div>
 
       </fieldset>
     </form>
   </div>
-
 </section>

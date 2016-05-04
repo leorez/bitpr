@@ -19,9 +19,11 @@
 
     $scope.goSearch = function () {
       console.log($stateParams.corpCode);
-      if ($stateParams.corpCode !== '') {
+      if ($stateParams.corpCode !== undefined) {
         $scope.searchKeyword = $stateParams.corpCode;
       }
+      console.log($scope.searchKeyword);
+
       $scope.resultArticles = [];
       $scope.progressbar.start();
       var req = {

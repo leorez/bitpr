@@ -26,19 +26,19 @@ module.exports = function (grunt) {
       }
     },
     watch: {
-      // serverViews: {
-      //   files: defaultAssets.server.views,
-      //   options: {
-      //     livereload: true
-      //   }
-      // },
-      // serverJS: {
-      //   files: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS),
-      //   tasks: ['eslint'],
-      //   options: {
-      //     livereload: true
-      //   }
-      // },
+      serverViews: {
+        files: defaultAssets.server.views,
+        options: {
+          livereload: true
+        }
+      },
+      serverJS: {
+        files: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS),
+        // tasks: ['eslint'],
+        options: {
+          livereload: true
+        }
+      },
       clientViews: {
         files: defaultAssets.client.views,
         options: {

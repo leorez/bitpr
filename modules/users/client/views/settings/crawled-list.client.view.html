@@ -1,0 +1,29 @@
+<div data-ng-controller="SettingsController" class="container-fluid" data-ng-init="crawledArticles()">
+
+  <h3 class="center">수집된 기사</h3>
+
+  <div>
+    <button type="button" class="btn btn-large btn-primary" ng-click="displayArticleToHomepage()">선택된 기사 홈페이지에 올리기
+    </button>
+    <button type="button" class="btn btn-large btn-primary" ng-click="shareArticle()">선택된 기사 공유하기</button>
+  </div>
+
+  <!-- result group -->
+  <div id="articleGroup" class="list-group">
+    <div class='list-group-item item' ng-repeat="item in articles">
+      <md-checkbox ng-checked="exists(item, selected)" ng-click="toggle(item, selected)">
+        <a ng-href="{{item.url}}" target="_blank">
+          <h4 class="list-group-item-heading title">
+
+            <span>{{item.title}}</span>
+            <span class="media">{{item.media}}</span>
+            <span class="media">{{item.articleAt | date:'yyyy-MM-dd HH:mm:ss Z'}}</span>
+          </h4>
+          <p class="list-group-item-text item-summary" ng-bind-html="item.summary"></p>
+        </a>
+      </md-checkbox>
+    </div>
+  </div>
+  <!-- result group -->
+
+</div>

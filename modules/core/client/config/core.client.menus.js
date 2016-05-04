@@ -20,6 +20,21 @@
     });
 
     menuService.addSubMenuItem('account', 'settings', {
+      title: '환경설정',
+      state: 'settings.config'
+    });
+
+    menuService.addSubMenuItem('account', 'settings', {
+      title: '수집된 기사목록',
+      state: 'settings.crawled-list'
+    });
+
+    menuService.addSubMenuItem('account', 'settings', {
+      title: '홈페이지에 게시된 기사목록',
+      state: 'settings.displayed-list'
+    });
+
+    menuService.addSubMenuItem('account', 'settings', {
       title: 'Edit Profile',
       state: 'settings.profile'
     });

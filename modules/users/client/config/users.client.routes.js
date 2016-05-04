@@ -30,6 +30,24 @@
           pageTitle: 'Settings'
         }
       })
+      .state('settings.config', {
+        url: '/config',
+        templateUrl: 'modules/users/client/views/settings/config.client.view.html',
+        controller: 'SettingsController',
+        controllerAs: 'vm'
+      })
+      .state('settings.crawled-list', {
+        url: '/crawled-list',
+        templateUrl: 'modules/users/client/views/settings/crawled-list.client.view.html',
+        controller: 'SettingsController',
+        controllerAs: 'vm'
+      })
+      .state('settings.displayed-list', {
+        url: '/displayed-list',
+        templateUrl: 'modules/users/client/views/settings/displayed-list.client.view.html',
+        controller: 'SettingsController',
+        controllerAs: 'vm'
+      })
       .state('settings.password', {
         url: '/password',
         templateUrl: 'modules/users/client/views/settings/change-password.client.view.html',

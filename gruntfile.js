@@ -26,19 +26,19 @@ module.exports = function (grunt) {
       }
     },
     watch: {
-      serverViews: {
-        files: defaultAssets.server.views,
-        options: {
-          livereload: true
-        }
-      },
-      serverJS: {
-        files: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS),
-        tasks: ['eslint'],
-        options: {
-          livereload: true
-        }
-      },
+      // serverViews: {
+      //   files: defaultAssets.server.views,
+      //   options: {
+      //     livereload: true
+      //   }
+      // },
+      // serverJS: {
+      //   files: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS),
+      //   tasks: ['eslint'],
+      //   options: {
+      //     livereload: true
+      //   }
+      // },
       clientViews: {
         files: defaultAssets.client.views,
         options: {
@@ -47,7 +47,7 @@ module.exports = function (grunt) {
       },
       clientJS: {
         files: defaultAssets.client.js,
-        tasks: ['eslint'],
+        // tasks: ['eslint'],
         options: {
           livereload: true
         }
@@ -61,14 +61,16 @@ module.exports = function (grunt) {
       },
       clientSCSS: {
         files: defaultAssets.client.sass,
-        tasks: ['sass', 'csslint'],
+        // tasks: ['sass', 'csslint'],
+        tasks: ['sass'],
         options: {
           livereload: true
         }
       },
       clientLESS: {
         files: defaultAssets.client.less,
-        tasks: ['less', 'csslint'],
+        // tasks: ['less', 'csslint'],
+        tasks: ['less'],
         options: {
           livereload: true
         }

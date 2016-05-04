@@ -17,9 +17,9 @@
     $scope.resultArticles = [];
     // ----------------------------------------
 
-    $scope.goSearch = function() {
+    $scope.goSearch = function () {
       console.log($stateParams.corpCode);
-      if($stateParams.corpCode !== '') {
+      if ($stateParams.corpCode !== '') {
         $scope.searchKeyword = $stateParams.corpCode;
       }
       $scope.resultArticles = [];
@@ -30,34 +30,34 @@
         headers: {
           'Content-Type': 'application/json; charset=utf-8'
         },
-        data: {keyword:$scope.searchKeyword}
-      }
+        data: { keyword: $scope.searchKeyword }
+      };
 
-      $http(req).then(function(res){
+      $http(req).then(function (res) {
         var jsonData = res;
 
-        if(typeof(jsonData) === 'string') {
+        if (typeof(jsonData) === 'string') {
           // unit test시 json 변환후 string인경우 다시한번 변환한다.
           jsonData = JSON.parse(jsonData);
         }
 
-        if(jsonData.status===200) {
+        if (jsonData.status === 200) {
           $scope.resultArticles = jsonData.data;
         }
 
         $scope.progressbar.complete();
-      }, function(err){
+      }, function (err) {
         $scope.progressbar.complete();
         console.log(err.message);
       });
 
     };
 
-    $scope.checkEnter = function($event) {
+    $scope.checkEnter = function ($event) {
       var keyCode = $event.which || $event.keyCode;
-      if(keyCode === 13) {
+      if (keyCode === 13) {
         $scope.goSearch();
       }
-    }
+    };
   }
 }());

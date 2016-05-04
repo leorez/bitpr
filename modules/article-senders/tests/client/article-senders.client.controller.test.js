@@ -1,172 +1,172 @@
 'use strict';
 
-(function() {
-	// Article senders Controller Spec
-	describe('Article senders Controller Tests', function() {
-		// Initialize global variables
-		var ArticleSendersController,
-			scope,
-			$httpBackend,
-			$stateParams,
-			$location;
+(function () {
+  // Article senders Controller Spec
+  describe('Article senders Controller Tests', function () {
+    // Initialize global variables
+    var ArticleSendersController,
+      scope,
+      $httpBackend,
+      $stateParams,
+      $location;
 
-		// The $resource service augments the response object with methods for updating and deleting the resource.
-		// If we were to use the standard toEqual matcher, our tests would fail because the test values would not match
-		// the responses exactly. To solve the problem, we define a new toEqualData Jasmine matcher.
-		// When the toEqualData matcher compares two objects, it takes only object properties into
-		// account and ignores methods.
-		beforeEach(function() {
-			jasmine.addMatchers({
-				toEqualData: function(util, customEqualityTesters) {
-					return {
-						compare: function(actual, expected) {
-							return {
-								pass: angular.equals(actual, expected)
-							};
-						}
-					};
-				}
-			});
-		});
+    // The $resource service augments the response object with methods for updating and deleting the resource.
+    // If we were to use the standard toEqual matcher, our tests would fail because the test values would not match
+    // the responses exactly. To solve the problem, we define a new toEqualData Jasmine matcher.
+    // When the toEqualData matcher compares two objects, it takes only object properties into
+    // account and ignores methods.
+    beforeEach(function () {
+      jasmine.addMatchers({
+        toEqualData: function (util, customEqualityTesters) {
+          return {
+            compare: function (actual, expected) {
+              return {
+                pass: angular.equals(actual, expected)
+              };
+            }
+          };
+        }
+      });
+    });
 
-		// Then we can start by loading the main application module
-		beforeEach(module(ApplicationConfiguration.applicationModuleName));
+    // Then we can start by loading the main application module
+    beforeEach(module(ApplicationConfiguration.applicationModuleName));
 
-		// The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
-		// This allows us to inject a service but then attach it to a variable
-		// with the same name as the service.
-		beforeEach(inject(function($controller, $rootScope, _$location_, _$stateParams_, _$httpBackend_) {
-			// Set a new global scope
-			scope = $rootScope.$new();
+    // The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
+    // This allows us to inject a service but then attach it to a variable
+    // with the same name as the service.
+    beforeEach(inject(function ($controller, $rootScope, _$location_, _$stateParams_, _$httpBackend_) {
+      // Set a new global scope
+      scope = $rootScope.$new();
 
-			// Point global variables to injected services
-			$stateParams = _$stateParams_;
-			$httpBackend = _$httpBackend_;
-			$location = _$location_;
+      // Point global variables to injected services
+      $stateParams = _$stateParams_;
+      $httpBackend = _$httpBackend_;
+      $location = _$location_;
 
-			// Initialize the Article senders controller.
-			ArticleSendersController = $controller('ArticleSendersController', {
-				$scope: scope
-			});
-		}));
+      // Initialize the Article senders controller.
+      ArticleSendersController = $controller('ArticleSendersController', {
+        $scope: scope
+      });
+    }));
 
-		it('$scope.bill() with valid form data and user input content should send success', inject(function(ArticleSenders) {
+    it('$scope.bill() with valid form data and user input content should send success', inject(function (ArticleSenders) {
 
-			var sampleRequest = new ArticleSenders({
-				title: '발송자료 테스트 제목',
-				content: '발송자로 테스트 내용',
-				reserveTime: 1,
-				beToDart: true,
-				sendCount: 1,
-				fare: 5000000
-			});
+      var sampleRequest = new ArticleSenders({
+        title: '발송자료 테스트 제목',
+        content: '발송자로 테스트 내용',
+        reserveTime: 1,
+        beToDart: true,
+        sendCount: 1,
+        fare: 5000000
+      });
 
-			var sampleResponse = new ArticleSenders({
-				_id: '525cf20451979dea2c000001',
-				title: '발송자료 테스트 제목',
-				content: '발송자로 테스트 내용',
-				reserveTime: 1,
-				beToDart: true,
-				sendCount: 1,
-				fare: 5000000
-			});
+      var sampleResponse = new ArticleSenders({
+        _id: '525cf20451979dea2c000001',
+        title: '발송자료 테스트 제목',
+        content: '발송자로 테스트 내용',
+        reserveTime: 1,
+        beToDart: true,
+        sendCount: 1,
+        fare: 5000000
+      });
 
-			scope.title = '발송자료 테스트 제목';
-			scope.content = '발송자로 테스트 내용';
-			scope.reserveTime = 1;
-			scope.beToDart = true;
-			scope.sendCount = 1;
-			scope.fare = 5000000;
-			
-			$httpBackend.expectPOST('article-senders', sampleRequest).respond(sampleResponse);
+      scope.title = '발송자료 테스트 제목';
+      scope.content = '발송자로 테스트 내용';
+      scope.reserveTime = 1;
+      scope.beToDart = true;
+      scope.sendCount = 1;
+      scope.fare = 5000000;
 
-			scope.bill();
-			$httpBackend.flush();
+      $httpBackend.expectPOST('article-senders', sampleRequest).respond(sampleResponse);
 
-			expect(scope.fare).toEqual(5000000);
-		}));
+      scope.bill();
+      $httpBackend.flush();
 
-		it('$scope.findOne() should get one articleSender', inject(function(ArticleSenders) {
-			var sample = new ArticleSenders({
-				title: 'An ArticleSender',
-				content: 'ArticleSender Content',
-				reserveTime: 1,
-				beToDart: true,
-				sendCount: 1,
-				fare: 5000000
-			});
+      expect(scope.fare).toEqual(5000000);
+    }));
 
-			$stateParams.articleSenderId = '525a8422f6d0f87f0e407a33';
+    it('$scope.findOne() should get one articleSender', inject(function (ArticleSenders) {
+      var sample = new ArticleSenders({
+        title: 'An ArticleSender',
+        content: 'ArticleSender Content',
+        reserveTime: 1,
+        beToDart: true,
+        sendCount: 1,
+        fare: 5000000
+      });
 
-			$httpBackend.expectGET(/article-senders\/([0-9a-fA-F]{24})$/).respond(sample);
+      $stateParams.articleSenderId = '525a8422f6d0f87f0e407a33';
 
-			scope.findOne();
-			$httpBackend.flush();
+      $httpBackend.expectGET(/article-senders\/([0-9a-fA-F]{24})$/).respond(sample);
 
-			expect(scope.articleSender).toEqualData(sample);
-		}));
+      scope.findOne();
+      $httpBackend.flush();
 
-		it('$scope.find() should get list', inject(function(ArticleSenders){
-			var sample = new ArticleSenders({
-				title: 'An ArticleSender',
-				content: 'ArticleSender Content',
-				reserveTime: 1,
-				beToDart: true,
-				sendCount: 1,
-				fare: 5000000
-			});
+      expect(scope.articleSender).toEqualData(sample);
+    }));
 
-			var samples = [sample];
+    it('$scope.find() should get list', inject(function (ArticleSenders) {
+      var sample = new ArticleSenders({
+        title: 'An ArticleSender',
+        content: 'ArticleSender Content',
+        reserveTime: 1,
+        beToDart: true,
+        sendCount: 1,
+        fare: 5000000
+      });
 
-			$httpBackend.expectGET('article-senders').respond(samples);
+      var samples = [sample];
 
-			scope.find();
-			$httpBackend.flush();
+      $httpBackend.expectGET('article-senders').respond(samples);
 
-			expect(scope.articleSenders).toEqualData(samples);
-		}));
+      scope.find();
+      $httpBackend.flush();
 
-		it('$scope.update() should update a valid articleSender', inject(function(ArticleSenders) {
-			var sample = new ArticleSenders({
-				_id: '525cf20451979dea2c000001',
-				title: 'An ArticleSender',
-				content: 'ArticleSender Content',
-				reserveTime: 1,
-				beToDart: true,
-				sendCount: 1,
-				fare: 5000000
-			});
+      expect(scope.articleSenders).toEqualData(samples);
+    }));
 
-			scope.articleSender = sample;
+    it('$scope.update() should update a valid articleSender', inject(function (ArticleSenders) {
+      var sample = new ArticleSenders({
+        _id: '525cf20451979dea2c000001',
+        title: 'An ArticleSender',
+        content: 'ArticleSender Content',
+        reserveTime: 1,
+        beToDart: true,
+        sendCount: 1,
+        fare: 5000000
+      });
 
-			$httpBackend.expectPUT(/article-senders\/[0-9a-fA-F]{24}$/).respond();
+      scope.articleSender = sample;
 
-			scope.update();
-			$httpBackend.flush();
+      $httpBackend.expectPUT(/article-senders\/[0-9a-fA-F]{24}$/).respond();
 
-			expect($location.path()).toBe('/article-senders/' + sample._id);
-		}));
+      scope.update();
+      $httpBackend.flush();
 
-		it('$scope.remove() should send a DELETE request with a valid articleSenderId and remove the articleSender', inject(function(ArticleSenders) {
-			var sample = new ArticleSenders({
-				_id: '525cf20451979dea2c000001',
-				title: 'An ArticleSender',
-				content: 'ArticleSender Content',
-				reserveTime: 1,
-				beToDart: true,
-				sendCount: 1,
-				fare: 5000000
-			});
+      expect($location.path()).toBe('/article-senders/' + sample._id);
+    }));
 
-			scope.articleSenders = [sample];
+    it('$scope.remove() should send a DELETE request with a valid articleSenderId and remove the articleSender', inject(function (ArticleSenders) {
+      var sample = new ArticleSenders({
+        _id: '525cf20451979dea2c000001',
+        title: 'An ArticleSender',
+        content: 'ArticleSender Content',
+        reserveTime: 1,
+        beToDart: true,
+        sendCount: 1,
+        fare: 5000000
+      });
 
-			$httpBackend.expectDELETE(/article-senders\/([0-9a-fA-F]{24})$/).respond(204);
+      scope.articleSenders = [sample];
 
-			scope.remove(sample);
-			$httpBackend.flush();
+      $httpBackend.expectDELETE(/article-senders\/([0-9a-fA-F]{24})$/).respond(204);
 
-			expect(scope.articleSenders.length).toBe(0);
-		}));
+      scope.remove(sample);
+      $httpBackend.flush();
 
-	});
+      expect(scope.articleSenders.length).toBe(0);
+    }));
+
+  });
 }());

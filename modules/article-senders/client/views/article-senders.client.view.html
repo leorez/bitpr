@@ -1,15 +1,15 @@
-<section ng-controller="ArticleSendersController" ng-init="find()">
+<section>
 	<div class="page-header">
 		<h2>보도자료 리스트</h2>
 	</div>
 
 	<div class="list-group">
-		<a data-ng-repeat="item in articleSenders" class="list-group-item">
+		<a data-ng-repeat="item in vm.articleSenders" class="list-group-item">
 			<small class="list-group-item-text">
-				<span data-ng-bind="item.created | date:'mediumDate'"></span>
+				<span>{{item.created}}</span>
 			</small>
-			<h4 class="list-group-item-heading" data-ng-bind="item.title"></h4>
-			<p class="list-group-item-text" ng-bind-html="item.content"></p>
+			<h4 class="list-group-item-heading">{{item.title}}</h4>
+			<p class="list-group-item-text">{{item.content}}</p>
 		</a>
 	</div>
 </section>

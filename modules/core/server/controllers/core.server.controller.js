@@ -1,9 +1,9 @@
 'use strict';
 
 var validator = require('validator'),
-    errorHandler = require('./errors.server.controller.js'),
-    schedule = require('./schedule.server.controller'),
-    Deferred = require('deferred-js');
+  errorHandler = require('./errors.server.controller.js'),
+  schedule = require('./schedule.server.controller'),
+  Deferred = require('deferred-js');
 
 /**
  * Render the main application page
@@ -32,24 +32,24 @@ exports.renderIndex = function (req, res) {
 };
 
 
-var corpCodeToName = function(code) {
+var corpCodeToName = function (code) {
   return code;
 };
 
-exports.search = function(req, res) {
+exports.search = function (req, res) {
   var keyword = req.body.keyword;
 
-  if(/[0-9]{6}$/.test(keyword)) {
-    console.log('CORP_CODE='+keyword);
+  if (/[0-9]{6}$/.test(keyword)) {
+    console.log('CORP_CODE=' + keyword);
     keyword = corpCodeToName(keyword);
-    console.log('Result='+keyword);
+    console.log('Result=' + keyword);
   }
 
-  Deferred.when(schedule.searchFromMedog(keyword)).then(function(result) {
+  Deferred.when(schedule.searchFromMedog(keyword)).then(function (result) {
     var data = JSON.parse(result).data;
     res.json(data);
-  }, function (err)  {
-    console.log('err: '+err);
+  }, function (err) {
+    console.log('err: ' + err);
     res.status(400).send({
       message: errorHandler.getErrorMessage(err)
     });

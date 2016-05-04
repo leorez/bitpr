@@ -1,56 +1,55 @@
-<section data-ng-controller="ArticleSendersController">
+<section>
 	<div class="page-header">
-		<h2>보도자료 발송</h2>
+		<h1>보도자료 발송</h1>
 	</div>
 	<div class="col-md-12">
-		<form name="articleSenderForm" class="form-horizontal" data-ng-submit="bill()">
+		<form name="vm.form.articleSenderForm" class="form-horizontal" ng-submit="vm.bill(vm.form.articleSenderForm.$valid)" novalidate>
 			<fieldset>
 				<div class="form-group">
 					<label class="control-label" for="title">제목</label>
 					<div class="controls">
-						<input type="text" name="title" id="title" data-ng-model="title" class="form-control" placeholder="제목을 입력하세요" required>
+						<input type="text" name="title" id="title" ng-model="vm.articleSender.title" class="form-control" placeholder="제목을 입력하세요" required>
 					</div>
 				</div>
-
 				<div class="form-group">
 					<div>
-						<input type="radio" ng-model="contentType" value="inputContent" checked>직접입력
-						<input type="radio" ng-model="contentType" value="uploadFile">파일업로드
+						<input type="radio" ng-model="vm.articleSender.contentType" value="inputContent" checked>직접입력
+						<input type="radio" ng-model="vm.articleSender.contentType" value="uploadFile">파일업로드
 					</div>
 
-					<div class="controls" data-ng-show="contentType==='uploadFile'">
+					<div class="controls" data-ng-show="vm.contentType==='uploadFile'">
 						<label class="control-label" for="file">파일</label>
-						<input ngf-select=""  ng-model="file" id="file" name="file" ngf-accept="'doc/*'" type="file">
-						<span class="progress" ng-show="file.progress >= 0">
-							<div style="width:{{file.progress}}%" ng-bind="picFile.progress + '%'"></div>
+						<input ngf-select=""  ng-model="vm.articleSender.file" id="file" name="file" ngf-accept="'doc/*'" type="file">
+						<span class="progress" ng-show="vm.articleSender.file.progress >= 0">
+							<div style="width:{{vm.articleSender.file.progress}}%" ng-bind="vm.articleSender.picFile.progress + '%'"></div>
 					  	</span>
 					</div>
-					<div class="controls" data-ng-show="contentType==='inputContent'">
+					<div class="controls" data-ng-show="vm.articleSender.contentType==='inputContent'">
 						<label class="control-label" for="content">내용</label>
 						<div>
-							<textarea data-ng-model="content" class="form-control" cols="30" rows="10" placeholder="내용을 입력하세요" name="content" id="content"></textarea>
+							<textarea data-ng-model="vm.articleSender.content" class="form-control" cols="30" rows="10" placeholder="내용을 입력하세요" name="content" id="content"></textarea>
 						</div>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="control-label" for="reserveTime">발송시점</label>
 					<div class="controls">
-						<select data-ng-model="reserveTime" id="reserveTime" ng-options="t as t+'시간후' for t in reserveTimes"></select>
+						<select ng-model="vm.articleSender.reserveTime" id="reserveTime" ng-options="t as t+'시간후' for t in vm.articleSender.reserveTimes"></select>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="control-label checkbox-inline" for="beToChart">
-						<input type="checkbox" data-ng-model="beToDart" id="beToChart"> 공시여부
+						<input type="checkbox" ng-model="vm.articleSender.beToDart" id="beToChart"> 공시여부
 					</label>
 				</div>
 				<div class="form-group">
 					<label class="control-label" for="sendCount">희망보도 갯수</label>
 					<div class="controls">
-						<select ng-change="onSendCountChanged()" data-ng-model="sendCount" id="sendCount" ng-options="c as c+'개' for c in sendCounts"></select>
+						<select ng-change="vm.onSendCountChanged()" data-ng-model="vm.articleSender.sendCount" id="sendCount" ng-options="c as c+'개' for c in vm.articleSender.sendCounts"></select>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">결제금액</label><label>{{fare}}원</label>
+					<label class="control-label">결제금액</label><label>{{vm.articleSender.fare}}원</label>
 				</div>
 
 				<div class="form-group">
@@ -58,8 +57,8 @@
 					<button type="reset" class="btn btn-default btn-lg">취소</button>
 				</div>
 
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
+				<div ng-show="vm.error" class="text-danger">
+					<strong ng-bind="vm.error"></strong>
 				</div>
 
 			</fieldset>

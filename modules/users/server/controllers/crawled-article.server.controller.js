@@ -10,7 +10,6 @@ var mongoose = require('mongoose'),
   _ = require('lodash');
 
 exports.list = function (req, res) {
-  console.log('run list')
   CrawledArticle.find().sort('-created').exec(function (err, articles) {
     if (err) {
       return res.status(400).send({

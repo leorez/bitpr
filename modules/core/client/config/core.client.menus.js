@@ -35,23 +35,23 @@
     });
 
     menuService.addSubMenuItem('account', 'settings', {
-      title: 'Edit Profile',
+      title: '내정보',
       state: 'settings.profile'
     });
 
     menuService.addSubMenuItem('account', 'settings', {
-      title: 'Edit Profile Picture',
+      title: '사진',
       state: 'settings.picture'
     });
 
     menuService.addSubMenuItem('account', 'settings', {
-      title: 'Change Password',
+      title: '암호변경',
       state: 'settings.password'
     });
 
-    menuService.addSubMenuItem('account', 'settings', {
-      title: 'Manage Social Accounts',
-      state: 'settings.accounts'
-    });
+    // menuService.addSubMenuItem('account', 'settings', {
+    //   title: 'Manage Social Ac경counts',
+    //   state: 'settings.accounts'
+    // });
   }
 }());

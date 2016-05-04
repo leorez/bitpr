@@ -87,7 +87,7 @@
     }
 
     function update(isValid) {
-      if(isValid) {
+      if (isValid) {
         vm.articleSender.$update(function (response) {
           $state.go('article-senders.preview', {
             articleSenderId: vm.articleSender._id

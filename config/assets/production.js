@@ -8,7 +8,7 @@ module.exports = {
         'public/lib/bootstrap/dist/css/bootstrap.min.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
         'public/lib/ngprogress/ngProgress.css',
-        'public/lib/ng-tags-input/ng-tags-input.min,css',
+        'public/lib/ng-tags-input/ng-tags-input.min.css',
         'public/lib/ng-tags-input/ng-tags-input.bootstrap.min.css',
         'public/lib/angular-material/angular-material.min.css'
         // endbower

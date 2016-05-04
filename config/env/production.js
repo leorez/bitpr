@@ -6,6 +6,7 @@ module.exports = {
     privateKey: './config/sslcerts/key.pem',
     certificate: './config/sslcerts/cert.pem'
   },
+  sessionSecret: process.env.SESSION_SECRET || 'super amazing secret',
   port: process.env.PORT || 8443,
   // Binding to 127.0.0.1 is safer in production.
   host: process.env.HOST || '0.0.0.0',

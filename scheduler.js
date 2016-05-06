@@ -122,7 +122,7 @@ var search = function (usersCnt, user, since) {
 };
 
 var api_key = 'key-52k6ubqaqzw6ir5g75mob96cqa03-xi3';
-var domain = 'bitpr.kr.mailgun.org';
+var domain = 'bitpr.kr';
 var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
 
 

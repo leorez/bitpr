@@ -22,7 +22,7 @@ var config = require('./config/config'),
   request = require('request');
 require('date-format-lite');
 
-config.db.url = 'mongodb://localhost/bitpr-dev';
+config.db.url = 'mongodb://localhost/bitpr';
 console.log(config.db.url);
 
 var db = mongoose.connect(config.db.url, function (err) {

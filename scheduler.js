@@ -121,39 +121,56 @@ var search = function (usersCnt, user, since) {
   });
 };
 
+var api_key = 'key-52k6ubqaqzw6ir5g75mob96cqa03-xi3';
+var domain = 'bitpr.kr.mailgun.org';
+var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
+
 
 function sendEmail(options, callback) {
-// create reusable transporter object using the default SMTP transport
-  var smtpConfig = {
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // use SSL
-    auth: {
-      user: 'noruya@gmail.com',
-      pass: 'shfndi#09'
-    }
-  };
-
-  var transporter = nodemailer.createTransport(smtpConfig);
-
-// setup e-mail data with unicode symbols
-  var mailOptions = {
+  var data = {
     from: '"비트피알" <news@bitpr.kr>', // sender address
     to: options.to, // list of receivers
     subject: options.subject, // Subject line
-    text: options.text, // plaintext body
-    html: options.html // html body
+    text: options.html // plaintext body
   };
 
-// send mail with defined transport object
-  transporter.sendMail(mailOptions, function(error, info){
-    callback(error, info);
-    
-    if(error){
-      return console.log(error);
-    }
-    console.log('Message sent: ' + info.response);
+  mailgun.messages().send(data, function (error, body) {
+    console.log(body);
+    console.log(error);
+    callback(error, body);
   });
+
+// // create reusable transporter object using the default SMTP transport
+//   var smtpConfig = {
+//     host: 'smtp.gmail.com',
+//     port: 465,
+//     secure: true, // use SSL
+//     auth: {
+//       user: 'noruya@gmail.com',
+//       pass: 'shfndi#09'
+//     }
+//   };
+//
+//   var transporter = nodemailer.createTransport(smtpConfig);
+//
+// // setup e-mail data with unicode symbols
+//   var mailOptions = {
+//     from: '"비트피알" <news@bitpr.kr>', // sender address
+//     to: options.to, // list of receivers
+//     subject: options.subject, // Subject line
+//     text: options.text, // plaintext body
+//     html: options.html // html body
+//   };
+//
+// // send mail with defined transport object
+//   transporter.sendMail(mailOptions, function(error, info){
+//     callback(error, info);
+//
+//     if(error){
+//       return console.log(error);
+//     }
+//     console.log('Message sent: ' + info.response);
+//   });
 };
 
 

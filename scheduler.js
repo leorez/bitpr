@@ -195,7 +195,7 @@ function sendArticleEmails() {
           if(diff.hours() < 0.1) {
             console.log('sending... '+article);
             var sendMailOptions = {
-              to: 'noruya@gmail.com',
+              to: 'noruya@gmail.com;zidell@gmail.com;smartkoh@gmail.com ',
               subject: article.title,
               text: '',
               html: '<p><h2>' + article.title + '</h2>' + article.content + '</p>'

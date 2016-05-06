@@ -115,7 +115,7 @@ var UserSchema = new Schema({
   },
   enabledCrawler: {
     type: Boolean,
-    default: false
+    default: true
   },
   /* 기업 상장코드 */
   corpCode: {

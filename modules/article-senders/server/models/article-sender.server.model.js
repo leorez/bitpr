@@ -14,6 +14,18 @@ var ArticleSenderSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  reserved: {
+    type: Date
+  },
+  sent: {
+    type: Date
+  },
+  status: {
+    // 'None', 'Reserved', 'Sent', 'Error'
+    type: String,
+    default: 'None',
+    trim: true
+  },
   title: {
     type: String,
     default: '',

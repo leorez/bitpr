@@ -3,22 +3,29 @@
  */
 'use strict';
 
-require('./app/models/crawled-article.server.model');
-require('./app/models/user.server.model');
+require('./modules/users/server/models/crawled-article.server.model');
+require('./modules/users/server/models/user.server.model');
+require('./modules/article-senders/server/models/article-sender.server.model');
 
 var config = require('./config/config'),
   mongoose = require('mongoose'),
   chalk = require('chalk'),
   User = mongoose.model('User'),
   CrawledArticle = mongoose.model('CrawledArticle'),
+  ArticleSender = mongoose.model('ArticleSender'),
   schedule = require('node-schedule'),
+  nodemailer = require('nodemailer'),
   Deferred = require('deferred-js'),
   dateAdder = require('add-subtract-date'),
+  DateDiff = require('date-diff'),
   moment = require('moment'),
   request = require('request');
 require('date-format-lite');
 
-var db = mongoose.connect(config.db, function (err) {
+config.db.url = 'mongodb://localhost/bitpr-dev';
+console.log(config.db.url);
+
+var db = mongoose.connect(config.db.url, function (err) {
   if (err) {
     console.error(chalk.red('Could not connect to MongoDB!'));
     console.log(chalk.red(err));
@@ -114,8 +121,93 @@ var search = function (usersCnt, user, since) {
   });
 };
 
+
+function sendEmail(options, callback) {
+// create reusable transporter object using the default SMTP transport
+  var smtpConfig = {
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // use SSL
+    auth: {
+      user: 'noruya@gmail.com',
+      pass: 'shfndi#09'
+    }
+  };
+
+  var transporter = nodemailer.createTransport(smtpConfig);
+
+// setup e-mail data with unicode symbols
+  var mailOptions = {
+    from: '"비트피알" <news@bitpr.kr>', // sender address
+    to: options.to, // list of receivers
+    subject: options.subject, // Subject line
+    text: options.text, // plaintext body
+    html: options.html // html body
+  };
+
+// send mail with defined transport object
+  transporter.sendMail(mailOptions, function(error, info){
+    callback(error, info);
+    
+    if(error){
+      return console.log(error);
+    }
+    console.log('Message sent: ' + info.response);
+  });
+};
+
+
+/*
+ ** 보도자료발송
+ */
+function sendArticleEmails() {
+  ArticleSender.find().sort('-reserved').exec(function (err, articleSenders) {
+    if (err) {
+      console.log(err);
+    } else {
+      articleSenders.forEach(function(article) {
+        if(article.status === 'Reserved') {
+
+          Date.masks.default = 'YYYY-MM-DD hh:mm:ss';
+          var t = dateAdder.subtract(article.reserved, article.reserveTime, "hour");
+          var diff = new DateDiff(new Date(), t);
+          console.log(t.format());
+          console.log('diff hours: ' + diff.hours());
+          console.log(typeof diff.hours());
+
+          if(diff.hours() < 0.1) {
+            console.log('sending... '+article);
+            var sendMailOptions = {
+              to: 'noruya@gmail.com',
+              subject: article.title,
+              text: '',
+              html: '<p><h2>' + article.title + '</h2>' + article.content + '</p>'
+            };
+
+            sendEmail(sendMailOptions, function (err, info) {
+              if(!err) {
+                article.status = 'Sent';
+                article.sent = new Date();
+                article.save(function (err) {
+                  if (err) {
+                    console.log('Error: ' + err);
+                  } else {
+                    console.log('Sent news : ' + article);
+                  }
+                });
+              }
+            });
+          }
+        }
+      });
+    }
+  });
+}
+
 function run() {
   var time = new Date();
+
+  sendArticleEmails();
 
   var where = {
     enabledCrawler: true,

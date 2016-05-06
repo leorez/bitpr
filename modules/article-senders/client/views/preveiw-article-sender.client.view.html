@@ -7,7 +7,7 @@
 			<label>발신자 : news@bitpr.kr</label>
 		</div>
 		<div>
-			{{authentication.user.displayName}} ({{authentication.user.telephone}} / {{authentication.user.cellphone}})
+			{{vm.authentication.user.displayName}} ({{vm.authentication.user.telephone}} / {{vm.authentication.user.cellphone}})
 		</div>
 		<div class="page-header">
 			<h3>{{vm.articleSender.title}}</h3>
@@ -31,7 +31,7 @@
 	</div>
 
 	<div class="form-group">
-		<button type="button" class="btn btn-primary btn-lg">발송하기</button>
+		<button type="button" class="btn btn-primary btn-lg" ng-click="send(vm.articleSender._id)">발송</button>
 		<a class="btn btn-default btn-lg" ui-sref="article-senders.edit({ articleSenderId : vm.articleSender._id })">수정</a>
 		<button type="button" class="btn btn-default btn-lg">취소</button>
 	</div>

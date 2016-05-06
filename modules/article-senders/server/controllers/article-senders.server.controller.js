@@ -5,6 +5,7 @@ var path = require('path'),
   mammoth = require('mammoth'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   ArticleSender = mongoose.model('ArticleSender'),
+  nodemailer = require('nodemailer'),
   _ = require('lodash');
 
 var saveArticleSender = function (articleSender, res) {
@@ -17,6 +18,38 @@ var saveArticleSender = function (articleSender, res) {
     } else {
       res.json(articleSender);
     }
+  });
+};
+
+exports.sendEmail = function(options) {
+// create reusable transporter object using the default SMTP transport
+  var smtpConfig = {
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // use SSL
+    auth: {
+      user: 'noruya@gmail.com',
+      pass: 'shfndi#09'
+    }
+  };
+
+  var transporter = nodemailer.createTransport(smtpConfig);
+
+// setup e-mail data with unicode symbols
+  var mailOptions = {
+    from: '"비트피알" <news@bitpr.kr>', // sender address
+    to: options.to, // list of receivers
+    subject: options.subject, // Subject line
+    text: options.text, // plaintext body
+    html: options.html // html body
+  };
+
+// send mail with defined transport object
+  transporter.sendMail(mailOptions, function(error, info){
+    if(error){
+      return console.log(error);
+    }
+    console.log('Message sent: ' + info.response);
   });
 };
 
@@ -47,11 +80,45 @@ exports.create = function (req, res) {
   }
 };
 
+exports.send = function(req, res) {
+  console.log('send ---');
+  console.log(req.body);
+  var sendMailOptions = {
+    to: 'noruya@gmail.com',
+    subject: 'test mail',
+    text: '',
+    html: '<p>test html</p>'
+  };
+  exports.sendEmail(sendMailOptions);
+  res.json({status: 'ok', message:'success'});
+};
+
 /**
  * Show the current Article sender
  */
 exports.read = function (req, res) {
-  res.json(req.articleSender);
+  console.log('read');
+
+  ArticleSender.findById(req.articleSender._id).populate('user', 'displayName').exec(function (err, articleSender) {
+    if (err) return next(err);
+    if (!articleSender) return next(new Error('Failed to load articleSender ' + id));
+
+    console.log(articleSender);
+    req.articleSender = articleSender;
+
+    // update reserved
+    articleSender.reserved = new Date();
+    articleSender.status = 'Reserved';
+    articleSender.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          messeage: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(req.articleSender);
+      }
+    });
+  });
 };
 
 /**

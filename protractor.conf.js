@@ -3,7 +3,7 @@
 // Protractor configuration
 var config = {
   allScriptsTimeout: 11000,
-  seleniumAddress: 'http://localhost:4444/wd/hub',
+  //seleniumAddress: 'http://localhost:4444/wd/hub',
 
   specs: [
     //'e2e/**/*.spec.js'
@@ -19,10 +19,10 @@ var config = {
   },
 
   onPrepare: function() {
-    browser.get('http://localhost:3000/#!/signin');
+    browser.get('http://localhost:3000/authentication/signin');
 
-    browser.findElement(by.id('username')).sendKeys('test');
-    browser.findElement(by.id('password')).sendKeys('testtest');
+    browser.findElement(by.id('username')).sendKeys('test2');
+    browser.findElement(by.id('password')).sendKeys('testtest!09AA');
     browser.findElement(by.buttonText('로그인')).click();
 
     // Login takes some time, so wait until it's done.
@@ -30,7 +30,7 @@ var config = {
     // index.html.
     return browser.wait(function() {
       return browser.getCurrentUrl().then(function(url) {
-        return /#!/.test(url);
+        return /\//.test(url);
       });
     }, 1000);
   }

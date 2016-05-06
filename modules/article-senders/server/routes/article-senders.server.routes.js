@@ -19,5 +19,8 @@ module.exports = function (app) {
     .put(articleSenders.update)
     .delete(articleSenders.delete);
 
+  app.route('/api/article-senders-send').all(articleSendersPolicy.isAllowed)
+    .post(articleSenders.send);
+
   app.param('articleSenderId', articleSenders.articleSenderByID);
 };

@@ -5,7 +5,7 @@
     .module('article-senders')
     .controller('ArticleSendersController', ArticleSendersController);
 
-  ArticleSendersController.$inject = ['$scope', '$mdDialog','$http', '$state', 'articleSenderResolve', '$location', 'Authentication', 'ArticleSendersService', 'Upload'];
+  ArticleSendersController.$inject = ['$scope', '$mdDialog', '$http', '$state', 'articleSenderResolve', '$location', 'Authentication', 'ArticleSendersService', 'Upload'];
 
   function ArticleSendersController($scope, $mdDialog, $http, $state, articleSender, $location, Authentication, ArticleSendersService, Upload) {
     var vm = this;

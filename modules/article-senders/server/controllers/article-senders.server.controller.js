@@ -21,7 +21,7 @@ var saveArticleSender = function (articleSender, res) {
   });
 };
 
-exports.sendEmail = function(options) {
+exports.sendEmail = function (options) {
 // create reusable transporter object using the default SMTP transport
   var smtpConfig = {
     host: 'smtp.gmail.com',
@@ -45,8 +45,8 @@ exports.sendEmail = function(options) {
   };
 
 // send mail with defined transport object
-  transporter.sendMail(mailOptions, function(error, info){
-    if(error){
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
       return console.log(error);
     }
     console.log('Message sent: ' + info.response);
@@ -80,7 +80,7 @@ exports.create = function (req, res) {
   }
 };
 
-exports.send = function(req, res) {
+exports.send = function (req, res) {
   console.log('send ---');
   console.log(req.body);
   var sendMailOptions = {
@@ -90,7 +90,7 @@ exports.send = function(req, res) {
     html: '<p>test html</p>'
   };
   exports.sendEmail(sendMailOptions);
-  res.json({status: 'ok', message:'success'});
+  res.json({ status: 'ok', message: 'success' });
 };
 
 /**
@@ -100,8 +100,8 @@ exports.read = function (req, res) {
   console.log('read');
 
   ArticleSender.findById(req.articleSender._id).populate('user', 'displayName').exec(function (err, articleSender) {
-    if (err) return next(err);
-    if (!articleSender) return next(new Error('Failed to load articleSender ' + id));
+    // if (err) return next(err);
+    // if (!articleSender) return next(new Error('Failed to load articleSender ' + id));
 
     console.log(articleSender);
     req.articleSender = articleSender;

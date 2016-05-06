@@ -226,18 +226,18 @@
     .module('article-senders')
     .controller('ArticleSendersController', ArticleSendersController);
 
-  ArticleSendersController.$inject = ['$scope', '$state', 'articleSenderResolve', '$location', 'Authentication', 'ArticleSendersService', 'Upload'];
+  ArticleSendersController.$inject = ['$scope', '$mdDialog', '$http', '$state', 'articleSenderResolve', '$location', 'Authentication', 'ArticleSendersService', 'Upload'];
 
-  function ArticleSendersController($scope, $state, articleSender, $location, Authentication, ArticleSendersService, Upload) {
+  function ArticleSendersController($scope, $mdDialog, $http, $state, articleSender, $location, Authentication, ArticleSendersService, Upload) {
     var vm = this;
 
     vm.error = null;
     vm.form = {};
     vm.articleSender = articleSender;
     vm.authentication = Authentication;
-    vm.articleSender.reserveTimes = _.range(1, 24);
+    vm.articleSender.reserveTimes = _.range(0, 24);
     vm.articleSender.sendCounts = [1, 2, 4, 6, 8, 10];
-    vm.articleSender.reserveTime = 1;
+    vm.articleSender.reserveTime = 0;
     vm.articleSender.sendCount = 1;
     vm.articleSender.beToDart = true;
     vm.articleSender.fare = 500000;
@@ -306,6 +306,28 @@
         });
       }
     }
+
+    $scope.send = function(id) {
+      console.log('send call');
+      console.log(id);
+      $http.post('/api/article-senders-send', {}).success(function (response) {
+
+        console.log(response);
+        var alert = $mdDialog.alert()
+          .title('발송')
+          .htmlContent('<md-content>발송이 시작되었습니다. 설정하신 시간후에 보도자료가 자동으로 발송됩니다.</md-content>')
+          .ok('닫기');
+
+        $mdDialog
+          .show(alert)
+          .finally(function () {
+            alert = undefined;
+          });
+      }).error(function (response) {
+        console.log(response.message);
+        vm.error = response.message;
+      });
+    };
 
     function update(isValid) {
       if (isValid) {

@@ -25,6 +25,7 @@ describe('articleSender page tests', function () {
 
   it('should go index page when click cancel button', function () {
     element(by.css('button[type="reset"]')).click();
+    element(by.buttonText('예')).click();
 
     browser.wait(function () {
       return browser.getCurrentUrl().then(function (url) {

@@ -54,8 +54,13 @@
     vm.cancel = cancel;
 
     function cancel() {
-      console.log('cancel');
-      $location.path('/');
+      var confirm = $mdDialog.confirm()
+        .textContent('취소하시면 입력하신 자료가 유실됩니다. 취소하시겠습니까?')
+        .ok('예')
+        .cancel('아니요');
+      $mdDialog.show(confirm).then(function() {
+        $location.path('/');
+      });
     }
 
     function onSendCountChanged() {

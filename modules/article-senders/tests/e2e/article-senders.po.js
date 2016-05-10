@@ -13,7 +13,6 @@ var ArticleSendersPage = function () {
   this.errorEl = element(by.binding('error'));
   this.useContentEl = element(by.css('[value="inputContent"]'));
   this.useFileUploadEl = element(by.css('[value="uploadFile"]'));
-  this.sendBtnEl = element(by.buttonText('발송'));
 };
 
 module.exports = new ArticleSendersPage();

@@ -23,6 +23,16 @@ describe('articleSender page tests', function () {
     expect(element(by.cssContainingText('option', '공시확인후')).isPresent()).toBeTruthy();
   });
 
+  it('should go index page when click cancel button', function () {
+    element(by.css('button[type="reset"]')).click();
+
+    browser.wait(function () {
+      return browser.getCurrentUrl().then(function (url) {
+        return /\//.test(url);
+      });
+    }, 1000);
+  });
+
   // it('should match with fare policy', function () {
   //   element(by.cssContainingText('option', '2개')).click();
   //   expect(page.fareEl.getText()).toContain('800000원');
@@ -55,7 +65,6 @@ describe('articleSender page tests', function () {
   //
   //   browser.wait(function () {
   //     return browser.getCurrentUrl().then(function (url) {
-  //       page.sendBtnEl.click();
   //       return /article-senders\/([0-9a-fA-F]{24})$/.test(url);
   //     });
   //   }, 1000);
@@ -78,20 +87,20 @@ describe('articleSender page tests', function () {
   //   }, 1000);
   // });
   //
-  it('should be able to submit with docx file', function () {
-    page.titleEl.sendKeys('test');
-    page.fileEl.sendKeys(__dirname + '/test.docx');
-    element(by.cssContainingText('option', '1시간후')).click();
-    element(by.cssContainingText('option', '2개')).click();
-    expect(page.fareEl.getText()).toContain('800000원');
-    element(by.css('button[type="submit"]')).click();
-
-    browser.wait(function () {
-      return browser.getCurrentUrl().then(function (url) {
-        return /article-senders\/([0-9a-fA-F]{24})$/.test(url);
-      });
-    }, 1000);
-  });
+  // it('should be able to submit with docx file', function () {
+  //   page.titleEl.sendKeys('test');
+  //   page.fileEl.sendKeys(__dirname + '/test.docx');
+  //   element(by.cssContainingText('option', '1시간후')).click();
+  //   element(by.cssContainingText('option', '2개')).click();
+  //   expect(page.fareEl.getText()).toContain('800000원');
+  //   element(by.css('button[type="submit"]')).click();
+  //
+  //   browser.wait(function () {
+  //     return browser.getCurrentUrl().then(function (url) {
+  //       return /article-senders\/([0-9a-fA-F]{24})$/.test(url);
+  //     });
+  //   }, 1000);
+  // });
   //
   // it('should cannot be able to submit with not docx file', function () {
   //   page.useFileUploadEl.click();

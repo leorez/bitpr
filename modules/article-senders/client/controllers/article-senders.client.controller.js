@@ -51,6 +51,12 @@
     vm.onSendCountChanged = onSendCountChanged;
     vm.update = update;
     vm.remove = remove;
+    vm.cancel = cancel;
+
+    function cancel() {
+      console.log('cancel');
+      $location.path('/');
+    }
 
     function onSendCountChanged() {
       var defaultFare = 500000;

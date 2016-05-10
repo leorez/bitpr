@@ -12,13 +12,13 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<div>
-						<input type="radio" ng-model="vm.articleSender.contentType" value="inputContent" checked>직접입력
-						<input type="radio" ng-model="vm.articleSender.contentType" value="uploadFile">파일업로드
-					</div>
+					<!--<div>-->
+						<!--<input type="radio" ng-model="vm.articleSender.contentType" value="inputContent" checked>직접입력-->
+						<!--<input type="radio" ng-model="vm.articleSender.contentType" value="uploadFile">파일업로드-->
+					<!--</div>-->
 
 					<div class="controls" data-ng-show="vm.articleSender.contentType==='uploadFile'">
-						<label class="control-label" for="file">파일</label>
+						<label class="control-label" for="file">보도자료파일 (doc,docx,hwp)</label>
 						<input ngf-select=""  ng-model="vm.articleSender.file" id="file" name="file" ngf-accept="'doc/*'" type="file">
 						<span class="progress" ng-show="vm.articleSender.file.progress >= 0">
 							<div style="width:{{vm.articleSender.file.progress}}%" ng-bind="vm.articleSender.picFile.progress + '%'"></div>
@@ -37,11 +37,11 @@
 						<select ng-model="vm.articleSender.reserveTime" id="reserveTime" ng-options="t.data as t.text for t in vm.articleSender.reserveTimeOptions"></select>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="control-label checkbox-inline" for="beToChart">
-						<input type="checkbox" ng-model="vm.articleSender.beToDart" id="beToChart"> 공시여부
-					</label>
-				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label checkbox-inline" for="beToChart">-->
+						<!--<input type="checkbox" ng-model="vm.articleSender.beToDart" id="beToChart"> 공시여부-->
+					<!--</label>-->
+				<!--</div>-->
 				<div class="form-group">
 					<label class="control-label" for="sendCount">희망보도 갯수</label>
 					<div class="controls">

@@ -44,7 +44,7 @@
     vm.articleSender.sendCount = 1;
     vm.articleSender.beToDart = true;
     vm.articleSender.fare = 500000;
-    vm.articleSender.contentType = 'inputContent';
+    vm.articleSender.contentType = 'uploadFile';
     /* 보도자료 내용 입력방법 직졉입력(inputContent)/ 파일업로드(uploadFile) */
 
     vm.bill = bill;

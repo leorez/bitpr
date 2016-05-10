@@ -78,22 +78,20 @@ describe('articleSender page tests', function () {
   //   }, 1000);
   // });
   //
-  // it('should be able to submit with docx file', function () {
-  //   page.contentEl.sendKeys('test content');
-  //   page.useFileUploadEl.click();
-  //   page.titleEl.sendKeys('test');
-  //   page.fileEl.sendKeys(__dirname + '/test.docx');
-  //   element(by.cssContainingText('option', '1시간후')).click();
-  //   element(by.cssContainingText('option', '2개')).click();
-  //   expect(page.fareEl.getText()).toContain('800000원');
-  //   element(by.css('button[type="submit"]')).click();
-  //
-  //   browser.wait(function () {
-  //     return browser.getCurrentUrl().then(function (url) {
-  //       return /article-senders\/([0-9a-fA-F]{24})$/.test(url);
-  //     });
-  //   }, 2000);
-  // });
+  it('should be able to submit with docx file', function () {
+    page.titleEl.sendKeys('test');
+    page.fileEl.sendKeys(__dirname + '/test.docx');
+    element(by.cssContainingText('option', '1시간후')).click();
+    element(by.cssContainingText('option', '2개')).click();
+    expect(page.fareEl.getText()).toContain('800000원');
+    element(by.css('button[type="submit"]')).click();
+
+    browser.wait(function () {
+      return browser.getCurrentUrl().then(function (url) {
+        return /article-senders\/([0-9a-fA-F]{24})$/.test(url);
+      });
+    }, 1000);
+  });
   //
   // it('should cannot be able to submit with not docx file', function () {
   //   page.useFileUploadEl.click();

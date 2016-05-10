@@ -87,11 +87,14 @@
       if (isValid && vm.articleSender.file) {
         vm.articleSender.user = Authentication.user._id;
 
-        Upload.upload({
+        var upload = Upload.upload({
           url: '/api/article-senders',
           method: 'POST',
-          data: vm.articleSender
-        }).then(function (resp) {
+          data: vm.articleSender,
+          withCredentials: true
+        });
+
+        upload.then(function (resp) {
           console.log(resp);
           vm.articleSender.title = '';
           vm.articleSender.content = '';
@@ -110,6 +113,7 @@
       } else {
         vm.articleSender.content = vm.articleSender.content.replace(/\n/g, "<br />");
         vm.articleSender.$save(function (response) {
+          console.log(response);
           vm.articleSender.title = '';
           vm.articleSender.content = '';
           $state.go('article-senders.preview', {

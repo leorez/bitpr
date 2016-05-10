@@ -19,7 +19,10 @@
         url: '',
         templateUrl: 'modules/article-senders/client/views/article-senders.client.view.html',
         controller: 'ArticleSendersListController',
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        data: {
+          roles: ['user']
+        }
       })
       .state('article-senders.create', {
         url: '/create',
@@ -30,7 +33,7 @@
           articleSenderResolve: newArticleSender
         },
         data: {
-          roles: ['user', 'admin']
+          roles: ['user']
         }
       })
       .state('article-senders.edit', {
@@ -42,7 +45,7 @@
           articleSenderResolve: getArticleSender
         },
         data: {
-          roles: ['user', 'admin']
+          roles: ['user']
         }
       })
       .state('article-senders.preview', {
@@ -54,7 +57,7 @@
           articleSenderResolve: getArticleSender
         },
         data: {
-          roles: ['user', 'admin']
+          roles: ['user']
         }
       });
 

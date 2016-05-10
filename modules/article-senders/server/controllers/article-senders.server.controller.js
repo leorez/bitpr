@@ -8,7 +8,7 @@ var path = require('path'),
   nodemailer = require('nodemailer'),
   _ = require('lodash');
 
-var saveArticleSender = function (articleSender, res) {
+var saveArticleSender = function (articleSender, req, res) {
   articleSender.save(function (err) {
     if (err) {
       console.log(err);
@@ -16,6 +16,7 @@ var saveArticleSender = function (articleSender, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      articleSender.user = req.user;
       res.json(articleSender);
     }
   });
@@ -64,8 +65,10 @@ exports.create = function (req, res) {
     mammoth.convertToHtml({ path: req.files.file.path })
       .then(function (result) {
         data.content = result.value;
-        console.log(result.messages);
-        saveArticleSender(new ArticleSender(data), res);
+        var articleSender = new ArticleSender(data);
+        articleSender.user = req.user;
+
+        saveArticleSender(articleSender, req, res);
 
       }, function (err) {
         console.log('err: ' + err);
@@ -76,7 +79,7 @@ exports.create = function (req, res) {
   } else {
     var articleSender = new ArticleSender(data);
     articleSender.user = req.user;
-    saveArticleSender(articleSender, res);
+    saveArticleSender(articleSender, req, res);
   }
 };
 

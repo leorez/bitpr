@@ -276,6 +276,42 @@ module.exports = function (grunt) {
     });
   });
 
+  // signup test user
+  grunt.task.registerTask('signup', 'signup test user', function () {
+    // async mode
+    var done = this.async();
+
+    var user1 = {
+      corpCode: '005930',
+      firstName: 'test',
+      lastName: 'user',
+      email: 'test.user@meanjs.com',
+      username: 'testUser',
+      displayName: 'test user',
+      password: 'P@$$w0rd!!',
+      provider: 'local'
+    };
+
+    // Use mongoose configuration
+    var mongoose = require('./config/lib/mongoose.js');
+
+    mongoose.connect(function (db) {
+      var mongoose = require('mongoose'),
+        schemaUser = require('./modules/users/server/models/user.server.model'),
+        User = mongoose.model('User');
+
+      var user = new User(user1);
+      user.save(function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('success signup test user');
+        }
+        db.connection.db.close(done);
+      });
+    });
+  });
+
   grunt.task.registerTask('server', 'Starting the server', function () {
     // Get the callback
     var done = this.async();
@@ -297,7 +333,7 @@ module.exports = function (grunt) {
   grunt.registerTask('test', ['env:test', 'lint', 'mkdir:upload', 'copy:localConfig', 'server', 'mochaTest', 'karma:unit', 'protractor']);
   grunt.registerTask('test:server', ['env:test', 'lint', 'server', 'mochaTest']);
   grunt.registerTask('test:client', ['env:test', 'lint', 'karma:unit']);
-  grunt.registerTask('test:e2e', ['env:test', 'lint', 'dropdb', 'server', 'protractor']);
+  grunt.registerTask('test:e2e', ['env:test', 'lint', 'dropdb', 'signup', 'server', 'protractor']);
   // Run project coverage
   grunt.registerTask('coverage', ['env:test', 'lint', 'mocha_istanbul:coverage', 'karma:unit']);
 

@@ -68,7 +68,8 @@ exports.changeProfilePicture = function (req, res) {
           message: 'Error occurred while uploading profile picture'
         });
       } else {
-        user.profileImageURL = config.uploads.profileUpload.dest + req.file.filename;
+        console.log(req);
+        user.profileImageURL = config.uploads.profileUpload.dest + req.files.newProfilePicture.name;
 
         user.save(function (saveError) {
           if (saveError) {

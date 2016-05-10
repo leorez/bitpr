@@ -14,7 +14,31 @@
     vm.form = {};
     vm.articleSender = articleSender;
     vm.authentication = Authentication;
-    vm.articleSender.reserveTimes = _.range(0, 24);
+    var reserveTimes = _.range(0, 24);
+    reserveTimes.push(24, 48, 72, 999); // 24: 1일후, 48: 2일후, 72: 3일후, 999: 공시확인후
+    vm.articleSender.reserveTimeOptions = [];
+    reserveTimes.forEach(function(item) {
+      var text = item + '시간후';
+      switch (item) {
+        case 0:
+          text = '즉시';
+          break;
+        case 24:
+          text = '1일후';
+          break;
+        case 48:
+          text = '2일후';
+          break;
+        case 72:
+          text = '3일후';
+          break;
+        case 999:
+          text = '공시확인후';
+          break;
+      }
+      var data = { text: text, data: item };
+      vm.articleSender.reserveTimeOptions.push(data);
+    });
     vm.articleSender.sendCounts = [1, 2, 4, 6, 8, 10];
     vm.articleSender.reserveTime = 0;
     vm.articleSender.sendCount = 1;
@@ -90,7 +114,6 @@
       console.log('send call');
       console.log(id);
       $http.post('/api/article-senders-send', {}).success(function (response) {
-
         console.log(response);
         var alert = $mdDialog.alert()
           .title('발송')

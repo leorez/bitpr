@@ -7,9 +7,8 @@ var config = {
 
   specs: [
     //'e2e/**/*.spec.js'
-    //'e2e/article-senders/article-senders.spec.js'
+    'modules/article-senders/tests/e2e/article-senders.spec.js'
     //'modules/users/tests/e2e/*.tests.js'
-    'modules/users/tests/e2e/config.e2e.tests.js'
   ],
 
   baseUrl: 'http://localhost:3001',
@@ -30,43 +29,20 @@ var config = {
       password: 'P@$$w0rd!!'
     };
 
-    browser.get('http://localhost:3001/authentication/signup');
-    // Enter Corp code
-    element(by.model('vm.credentials.corpCode')).sendKeys(user1.corpCode);
-    // Enter First Name
-    element(by.model('vm.credentials.firstName')).sendKeys(user1.firstName);
-    // Enter Last Name
-    element(by.model('vm.credentials.lastName')).sendKeys(user1.lastName);
-    // Enter Email
-    element(by.model('vm.credentials.email')).sendKeys(user1.email);
-    // Enter Username
+    browser.get('http://localhost:3001/authentication/signin');
+
     element(by.model('vm.credentials.username')).sendKeys(user1.username);
-    // Enter Invalid Password
     element(by.model('vm.credentials.password')).sendKeys(user1.password);
-    // Click Submit button
     element(by.css('button[type=submit]')).click();
 
+    // Login takes some time, so wait until it's done.
+    // For the test app's login, we know it's done when it redirects to
+    // index.html.
     return browser.wait(function() {
       return browser.getCurrentUrl().then(function(url) {
-        return true;
+        return /\//.test(url);
       });
     }, 1000);
-
-
-    // browser.get('http://localhost:3001/authentication/signin');
-    //
-    // element(by.model('vm.credentials.username')).sendKeys(user1.username);
-    // element(by.model('vm.credentials.password')).sendKeys(user1.password);
-    // element(by.css('button[type=submit]')).click();
-    //
-    // // Login takes some time, so wait until it's done.
-    // // For the test app's login, we know it's done when it redirects to
-    // // index.html.
-    // return browser.wait(function() {
-    //   return browser.getCurrentUrl().then(function(url) {
-    //     return /\//.test(url);
-    //   });
-    // }, 1000);
 
   }
 };

@@ -36,6 +36,7 @@
     };
 
     $scope.getConfig = function () {
+      console.log('getConfig'+JSON.stringify(Authentication.user));
       $scope.user = Authentication.user;
       $scope.mList = [];
       _.range(0, 6).forEach(function (i) {
@@ -45,6 +46,8 @@
 
       if ($scope.user.crawlTimeHour === undefined) $scope.user.crawlTimeHour = 0;
       if ($scope.user.crawlTimeMinutes === undefined) $scope.user.crawlTimeMinutes = 0;
+
+      console.log($scope.user);
 
       if (typeof $scope.user.keywords === 'string' && $scope.user.keywords !== '') {
         var keywords = $scope.user.keywords.split(',');
@@ -60,7 +63,6 @@
 
       if (Authentication.user) {
         var tags = [];
-        console.log($scope.keywords);
         angular.forEach($scope.keywords, function (value) {
           tags.push(value.text);
         });
@@ -72,8 +74,8 @@
 
         user.$update(function (response) {
           $scope.success = true;
+          vm.success = true;
           Authentication.user = response;
-          $scope.user = Authentication.user;
         }, function (response) {
           $scope.error = response.data.message;
         });

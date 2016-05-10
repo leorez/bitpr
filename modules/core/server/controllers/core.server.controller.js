@@ -36,6 +36,7 @@ var corpCodeToName = function (code) {
   return code;
 };
 
+// dart open api key: 8fe9565007f1da895e18858dda74b4ac56d77c58
 exports.search = function (req, res) {
   var keyword = req.body.keyword;
 

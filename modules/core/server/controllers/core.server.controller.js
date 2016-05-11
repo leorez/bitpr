@@ -50,9 +50,9 @@ var corpCodeToName = function (def, code) {
       def.reject(code);
     } else {
       console.log(body);
-      // var json = JSON.parse(body);
-      if (body.err_code === '000')
-        def.resolve(body.crp_nm_i);
+      var json = JSON.parse(body);
+      if (json.err_code === '000')
+        def.resolve(json.crp_nm_i);
       else
         def.reject(code);
     }

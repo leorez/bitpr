@@ -1,0 +1,7 @@
+{
+  "APPID" : "bitprtest",
+  "APIKEY" : "1f96bdac175e11e6bca70cc47a1fcfae",
+  "CONTENT" : "비트피알(BITPR) SMS 테스트입니다.",
+  "SENDER" : "01021873886",
+  "RECEIVERS" : ["01021873886", "01027439905", "01029731203"]
+}

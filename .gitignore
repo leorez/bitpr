@@ -18,7 +18,6 @@ coverage/
 
 # MEAN.js app and assets
 # ======================
-uploads
 modules/users/client/img/profile/uploads
 config/env/local.js
 config/env/local-*.js
@@ -75,3 +74,4 @@ mongod
 
 # upload files
 modules/article-senders/server/routes/tmp/*
+uploads/images/*.*

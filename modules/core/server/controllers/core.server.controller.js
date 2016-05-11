@@ -38,8 +38,7 @@ exports.renderIndex = function (req, res) {
   });
 };
 
-
-var corpCodeToName = function (def, code) {
+exports.corpCodeToName = function (def, code) {
   // Dart OpenAPI test command
   // curl "http://dart.fss.or.kr/api/company.json?auth=8fe9565007f1da895e18858dda74b4ac56d77c58&crp_cd=005930"
   // dart open api key: 8fe9565007f1da895e18858dda74b4ac56d77c58
@@ -81,14 +80,13 @@ exports.search = function (req, res) {
     def.then(function (name) {
       keyword = name;
       console.log('Result=' + keyword);
-
       search(keyword, req, res);
     }, function (error) {
       console.log('error ' + error);
       search(keyword, req, res);
     });
 
-    corpCodeToName(def, keyword);
+    exports.corpCodeToName(def, keyword);
 
   } else {
     search(keyword, req, res);

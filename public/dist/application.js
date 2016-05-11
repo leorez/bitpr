@@ -5,7 +5,7 @@
 
   var service = {
     applicationModuleName: applicationModuleName,
-    applicationModuleVendorDependencies: ['ngSanitize', 'ngResource', 'ngAnimate', 'ngMessages', 'ui.router', 'ui.bootstrap', 'angularFileUpload', 'ngAria', 'ngMaterial', 'ngTagsInput', 'ngFileUpload', 'ngProgress', 'angular-clipboard'],
+    applicationModuleVendorDependencies: ['ngSanitize', 'ngResource', 'ngAnimate', 'ngMessages', 'ui.router', 'ui.bootstrap', 'ngAria', 'ngMaterial', 'ngTagsInput', 'ngFileUpload', 'ngProgress', 'angular-clipboard'],
     registerModule: registerModule
   };
 
@@ -163,7 +163,10 @@
         url: '',
         templateUrl: 'modules/article-senders/client/views/article-senders.client.view.html',
         controller: 'ArticleSendersListController',
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        data: {
+          roles: ['user']
+        }
       })
       .state('article-senders.create', {
         url: '/create',
@@ -174,7 +177,7 @@
           articleSenderResolve: newArticleSender
         },
         data: {
-          roles: ['user', 'admin']
+          roles: ['user']
         }
       })
       .state('article-senders.edit', {
@@ -186,7 +189,7 @@
           articleSenderResolve: getArticleSender
         },
         data: {
-          roles: ['user', 'admin']
+          roles: ['user']
         }
       })
       .state('article-senders.preview', {
@@ -198,7 +201,7 @@
           articleSenderResolve: getArticleSender
         },
         data: {
-          roles: ['user', 'admin']
+          roles: ['user']
         }
       });
 
@@ -235,19 +238,64 @@
     vm.form = {};
     vm.articleSender = articleSender;
     vm.authentication = Authentication;
-    vm.articleSender.reserveTimes = _.range(0, 24);
+    var reserveTimes = _.range(0, 24);
+    reserveTimes.push(24, 48, 72, 999); // 24: 1일후, 48: 2일후, 72: 3일후, 999: 공시확인후
+    vm.articleSender.reserveTimeOptions = [];
+    reserveTimes.forEach(function(item) {
+      var text = item + '시간후';
+      switch (item) {
+        case 0:
+          text = '즉시';
+          break;
+        case 24:
+          text = '1일후';
+          break;
+        case 48:
+          text = '2일후';
+          break;
+        case 72:
+          text = '3일후';
+          break;
+        case 999:
+          text = '공시확인후';
+          break;
+      }
+      var data = { text: text, data: item };
+      vm.articleSender.reserveTimeOptions.push(data);
+    });
     vm.articleSender.sendCounts = [1, 2, 4, 6, 8, 10];
     vm.articleSender.reserveTime = 0;
     vm.articleSender.sendCount = 1;
     vm.articleSender.beToDart = true;
     vm.articleSender.fare = 500000;
-    vm.articleSender.contentType = 'inputContent';
+    vm.articleSender.contentType = 'uploadFile';
     /* 보도자료 내용 입력방법 직졉입력(inputContent)/ 파일업로드(uploadFile) */
+
+    /*
+     ** imageRoot (/uploads/images) 를 기준으로 /images/{image-name}으로 이미지소스를 가져올수 있도록
+     *  path를 수정한다.
+     *  /uploads 폴더 밑으로 디렉토리구조로 route되도록 config/lib/express.js 에 정의 되어있음
+     */
+    var imageRoot = '/images/';
+    if (vm.articleSender.image1) vm.articleSender.image1 = imageRoot + vm.articleSender.image1;
+    if (vm.articleSender.image2) vm.articleSender.image2 = imageRoot + vm.articleSender.image2;
+    if (vm.articleSender.image3) vm.articleSender.image3 = imageRoot + vm.articleSender.image3;
 
     vm.bill = bill;
     vm.onSendCountChanged = onSendCountChanged;
     vm.update = update;
     vm.remove = remove;
+    vm.cancel = cancel;
+
+    function cancel() {
+      var confirm = $mdDialog.confirm()
+        .textContent('취소하시면 입력하신 자료가 유실됩니다. 취소하시겠습니까?')
+        .ok('예')
+        .cancel('아니요');
+      $mdDialog.show(confirm).then(function() {
+        $location.path('/');
+      });
+    }
 
     function onSendCountChanged() {
       var defaultFare = 500000;
@@ -271,13 +319,15 @@
       }
 
       if (isValid && vm.articleSender.file) {
-        vm.articleSender.user = Authentication.user._id;
-
-        Upload.upload({
+        var upload = Upload.upload({
           url: '/api/article-senders',
           method: 'POST',
-          data: vm.articleSender
-        }).then(function (resp) {
+          data: vm.articleSender,
+          withCredentials: true,
+          disableProgress: true
+        });
+
+        upload.then(function (resp) {
           console.log(resp);
           vm.articleSender.title = '';
           vm.articleSender.content = '';
@@ -294,8 +344,9 @@
         });
 
       } else {
-        vm.articleSender.content = vm.articleSender.content.replace(/\n/g, "<br />");
+        vm.articleSender.content = vm.articleSender.content.replace(/\n/g, '<br />');
         vm.articleSender.$save(function (response) {
+          console.log(response);
           vm.articleSender.title = '';
           vm.articleSender.content = '';
           $state.go('article-senders.preview', {
@@ -311,7 +362,6 @@
       console.log('send call');
       console.log(id);
       $http.post('/api/article-senders-send', {}).success(function (response) {
-
         console.log(response);
         var alert = $mdDialog.alert()
           .title('발송')
@@ -2164,7 +2214,6 @@
 
       if (Authentication.user) {
         var tags = [];
-        console.log($scope.keywords);
         angular.forEach($scope.keywords, function (value) {
           tags.push(value.text);
         });
@@ -2176,13 +2225,12 @@
 
         user.$update(function (response) {
           $scope.success = true;
+          vm.success = true;
           Authentication.user = response;
-          $scope.user = Authentication.user;
         }, function (response) {
           $scope.error = response.data.message;
         });
       }
-
     };
 
     $scope.displayArticleToHomepage = function () {

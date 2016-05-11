@@ -20,7 +20,7 @@ exports.searchFromMedog = function (keyword) {
   //		uni_except_words: 'y' ( 현재 'y'로 고정)
 
   Date.masks.default = 'YYYY-MM-DD hh:mm:ss';
-  var t = dateAdder.subtract(new Date(), 3, "day");
+  var t = dateAdder.subtract(new Date(), 3, 'day');
   var since = t.format();
 
   var formData = {

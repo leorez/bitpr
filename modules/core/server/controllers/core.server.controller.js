@@ -4,6 +4,8 @@ var validator = require('validator'),
   errorHandler = require('./errors.server.controller.js'),
   schedule = require('./schedule.server.controller'),
   appRoot = require('app-root-path'),
+  request = require('request'),
+  EzDeferred = require('easy-deferred'),
   Deferred = require('deferred-js');
 
 exports.images = function (req, res) {
@@ -37,20 +39,27 @@ exports.renderIndex = function (req, res) {
 };
 
 
-var corpCodeToName = function (code) {
-  return code;
+var corpCodeToName = function (def, code) {
+  // Dart OpenAPI test command
+  // curl "http://dart.fss.or.kr/api/company.json?auth=8fe9565007f1da895e18858dda74b4ac56d77c58&crp_cd=005930"
+  // dart open api key: 8fe9565007f1da895e18858dda74b4ac56d77c58
+
+  var url = 'http://dart.fss.or.kr/api/company.json?auth=8fe9565007f1da895e18858dda74b4ac56d77c58&crp_cd=' + code;
+  request(url, function (error, response, body) {
+    if (error) {
+      def.reject(code);
+    } else {
+      console.log(body);
+      // var json = JSON.parse(body);
+      if (body.err_code === '000')
+        def.resolve(body.crp_nm_i);
+      else
+        def.reject(code);
+    }
+  });
 };
 
-// dart open api key: 8fe9565007f1da895e18858dda74b4ac56d77c58
-exports.search = function (req, res) {
-  var keyword = req.body.keyword;
-
-  if (/[0-9]{6}$/.test(keyword)) {
-    console.log('CORP_CODE=' + keyword);
-    keyword = corpCodeToName(keyword);
-    console.log('Result=' + keyword);
-  }
-
+function search(keyword, req, res) {
   Deferred.when(schedule.searchFromMedog(keyword)).then(function (result) {
     var data = JSON.parse(result).data;
     res.json(data);
@@ -60,6 +69,29 @@ exports.search = function (req, res) {
       message: errorHandler.getErrorMessage(err)
     });
   });
+}
+
+exports.search = function (req, res) {
+  var keyword = req.body.keyword;
+
+  if (/[0-9]{6}$/.test(keyword)) {
+    console.log('CORP_CODE=' + keyword);
+
+    var def = new EzDeferred();
+    def.then(function (name) {
+      keyword = name;
+      console.log('Result=' + keyword);
+
+      search(keyword, req, res);
+    }, function (error) {
+      console.log('error ' + error);
+    });
+
+    corpCodeToName(def, keyword);
+
+  } else {
+    search(keyword, req, res);
+  }
 };
 
 /**

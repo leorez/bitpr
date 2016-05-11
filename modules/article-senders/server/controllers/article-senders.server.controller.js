@@ -76,7 +76,7 @@ exports.create = function (req, res) {
         }, function (err) {
           console.log('err: ' + err);
           res.status(400).send({
-            message: "'MS Word'가 아닙니다. 파일을 확인해주세요."
+            message: '\'MS Word\'가 아닙니다. 파일을 확인해주세요.'
           });
         }).done();
     } else {

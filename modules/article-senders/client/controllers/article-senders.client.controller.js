@@ -120,7 +120,7 @@
         });
 
       } else {
-        vm.articleSender.content = vm.articleSender.content.replace(/\n/g, "<br />");
+        vm.articleSender.content = vm.articleSender.content.replace(/\n/g, '<br />');
         vm.articleSender.$save(function (response) {
           console.log(response);
           vm.articleSender.title = '';

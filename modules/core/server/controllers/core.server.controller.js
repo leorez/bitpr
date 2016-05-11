@@ -85,6 +85,7 @@ exports.search = function (req, res) {
       search(keyword, req, res);
     }, function (error) {
       console.log('error ' + error);
+      search(keyword, req, res);
     });
 
     corpCodeToName(def, keyword);

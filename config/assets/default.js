@@ -57,7 +57,13 @@ module.exports = {
       'modules/**/*/img/**/*.svg'
     ],
     views: ['modules/*/client/views/**/*.html'],
-    templates: ['build/templates.js']
+    templates: ['build/templates.js'],
+    e2eTests: [
+      'modules/*/tests/e2e/*.js'
+    ],
+    tests: [
+      'modules/*/tests/client/*.js'
+    ]
   },
   server: {
     gruntConfig: ['gruntfile.js'],
@@ -68,6 +74,7 @@ module.exports = {
     sockets: 'modules/*/server/sockets/**/*.js',
     config: ['modules/*/server/config/*.js'],
     policies: 'modules/*/server/policies/*.js',
-    views: ['modules/*/server/views/*.html']
+    views: ['modules/*/server/views/*.html'],
+    tests: ['modules/*/tests/server/*.js']
   }
 };

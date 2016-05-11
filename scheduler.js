@@ -141,7 +141,6 @@ function sendEmail(options, callback) {
   });
 }
 
-
 /*
  ** 보도자료발송
  */

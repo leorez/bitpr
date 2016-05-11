@@ -34,20 +34,42 @@ module.exports = function (grunt) {
       },
       serverJS: {
         files: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS),
-        // tasks: ['eslint'],
+        tasks: ['eslint'],
         options: {
           livereload: true
         }
       },
       clientViews: {
         files: defaultAssets.client.views,
+        tasks: ['test:e2e'],
         options: {
           livereload: true
         }
       },
       clientJS: {
         files: defaultAssets.client.js,
-        // tasks: ['eslint'],
+        tasks: ['eslint'],
+        options: {
+          livereload: true
+        }
+      },
+      serverTests: {
+        files: testAssets.tests.server,
+        tasks: ['test:server'],
+        options: {
+          livereload: true
+        }
+      },
+      clientE2eTests: {
+        files: testAssets.tests.e2e,
+        tasks: ['test:e2e'],
+        options: {
+          livereload: true
+        }
+      },
+      clientTests: {
+        files: testAssets.tests.client,
+        tasks: ['test:client'],
         options: {
           livereload: true
         }

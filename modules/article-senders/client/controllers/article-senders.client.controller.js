@@ -47,6 +47,16 @@
     vm.articleSender.contentType = 'uploadFile';
     /* 보도자료 내용 입력방법 직졉입력(inputContent)/ 파일업로드(uploadFile) */
 
+    /*
+     ** imageRoot (/uploads/images) 를 기준으로 /images/{image-name}으로 이미지소스를 가져올수 있도록
+     *  path를 수정한다.
+     *  /uploads 폴더 밑으로 디렉토리구조로 route되도록 config/lib/express.js 에 정의 되어있음
+     */
+    var imageRoot = '/images/';
+    if (vm.articleSender.image1) vm.articleSender.image1 = imageRoot + vm.articleSender.image1;
+    if (vm.articleSender.image2) vm.articleSender.image2 = imageRoot + vm.articleSender.image2;
+    if (vm.articleSender.image3) vm.articleSender.image3 = imageRoot + vm.articleSender.image3;
+
     vm.bill = bill;
     vm.onSendCountChanged = onSendCountChanged;
     vm.update = update;
@@ -85,13 +95,12 @@
       }
 
       if (isValid && vm.articleSender.file) {
-        vm.articleSender.user = Authentication.user._id;
-
         var upload = Upload.upload({
           url: '/api/article-senders',
           method: 'POST',
           data: vm.articleSender,
-          withCredentials: true
+          withCredentials: true,
+          disableProgress: true
         });
 
         upload.then(function (resp) {

@@ -1,4 +1,5 @@
 'use strict';
+var appRoot = require('app-root-path');
 
 module.exports = function (app) {
   // Root routing

@@ -20,10 +20,19 @@
 					<div class="controls" data-ng-show="vm.articleSender.contentType==='uploadFile'">
 						<label class="control-label" for="file">보도자료파일 (doc,docx,hwp)</label>
 						<input ngf-select=""  ng-model="vm.articleSender.file" id="file" name="file" ngf-accept="'doc/*'" type="file">
-						<span class="progress" ng-show="vm.articleSender.file.progress >= 0">
-							<div style="width:{{vm.articleSender.file.progress}}%" ng-bind="vm.articleSender.picFile.progress + '%'"></div>
-					  	</span>
 					</div>
+          <div class="controls">
+            <label class="control-label" for="file">사진자료 1</label>
+            <input ngf-select=""  ng-model="vm.articleSender.image1" id="image1" name="image1" ngf-accept="'image/*'" type="file">
+          </div>
+          <div class="controls">
+            <label class="control-label" for="file">사진자료 2</label>
+            <input ngf-select=""  ng-model="vm.articleSender.image2" id="image2" name="image2" ngf-accept="'image/*'" type="file">
+          </div>
+          <div class="controls">
+            <label class="control-label" for="file">사진자료 3</label>
+            <input ngf-select=""  ng-model="vm.articleSender.image3" id="image3" name="image3" ngf-accept="'image/*'" type="file">
+          </div>
 					<div class="controls" data-ng-show="vm.articleSender.contentType==='inputContent'">
 						<label class="control-label" for="content">내용</label>
 						<div>

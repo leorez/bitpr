@@ -2,6 +2,20 @@
 	<div class="page-header">
 		<h2>보도자료 미리보기</h2>
 	</div>
+  <div class="col-md-12">
+    <div>
+      <label>발송시점 : </label>
+      <label>{{vm.articleSender.reserveTime}}시간후</label>
+    </div>
+    <div>
+      <label>희망보도갯수 : </label>
+      <label>{{vm.articleSender.sendCount}}개</label>
+    </div>
+    <!--<div>-->
+    <!--<label>공시여부: </label>-->
+    <!--<label>{{vm.articleSender.beToDart}}</label>-->
+    <!--</div>-->
+  </div>
 	<div class="col-md-12">
 		<div>
 			<label>발신자 : news@bitpr.kr</label>
@@ -14,21 +28,21 @@
 		</div>
 		<div ng-bind-html="vm.articleSender.content"></div>
 	</div>
-
-	<div class="col-md-12">
-		<div>
-			<label>발송시점 : </label>
-			<label>{{vm.articleSender.reserveTime}}시간후</label>
-		</div>
-		<div>
-			<label>희망보도갯수 : </label>
-			<label>{{vm.articleSender.sendCount}}개</label>
-		</div>
-		<div>
-			<label>공시여부: </label>
-			<label>{{vm.articleSender.beToDart}}</label>
-		</div>
-	</div>
+  <div class="col-md-12">
+    <div ng-show="vm.articleSender.image1.length > 0">
+      <img ng-src="{{vm.articleSender.image1}}" id="image1">
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div ng-show="vm.articleSender.image2.length > 0">
+      <img ng-src="{{vm.articleSender.image2}}" id="image2">
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div ng-show="vm.articleSender.image3.length > 0">
+      <img ng-src="{{vm.articleSender.image3}}" id="image3">
+    </div>
+  </div>
 
 	<div class="form-group">
 		<button type="button" class="btn btn-primary btn-lg">발송</button>

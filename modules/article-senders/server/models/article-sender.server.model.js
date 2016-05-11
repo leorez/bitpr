@@ -38,6 +38,22 @@ var ArticleSenderSchema = new Schema({
     trim: true,
     required: 'Content cannot be blank'
   },
+  file: {
+    type: String,
+    trim: true
+  },
+  image1: {
+    type: String,
+    trim: true
+  },
+  image2: {
+    type: String,
+    trim: true
+  },
+  image3: {
+    type: String,
+    trim: true
+  },
   reserveTime: {
     type: Number,
     default: 1,

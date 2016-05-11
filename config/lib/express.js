@@ -45,6 +45,9 @@ module.exports.initLocalVariables = function (app) {
     res.locals.url = req.protocol + '://' + req.headers.host + req.originalUrl;
     next();
   });
+
+  // 파일업로드 폴더를 디렉토리 구조로 접근하도록 설정하는 구문
+  app.use(express.static('uploads'));
 };
 
 /**

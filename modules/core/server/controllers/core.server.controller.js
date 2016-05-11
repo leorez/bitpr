@@ -3,8 +3,13 @@
 var validator = require('validator'),
   errorHandler = require('./errors.server.controller.js'),
   schedule = require('./schedule.server.controller'),
+  appRoot = require('app-root-path'),
   Deferred = require('deferred-js');
 
+exports.images = function (req, res) {
+  console.log(appRoot + '/uploads/images/3U3yQ_X-d_IGESG0hcTY7b2Y.jpeg');
+  res.render(appRoot + '/uploads/images/3U3yQ_X-d_IGESG0hcTY7b2Y.jpeg');
+};
 /**
  * Render the main application page
  */

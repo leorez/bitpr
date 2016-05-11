@@ -88,20 +88,50 @@ describe('articleSender page tests', function () {
   //   }, 1000);
   // });
   //
-  it('should be able to submit with docx file', function () {
+  it('should have 3 image file selectors', function () {
+    expect(element(by.css('#image1')).isPresent()).toBeTruthy();
+    expect(element(by.css('#image2')).isPresent()).toBeTruthy();
+    expect(element(by.css('#image3')).isPresent()).toBeTruthy();
+  });
+
+  it('should be able to submit with docx file and images', function () {
     page.titleEl.sendKeys('test');
     page.fileEl.sendKeys(__dirname + '/test.docx');
+    element(by.model('vm.articleSender.image1')).sendKeys(__dirname + '/test1.jpeg');
+    element(by.model('vm.articleSender.image2')).sendKeys(__dirname + '/test2.jpeg');
     element(by.cssContainingText('option', '1시간후')).click();
     element(by.cssContainingText('option', '2개')).click();
     expect(page.fareEl.getText()).toContain('800000원');
     element(by.css('button[type="submit"]')).click();
-
     browser.wait(function () {
       return browser.getCurrentUrl().then(function (url) {
-        return /article-senders\/([0-9a-fA-F]{24})$/.test(url);
+        var isPrevewPage = /article-senders\/([0-9a-fA-F]{24})$/.test(url);
+        expect(isPrevewPage).toBeTruthy();
+        if (isPrevewPage) {
+          expect(element(by.css('#image1')).isPresent()).toBeTruthy();
+          expect(element(by.css('#image2')).isPresent()).toBeTruthy();
+          expect(element(by.css('#image3')).isPresent()).toBeFalsy();
+          return true;
+        } else {
+          return false;
+        }
       });
-    }, 1000);
+    }, 10000);
   });
+
+  // it('should be able to submit with docx file and no images', function () {
+  //   page.titleEl.sendKeys('test');
+  //   page.fileEl.sendKeys(__dirname + '/test.docx');
+  //   element(by.cssContainingText('option', '1시간후')).click();
+  //   element(by.cssContainingText('option', '2개')).click();
+  //   expect(page.fareEl.getText()).toContain('800000원');
+  //   element(by.css('button[type="submit"]')).click();
+  //   browser.wait(function () {
+  //     return browser.getCurrentUrl().then(function (url) {
+  //       return /article-senders\/([0-9a-fA-F]{24})$/.test(url);
+  //     });
+  //   }, 1000);
+  // });
   //
   // it('should cannot be able to submit with not docx file', function () {
   //   page.useFileUploadEl.click();
@@ -116,5 +146,4 @@ describe('articleSender page tests', function () {
   //
   //   expect(page.errorEl.getText()).toContain("'MS Word'가 아닙니다. 파일을 확인해주세요.");
   // });
-
 });

@@ -5,6 +5,7 @@
   describe('Article senders Controller Tests', function () {
     // Initialize global variables
     var ArticleSendersController,
+      ArticleSendersService,
       scope,
       $httpBackend,
       $stateParams,
@@ -35,7 +36,7 @@
     // The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
     // This allows us to inject a service but then attach it to a variable
     // with the same name as the service.
-    beforeEach(inject(function ($controller, $rootScope, _$location_, _$stateParams_, _$httpBackend_) {
+    beforeEach(inject(function ($controller, $rootScope, _$location_, _$stateParams_, _$httpBackend_, _ArticleSendersService_) {
       // Set a new global scope
       scope = $rootScope.$new();
 
@@ -43,16 +44,18 @@
       $stateParams = _$stateParams_;
       $httpBackend = _$httpBackend_;
       $location = _$location_;
+      ArticleSendersService = _ArticleSendersService_;
 
       // Initialize the Article senders controller.
       ArticleSendersController = $controller('ArticleSendersController', {
-        $scope: scope
+        $scope: scope,
+        articleSenderResolve: {}
       });
     }));
 
-    it('$scope.bill() with valid form data and user input content should send success', inject(function (ArticleSenders) {
+    it('$scope.vm.bill() with valid form data and user input content should send success', inject(function (ArticleSendersService) {
 
-      var sampleRequest = new ArticleSenders({
+      var sampleRequest = new ArticleSendersService({
         title: '발송자료 테스트 제목',
         content: '발송자로 테스트 내용',
         reserveTime: 1,
@@ -61,7 +64,7 @@
         fare: 5000000
       });
 
-      var sampleResponse = new ArticleSenders({
+      var sampleResponse = new ArticleSendersService({
         _id: '525cf20451979dea2c000001',
         title: '발송자료 테스트 제목',
         content: '발송자로 테스트 내용',
@@ -71,23 +74,23 @@
         fare: 5000000
       });
 
-      scope.title = '발송자료 테스트 제목';
-      scope.content = '발송자로 테스트 내용';
-      scope.reserveTime = 1;
-      scope.beToDart = true;
-      scope.sendCount = 1;
-      scope.fare = 5000000;
+      scope.vm.title = '발송자료 테스트 제목';
+      scope.vm.content = '발송자로 테스트 내용';
+      scope.vm.reserveTime = 1;
+      scope.vm.beToDart = true;
+      scope.vm.sendCount = 1;
+      scope.vm.fare = 5000000;
 
       $httpBackend.expectPOST('article-senders', sampleRequest).respond(sampleResponse);
 
-      scope.bill();
+      scope.vm.bill();
       $httpBackend.flush();
 
-      expect(scope.fare).toEqual(5000000);
+      expect(scope.vm.fare).toEqual(5000000);
     }));
 
-    it('$scope.findOne() should get one articleSender', inject(function (ArticleSenders) {
-      var sample = new ArticleSenders({
+    it('$scope.vm.findOne() should get one articleSender', inject(function (ArticleSendersService) {
+      var sample = new ArticleSendersService({
         title: 'An ArticleSender',
         content: 'ArticleSender Content',
         reserveTime: 1,
@@ -100,14 +103,14 @@
 
       $httpBackend.expectGET(/article-senders\/([0-9a-fA-F]{24})$/).respond(sample);
 
-      scope.findOne();
+      scope.vm.findOne();
       $httpBackend.flush();
 
-      expect(scope.articleSender).toEqualData(sample);
+      expect(scope.vm.articleSender).toEqualData(sample);
     }));
 
-    it('$scope.find() should get list', inject(function (ArticleSenders) {
-      var sample = new ArticleSenders({
+    it('$scope.vm.find() should get list', inject(function (ArticleSendersService) {
+      var sample = new ArticleSendersService({
         title: 'An ArticleSender',
         content: 'ArticleSender Content',
         reserveTime: 1,
@@ -120,14 +123,14 @@
 
       $httpBackend.expectGET('article-senders').respond(samples);
 
-      scope.find();
+      scope.vm.find();
       $httpBackend.flush();
 
-      expect(scope.articleSenders).toEqualData(samples);
+      expect(scope.vm.articleSenders).toEqualData(samples);
     }));
 
-    it('$scope.update() should update a valid articleSender', inject(function (ArticleSenders) {
-      var sample = new ArticleSenders({
+    it('$scope.vm.update() should update a valid articleSender', inject(function (ArticleSendersService) {
+      var sample = new ArticleSendersService({
         _id: '525cf20451979dea2c000001',
         title: 'An ArticleSender',
         content: 'ArticleSender Content',
@@ -137,18 +140,18 @@
         fare: 5000000
       });
 
-      scope.articleSender = sample;
+      scope.vm.articleSender = sample;
 
       $httpBackend.expectPUT(/article-senders\/[0-9a-fA-F]{24}$/).respond();
 
-      scope.update();
+      scope.vm.update();
       $httpBackend.flush();
 
       expect($location.path()).toBe('/article-senders/' + sample._id);
     }));
 
-    it('$scope.remove() should send a DELETE request with a valid articleSenderId and remove the articleSender', inject(function (ArticleSenders) {
-      var sample = new ArticleSenders({
+    it('$scope.vm.remove() should send a DELETE request with a valid articleSenderId and remove the articleSender', inject(function (ArticleSendersService) {
+      var sample = new ArticleSendersService({
         _id: '525cf20451979dea2c000001',
         title: 'An ArticleSender',
         content: 'ArticleSender Content',
@@ -158,14 +161,14 @@
         fare: 5000000
       });
 
-      scope.articleSenders = [sample];
+      scope.vm.articleSender = [sample];
 
       $httpBackend.expectDELETE(/article-senders\/([0-9a-fA-F]{24})$/).respond(204);
 
-      scope.remove(sample);
+      scope.vm.remove(sample);
       $httpBackend.flush();
 
-      expect(scope.articleSenders.length).toBe(0);
+      expect(scope.vm.articleSender.length).toBe(0);
     }));
 
   });

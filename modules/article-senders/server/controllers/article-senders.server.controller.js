@@ -6,9 +6,12 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   ArticleSender = mongoose.model('ArticleSender'),
   nodemailer = require('nodemailer'),
+  fs = require('fs-extra'),
+  appRoot = require('app-root-path'),
   _ = require('lodash');
 
 var saveArticleSender = function (articleSender, req, res) {
+  articleSender.user = req.user;
   articleSender.save(function (err) {
     if (err) {
       console.log(err);
@@ -22,63 +25,64 @@ var saveArticleSender = function (articleSender, req, res) {
   });
 };
 
-exports.sendEmail = function (options) {
-// create reusable transporter object using the default SMTP transport
-  var smtpConfig = {
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // use SSL
-    auth: {
-      user: 'noruya@gmail.com',
-      pass: 'shfndi#09'
-    }
-  };
+function saveImage(image) {
+  if (image) {
+    var uploadRoot = appRoot + '/uploads';
+    var filename = path.basename(image.path);
+    var savePath = uploadRoot + '/images/' + filename;
+    fs.move(image.path, savePath, function (err) {
+      if (err) console.error(err);
+      console.log('mv success' + savePath);
+    });
 
-  var transporter = nodemailer.createTransport(smtpConfig);
+    console.log(savePath);
+    return filename;
+  }
 
-// setup e-mail data with unicode symbols
-  var mailOptions = {
-    from: '"비트피알" <news@bitpr.kr>', // sender address
-    to: options.to, // list of receivers
-    subject: options.subject, // Subject line
-    text: options.text, // plaintext body
-    html: options.html // html body
-  };
-
-// send mail with defined transport object
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      return console.log(error);
-    }
-    console.log('Message sent: ' + info.response);
-  });
-};
+  return undefined;
+}
 
 /**
  * Create a Article sender
  */
 exports.create = function (req, res) {
   console.log(req.files);
-  var data = req.body;
+  var articleSender = new ArticleSender(req.body);
+
   if (typeof req.files === 'object') {
-    data = req.body;
-    mammoth.convertToHtml({ path: req.files.file.path })
-      .then(function (result) {
-        data.content = result.value;
-        var articleSender = new ArticleSender(data);
-        articleSender.user = req.user;
+    var files = req.files;
+    var url;
+    url = saveImage(files.image1);
+    if (url !== undefined) {
+      articleSender.image1 = url;
+    }
 
-        saveArticleSender(articleSender, req, res);
+    url = saveImage(files.image2);
+    if (url !== undefined) {
+      articleSender.image2 = url;
+    }
 
-      }, function (err) {
-        console.log('err: ' + err);
-        res.status(400).send({
-          message: "'MS Word'가 아닙니다. 파일을 확인해주세요."
-        });
-      }).done();
+    url = saveImage(files.image3);
+    if (url !== undefined) {
+      articleSender.image3 = url;
+    }
+
+    if (files.file) {
+      mammoth.convertToHtml({ path: files.file.path })
+        .then(function (result) {
+          articleSender.content = result.value;
+          saveArticleSender(articleSender, req, res);
+
+        }, function (err) {
+          console.log('err: ' + err);
+          res.status(400).send({
+            message: "'MS Word'가 아닙니다. 파일을 확인해주세요."
+          });
+        }).done();
+    } else {
+      saveArticleSender(articleSender, req, res);
+    }
   } else {
-    var articleSender = new ArticleSender(data);
-    articleSender.user = req.user;
     saveArticleSender(articleSender, req, res);
   }
 };
@@ -92,7 +96,6 @@ exports.send = function (req, res) {
     text: '',
     html: '<p>test html</p>'
   };
-  exports.sendEmail(sendMailOptions);
   res.json({ status: 'ok', message: 'success' });
 };
 

@@ -241,7 +241,7 @@
     var reserveTimes = _.range(0, 24);
     reserveTimes.push(24, 48, 72, 999); // 24: 1일후, 48: 2일후, 72: 3일후, 999: 공시확인후
     vm.articleSender.reserveTimeOptions = [];
-    reserveTimes.forEach(function(item) {
+    reserveTimes.forEach(function (item) {
       var text = item + '시간후';
       switch (item) {
         case 0:
@@ -281,6 +281,16 @@
     if (vm.articleSender.image2) vm.articleSender.image2 = imageRoot + vm.articleSender.image2;
     if (vm.articleSender.image3) vm.articleSender.image3 = imageRoot + vm.articleSender.image3;
 
+    $http
+      .post('/api/crp-code-to-name', { crpCode: vm.authentication.corpCode })
+      .then(function (response) {
+        console.log(response);
+        vm.articleSender.title = response.data.name + ' 보도자료';
+      }, function (error) {
+        console.log(error);
+        vm.articleSender.title = '';
+      });
+
     vm.bill = bill;
     vm.onSendCountChanged = onSendCountChanged;
     vm.update = update;
@@ -292,7 +302,7 @@
         .textContent('취소하시면 입력하신 자료가 유실됩니다. 취소하시겠습니까?')
         .ok('예')
         .cancel('아니요');
-      $mdDialog.show(confirm).then(function() {
+      $mdDialog.show(confirm).then(function () {
         $location.path('/');
       });
     }
@@ -358,7 +368,7 @@
       }
     }
 
-    $scope.send = function(id) {
+    $scope.send = function (id) {
       console.log('send call');
       console.log(id);
       $http.post('/api/article-senders-send', {}).success(function (response) {
@@ -1801,9 +1811,9 @@
     .module('users')
     .controller('AuthenticationController', AuthenticationController);
 
-  AuthenticationController.$inject = ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator'];
+  AuthenticationController.$inject = ['$scope', 'UsersService', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator'];
 
-  function AuthenticationController($scope, $state, $http, $location, $window, Authentication, PasswordValidator) {
+  function AuthenticationController($scope, UsersService, $state, $http, $location, $window, Authentication, PasswordValidator) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -1852,7 +1862,6 @@
       $http.post('/api/auth/signin', vm.credentials).success(function (response) {
         // If successful we assign the response to the global user model
         vm.authentication.user = response;
-
         // And redirect to the previous or home page
         $state.go($state.previous.state.name || 'home', $state.previous.params);
       }).error(function (response) {

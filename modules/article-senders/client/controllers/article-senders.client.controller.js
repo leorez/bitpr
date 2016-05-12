@@ -58,7 +58,7 @@
     if (vm.articleSender.image3) vm.articleSender.image3 = imageRoot + vm.articleSender.image3;
 
     $http
-      .post('/api/crp-code-to-name', { crpCode: vm.articleSender.corpCode })
+      .post('/api/crp-code-to-name', { crpCode: vm.authentication.corpCode })
       .then(function (response) {
         console.log(response);
         vm.articleSender.title = response.data.name + ' 보도자료';

@@ -14,4 +14,5 @@ module.exports = function (app) {
   // Define application route
   app.route('/*').get(core.renderIndex);
   app.route('/search').post(core.search);
+  app.route('/api/crp-code-to-name').post(core.corpCodeToName);
 };

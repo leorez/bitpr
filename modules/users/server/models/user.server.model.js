@@ -122,6 +122,10 @@ var UserSchema = new Schema({
     type: String,
     default: ''
   },
+  corpName: {
+    type: String,
+    default: ''
+  },
   telephone: {
     type: String,
     default: ''

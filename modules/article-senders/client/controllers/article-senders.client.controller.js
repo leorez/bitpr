@@ -58,10 +58,10 @@
     if (vm.articleSender.image3) vm.articleSender.image3 = imageRoot + vm.articleSender.image3;
 
     $http
-      .post('/api/crp-code-to-name', { crpCode: vm.articleSender.corpCode }, { headers: { 'Content-Type': 'application/json' } })
+      .post('/api/crp-code-to-name', { crpCode: vm.articleSender.corpCode })
       .then(function (response) {
         console.log(response);
-        vm.articleSender.title = response.name + ' 보도자료';
+        vm.articleSender.title = response.data.name + ' 보도자료';
       }, function (error) {
         console.log(error);
         vm.articleSender.title = '';

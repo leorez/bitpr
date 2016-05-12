@@ -31,9 +31,13 @@ exports.renderIndex = function (req, res) {
       firstName: validator.escape(req.user.firstName),
       additionalProvidersData: req.user.additionalProvidersData,
       corpCode: req.user.corpCode,
-      corpName: req.user.coprName,
+      corpName: req.user.corpName,
       telephone: req.user.telephone,
-      cellphone: req.user.cellphone
+      cellphone: req.user.cellphone,
+      keywords: req.user.keywords,
+      crawlTimeHour: req.user.crawlTimeHour,
+      crawlTimeMinutes: req.user.crawlTimeMinutes,
+      enabledCrawler: req.user.enabledCrawler
     };
   }
 

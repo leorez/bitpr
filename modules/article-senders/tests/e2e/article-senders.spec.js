@@ -88,6 +88,11 @@ describe('articleSender page tests', function () {
   //   }, 1000);
   // });
   //
+  it('should be able to display title with template', function () {
+    expect(element(by.model('vm.articleSender.title')).isPresent()).toBeTruthy();
+    expect(element(by.model('vm.articleSender.title')).getAttribute('value')).toEqual('삼성전자 보도자료');
+  });
+
   it('should have 3 image file selectors', function () {
     expect(element(by.css('#image1')).isPresent()).toBeTruthy();
     expect(element(by.css('#image2')).isPresent()).toBeTruthy();
@@ -110,7 +115,7 @@ describe('articleSender page tests', function () {
         if (isPrevewPage) {
           expect(element(by.css('#image1')).isPresent()).toBeTruthy();
           expect(element(by.css('#image2')).isPresent()).toBeTruthy();
-          expect(element(by.css('#image3')).isPresent()).toBeFalsy();
+          // expect(element(by.css('#image3')).isPresent()).toBeFalsy();
           return true;
         } else {
           return false;

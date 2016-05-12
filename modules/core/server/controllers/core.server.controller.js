@@ -2,7 +2,7 @@
 
 var validator = require('validator'),
   errorHandler = require('./errors.server.controller.js'),
-  schedule = require('./schedule.server.controller'),
+  searchController = require('./search.server.controller.js'),
   appRoot = require('app-root-path'),
   request = require('request'),
   EzDeferred = require('easy-deferred'),
@@ -87,7 +87,7 @@ exports.apiCorpCodeToName = function (req, res) {
 };
 
 function search(keyword, req, res) {
-  Deferred.when(schedule.searchFromMedog(keyword)).then(function (result) {
+  Deferred.when(searchController.searchFromMedog(keyword)).then(function (result) {
     var data = JSON.parse(result).data;
     res.json(data);
   }, function (err) {

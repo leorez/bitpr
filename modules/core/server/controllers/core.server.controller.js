@@ -44,6 +44,9 @@ exports.corpCodeToName = function (def, code) {
   // curl "http://dart.fss.or.kr/api/company.json?auth=8fe9565007f1da895e18858dda74b4ac56d77c58&crp_cd=005930"
   // dart open api key: 8fe9565007f1da895e18858dda74b4ac56d77c58
 
+  console.log('code: ' + code);
+  if (!code) def.reject('Error: code undefined');
+
   var url = 'http://dart.fss.or.kr/api/company.json?auth=8fe9565007f1da895e18858dda74b4ac56d77c58&crp_cd=' + code;
   request(url, function (error, response, body) {
     if (error) {

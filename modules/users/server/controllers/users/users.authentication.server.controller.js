@@ -7,10 +7,7 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
-  EzDeferred = require('easy-deferred'),
   User = mongoose.model('User');
-
-var coreController = require(path.resolve('./modules/core/server/controllers/core.server.controller'));
 
 // URLs for which user can't be redirected on signin
 var noReturnUrls = [
@@ -68,19 +65,7 @@ exports.signin = function (req, res, next) {
         if (err) {
           res.status(400).send(err);
         } else {
-          var def = new EzDeferred();
-          def.then(function (corpName) {
-            console.log('Result=' + corpName);
-            user.corpName = corpName;
-            user.save(function(err) {
-              res.json(user);
-            });
-          }, function (error) {
-            console.log('error ' + error);
-            res.json(user);
-          });
-
-          coreController.corpCodeToName(def, user.corpCode);
+          res.json(user);
         }
       });
     }

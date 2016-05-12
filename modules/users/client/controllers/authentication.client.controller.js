@@ -56,27 +56,6 @@
       $http.post('/api/auth/signin', vm.credentials).success(function (response) {
         // If successful we assign the response to the global user model
         vm.authentication.user = response;
-
-        // 기업명 조회해서 업데이트 하기
-        // 로그인 할때 마다 갱신
-        $http
-          .post('/api/crp-code-to-name', { crpCode: vm.authentication.user.corpCode })
-          .then(function (response) {
-            console.log(response);
-            vm.authentication.user.corpName = response.data.name;
-
-            var user = new UsersService(vm.authentication.user);
-
-            user.$update(function (response) {
-              Authentication.user = response;
-            }, function (response) {
-              console.log(response.data.message);
-            });
-
-          }, function (error) {
-            console.log(error);
-          });
-
         // And redirect to the previous or home page
         $state.go($state.previous.state.name || 'home', $state.previous.params);
       }).error(function (response) {

@@ -7,7 +7,8 @@ var data = {
   "sender"     : c.SENDER,
   "receivers"  : c.RECEIVERS,
   "content"    : c.CONTENT
-}
+};
+
 var body = JSON.stringify(data);
 
 var options = {

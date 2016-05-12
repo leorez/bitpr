@@ -20,10 +20,26 @@ var config = require('./config/config'),
   dateAdder = require('add-subtract-date'),
   DateDiff = require('date-diff'),
   moment = require('moment'),
+  mailcomposer = require('mailcomposer'),
+  process = require('process'),
   request = require('request');
 require('date-format-lite');
 
-config.db.url = 'mongodb://localhost/bitpr';
+switch (process.env.NODE_ENV) {
+  case 'test':
+    config.db.url = 'mongodb://localhost/bitpr-test';
+    break;
+  case 'development':
+    config.db.url = 'mongodb://localhost/bitpr-dev';
+    break;
+  case 'production':
+    config.db.url = 'mongodb://localhost/bitpr';
+    break;
+  default:
+    config.db.url = 'mongodb://localhost/bitpr';
+    break;
+}
+
 console.log(config.db.url);
 
 var db = mongoose.connect(config.db.url, function (err) {
@@ -83,23 +99,77 @@ var domain = 'bitpr.kr';
 var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
 
 function sendEmail(options, callback) {
-  var data = {
+  console.log('sendEmail');
+  var mail = mailcomposer({
     from: '"비트피알" <news@bitpr.kr>', // sender address
     to: options.to, // list of receivers
     subject: options.subject, // Subject line
-    text: options.html // plaintext body
-  };
+    html: options.html, // plaintext body
+    attachments: options.attachments
+  });
 
-  mailgun.messages().send(data, function (error, body) {
-    console.log(body);
-    console.log(error);
-    callback(error, body);
+  mail.build(function (mailBuildError, message) {
+    if (mailBuildError) {
+      console.error(mailBuildError);
+      callback(mailBuildError, message);
+      return;
+    }
+
+    var dataToSend = {
+      to: options.to,
+      message: message.toString('ascii')
+    };
+
+    console.log(message);
+
+    mailgun.messages().sendMime(dataToSend, function (error, body) {
+      console.log(body);
+      console.log(error);
+      callback(error, body);
+    });
   });
 }
 
-/*
+var dstRoot = __dirname+'/uploads';
+
+function attachFile(sendMailOptions, file, root) {
+  if (typeof file !== 'undefined' && file.length > 0) {
+    sendMailOptions.attachments.push({ filename: file, path: root + file });
+  }
+}
+
+function sendArticle(article) {
+  console.log('sending... '+article);
+  var sendMailOptions = {
+    to: 'noruya@gmail.com, zidell@gmail.com, smartkoh@gmail.com ',
+    subject: article.title,
+    html: '<pre><h2>' + article.title + '</h2>' + article.content + '</pre>',
+    attachments: []
+  };
+
+  attachFile(sendMailOptions, article.file, dstRoot + '/docs/');
+  attachFile(sendMailOptions, article.image1, dstRoot + '/docs/');
+  attachFile(sendMailOptions, article.image2, dstRoot + '/docs/');
+  attachFile(sendMailOptions, article.image3, dstRoot + '/docs/');
+
+  sendEmail(sendMailOptions, function (err, info) {
+    if(!err) {
+      article.status = 'Sent';
+      article.sent = new Date();
+      article.save(function (err) {
+        if (err) {
+          console.log('Error: ' + err);
+        } else {
+          console.log('Sent news : ' + article);
+        }
+      });
+    }
+  });
+}
+
+/*****************************
  ** 보도자료발송
- */
+ *****************************/
 function sendArticleEmails() {
   ArticleSender.find().sort('-reserved').exec(function (err, articleSenders) {
     if (err) {
@@ -108,35 +178,28 @@ function sendArticleEmails() {
       articleSenders.forEach(function(article) {
         if(article.status === 'Reserved') {
 
-          Date.masks.default = 'YYYY-MM-DD hh:mm:ss';
-          var t = dateAdder.subtract(article.reserved, article.reserveTime, "hour");
-          var diff = new DateDiff(new Date(), t);
-          console.log(t.format());
-          console.log('diff hours: ' + diff.hours());
-          console.log(typeof diff.hours());
+          if (article.reserveTime === 0) {
+            console.log('즉시발송');
+            sendArticle(article);
+          } else if (article.reserveTime === 999) {
+            console.log('공시이후 발송');
+          } else {
+            Date.masks.default = 'YYYY-MM-DD hh:mm:ss';
+            var t = dateAdder.add(article.reserved, article.reserveTime, "hour");
+            var diff = new DateDiff(t, new Date());
+            console.log(t.format());
+            console.log('diff hours: ' + diff.hours());
+            console.log('diff minutes: ' + diff.minutes());
+            console.log('diff seconds: ' + diff.seconds());
+            console.log(typeof diff.hours());
 
-          if(diff.hours() < 0.1) {
-            console.log('sending... '+article);
-            var sendMailOptions = {
-              to: 'noruya@gmail.com;zidell@gmail.com;smartkoh@gmail.com ',
-              subject: article.title,
-              text: '',
-              html: '<p><h2>' + article.title + '</h2>' + article.content + '</p>'
-            };
+            if (article.reserveTime > 0 && diff.minutes() <= 5.0) {
+              console.log('예약 5분전 SMS 통보');
+            }
 
-            sendEmail(sendMailOptions, function (err, info) {
-              if(!err) {
-                article.status = 'Sent';
-                article.sent = new Date();
-                article.save(function (err) {
-                  if (err) {
-                    console.log('Error: ' + err);
-                  } else {
-                    console.log('Sent news : ' + article);
-                  }
-                });
-              }
-            });
+            if(diff.minutes() < 1.0) {
+              sendArticle(article);
+            }
           }
         }
       });
@@ -144,10 +207,11 @@ function sendArticleEmails() {
   });
 }
 
-function run() {
+/*****************************
+ ** 기사수집
+ *****************************/
+function crawlArticlesEachUser() {
   var time = new Date();
-
-  sendArticleEmails();
 
   var where = {
     enabledCrawler: true,
@@ -183,10 +247,15 @@ function run() {
   });
 }
 
-var rule = new schedule.RecurrenceRule();
-rule.second = 0;
-
-var job = schedule.scheduleJob(rule, function () {
+var job = schedule.scheduleJob('*/5 * * * * *', function () {
   console.log('start');
-  run();
+  /***************************
+   * 보도자료 발송
+   **************************/
+  sendArticleEmails();
+
+  /******************************
+   *  기사수집
+   ******************************/
+  crawlArticlesEachUser();
 });

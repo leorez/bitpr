@@ -22,7 +22,7 @@ exports.searchFromMedog = function (keyword, since) {
   Date.masks.default = 'YYYY-MM-DD hh:mm:ss';
 
   if (typeof since === 'undefined' || since === '') {
-    var t = dateAdder.subtract(new Date(), 3, "day");
+    var t = dateAdder.subtract(new Date(), 3, 'day');
     since = t.format();
   }
 

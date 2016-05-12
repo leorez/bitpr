@@ -75,3 +75,4 @@ mongod
 # upload files
 modules/article-senders/server/routes/tmp/*
 uploads/images/*.*
+uploads/docs/*.*

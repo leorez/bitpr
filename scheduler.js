@@ -157,7 +157,7 @@ function phonesString(article) {
 var coreController = require('./modules/core/server/controllers/core.server.controller');
 
 function contentBuild(article, callback) {
-  coreController.corpCodeToName(article.corpCode, function (corpName, error) {
+  coreController.corpCodeToName(article.user.corpCode, function (corpName, error) {
     if (error)
       console.error(error);
 

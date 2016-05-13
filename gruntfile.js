@@ -100,11 +100,10 @@ module.exports = function (grunt) {
       schedulerTest: {
         files: ['scheduler.js', 'scheduler-test.js'],
         tasks: ['test:scheduler']
-      }
-    },
-    exec: {
-      schedulerTest: {
-        cmd: 'node scheduler-test.js'
+      },
+      bluehouselabsmsTest: {
+        files: ['bluehouselabsms.js', 'bluehouselabsms-test.js'],
+        tasks: ['test:bluehouselabsms']
       }
     },
     nodemon: {
@@ -245,6 +244,14 @@ module.exports = function (grunt) {
           return !fs.existsSync('config/env/local-development.js');
         }
       }
+    },
+    exec: {
+      schedulerTest: {
+        cmd: 'node scheduler-test.js'
+      },
+      bluehouselabsmsTest: {
+        cmd: 'node bluehouselabsms-test.js'
+      }
     }
   });
 
@@ -355,6 +362,7 @@ module.exports = function (grunt) {
   });
 
   grunt.task.registerTask('schedulerTest', 'Sarting scheduler test', ['exec:schedulerTest']);
+  grunt.task.registerTask('bluehouselabsmsTest', 'Sarting BluehouselabSMS test', ['exec:bluehouselabsmsTest']);
 
   // Lint CSS and JavaScript files.
   grunt.registerTask('lint', ['sass', 'less', 'eslint', 'csslint']);
@@ -368,6 +376,7 @@ module.exports = function (grunt) {
   grunt.registerTask('test:client', ['env:test', 'lint', 'karma:unit']);
   grunt.registerTask('test:e2e', ['env:test', 'lint', 'dropdb', 'signup', 'server', 'protractor']);
   grunt.registerTask('test:scheduler', ['env:test', 'schedulerTest']);
+  grunt.registerTask('test:bluehouselabsms', ['env:test', 'bluehouselabsmsTest']);
 
   // Run project coverage
   grunt.registerTask('coverage', ['env:test', 'lint', 'mocha_istanbul:coverage', 'karma:unit']);

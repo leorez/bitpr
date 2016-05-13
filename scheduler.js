@@ -22,6 +22,7 @@ var config = require('./config/config'),
   moment = require('moment'),
   mailcomposer = require('mailcomposer'),
   process = require('process'),
+  sms = require('./bluehouselabsms'),
   request = require('request');
 require('date-format-lite');
 
@@ -158,10 +159,22 @@ function sendArticle(article) {
       article.sent = new Date();
       article.save(function (err) {
         if (err) {
-          console.log('Error: ' + err);
+          console.error('Error: ' + err);
         } else {
           console.log('Sent news : ' + article);
         }
+      });
+
+      // send sms
+      var smsOptions = {
+        "CONTENT" : "[비트피알] 작성하신 보도자료가 발송되었습니다. (" + article.title + ")",
+        "SENDER" : "01021873886",
+        "RECEIVERS" : ["01021873886"]
+      };
+
+      sms.send(smsOptions, function (err) {
+        if (err)
+          console.error(err);
       });
     }
   });

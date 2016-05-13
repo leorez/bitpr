@@ -30,7 +30,7 @@ var req = https.request(options, function(res) {
   });
   res.on('end', function(d) {
   	if(res.statusCode==200)
-		console.log(JSON.parse(body));
+		  console.log(JSON.parse(body));
 	else
 		console.log(body);
   });

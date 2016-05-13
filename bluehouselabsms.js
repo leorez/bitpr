@@ -4,8 +4,6 @@
 'use strict';
 var https = require("https");
 
-
-
 var conf = {
   "APPID" : "bitprtest",
   "APIKEY" : "1f96bdac175e11e6bca70cc47a1fcfae"
@@ -13,7 +11,8 @@ var conf = {
 var credential = 'Basic '+new Buffer(conf.APPID+':'+conf.APIKEY).toString('base64');
 
 exports.send = function (options, callback) {
-  console.log('send start');
+  callback();
+  return;
 
   var data = {
     "sender"     : options.SENDER,
@@ -56,5 +55,4 @@ exports.send = function (options, callback) {
     console.error(e);
     callback(e);
   });
-
 };

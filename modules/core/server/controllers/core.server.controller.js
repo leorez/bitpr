@@ -47,43 +47,44 @@ exports.renderIndex = function (req, res) {
 };
 
 
-exports.corpCodeToName = function (def, code) {
+exports.corpCodeToName = function (code, callBack) {
   // Dart OpenAPI test command
   // curl "http://dart.fss.or.kr/api/company.json?auth=8fe9565007f1da895e18858dda74b4ac56d77c58&crp_cd=005930"
   // dart open api key: 8fe9565007f1da895e18858dda74b4ac56d77c58
 
   console.log('code: ' + code);
-  if (!code) def.reject('Error: code undefined');
+  if (!code) callBack('', 'Error: code undefined');
 
   var url = 'http://dart.fss.or.kr/api/company.json?auth=8fe9565007f1da895e18858dda74b4ac56d77c58&crp_cd=' + code;
   request(url, function (error, response, body) {
     if (error) {
-      def.reject(code);
+      console.error(error);
+      callBack('', error);
     } else {
       console.log(body);
       var json = JSON.parse(body);
       if (json.err_code === '000')
-        def.resolve(json.crp_nm_i);
+        callBack(json.crp_nm_i);
       else
-        def.reject(code);
+        callBack('', json.err_code);
     }
   });
 };
 
 exports.apiCorpCodeToName = function (req, res) {
   var corpCode = req.body.corpCode;
-  var def = new EzDeferred();
-  def.then(function (name) {
-    console.log('Result=' + name);
-    res.json({ name: name });
-  }, function (error) {
-    console.log('error ' + error);
-    res.status(400).send({
-      message: errorHandler.getErrorMessage(error)
-    });
-  });
 
-  exports.corpCodeToName(def, corpCode);
+  exports.corpCodeToName(corpCode, function (corpName, error) {
+    if (error) {
+      console.log('error ' + error);
+      res.status(400).send({
+        message: errorHandler.getErrorMessage(error)
+      });
+    } else {
+      console.log('Result=' + name);
+      res.json({ name: name });
+    }
+  });
 };
 
 function search(keyword, req, res) {

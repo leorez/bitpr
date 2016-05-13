@@ -139,12 +139,52 @@ function attachFile(sendMailOptions, file, root) {
   }
 }
 
+function phonesString(article) {
+  if((typeof article.user.telephone === 'undefined' || article.user.telephone === '') &&
+    (typeof article.user.cellphone === 'undefined' || article.user.cellphone === ''))
+    return '';
+
+  var phones = '(연락처 : ';
+  if (typeof article.user.telephone !== 'undefined' && article.user.telephone !== '')
+    phones += article.user.telephone + ', ';
+  if (typeof article.user.cellphone !== 'undefined' && article.user.cellphone !== '')
+    phones += article.user.cellphone;
+  phones += ')';
+
+  return phones;
+}
+
+var coreController = require('./modules/core/server/controllers/core.server.controller');
+function getCorpName(corpCode) {
+  coreController.corpCodeToName(corpCode, function (corpName, error) {
+    if (error)
+      return '';
+    else
+      return corpName;
+  });
+}
+
+function contentBuild(article) {
+  var corpName = getCorpName(article.corpCode);
+  var phones = phonesString(article);
+
+  var content = '<pre>';
+  content += '<h1>' + article.title + '</h1>';
+  content += '<p>' + corpName + ' ' + article.user.displayName + ' ' + phones + '</p>'
+  content += '<h2>보도자료</h2>';
+  content += article.content;
+  content += '</pre>';
+  return content;
+}
+
 function sendArticle(article) {
   console.log('sending... '+article);
+
+  var content = contentBuild(article);
   var sendMailOptions = {
     to: 'noruya@gmail.com, zidell@gmail.com, smartkoh@gmail.com ',
     subject: article.title,
-    html: '<pre><h2>' + article.title + '</h2>' + article.content + '</pre>',
+    html: content,
     attachments: []
   };
 
@@ -165,17 +205,21 @@ function sendArticle(article) {
         }
       });
 
-      // send sms
-      var smsOptions = {
-        "CONTENT" : "[비트피알] 작성하신 보도자료가 발송되었습니다. (" + article.title + ")",
-        "SENDER" : "01021873886",
-        "RECEIVERS" : ["01021873886"]
-      };
+      if (typeof  article.user.cellphone !== 'undefined' && article.user.cellphone.length > 0) {
+        var cellphone = article.user.cellphone.replace(/[^0-9]+/g, '');
 
-      sms.send(smsOptions, function (err) {
-        if (err)
-          console.error(err);
-      });
+        // send sms
+        var smsOptions = {
+          "CONTENT": "[비트피알] 작성하신 보도자료가 발송되었습니다. (" + article.title + ")",
+          "SENDER": "01021873886",
+          "RECEIVERS": [cellphone]
+        };
+
+        sms.send(smsOptions, function (err) {
+          if (err)
+            console.error(err);
+        });
+      }
     }
   });
 }
@@ -184,7 +228,7 @@ function sendArticle(article) {
  ** 보도자료발송
  *****************************/
 function sendArticleEmails() {
-  ArticleSender.find().sort('-reserved').exec(function (err, articleSenders) {
+  ArticleSender.find().sort('-reserved').populate('user').exec(function (err, articleSenders) {
     if (err) {
       console.log(err);
     } else {

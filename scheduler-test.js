@@ -62,17 +62,19 @@ var user1 = {
   lastName: 'user',
   email: 'noruya@gmail.com',
   username: 'testUser',
-  displayName: 'test user',
+  displayName: '홍길동',
   password: 'P@$$w0rd!!',
   provider: 'local',
+  telephone: '02-0987-6543',
   cellphone: '010-2187-3886'
 };
+
 
 var fiveMinLeft = dateAdder.subtract(new Date(), 55, "minute");
 // 즉시발송 테스트용
 var articleSender_imediate = {
   status: 'Reserved',
-  title: 'Test Title',
+  title: '백악관, 히로시마 방문은 한국인 포함 "모든 희생자 기리려는것"',
   content: 'Test Content',
   file: 'test.docx',
   image1: 'test1.jpeg',
@@ -93,15 +95,7 @@ mammoth.convertToHtml({ path: uploadsRoot + '/docs/test.docx' })
 
 // "RECEIVERS" : ["01021873886", "01027439905", "01029731203"]
 
-mongoose.connection.on('open', function(){
-  db.connection.db.dropDatabase(function (err) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log('dropped db:');
-    }
-  });
-
+var onReadyDatabase = function () {
   var user = new User(user1);
   user.save(function (err) {
     if (err) {
@@ -122,7 +116,17 @@ mongoose.connection.on('open', function(){
       });
     }
   });
+};
 
+mongoose.connection.on('open', function(){
+  db.connection.db.dropDatabase(function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('dropped db:');
+      onReadyDatabase();
+    }
+  });
 });
 
 

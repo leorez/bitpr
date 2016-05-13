@@ -90,8 +90,8 @@ exports.apiCorpCodeToName = function (req, res) {
         message: errorHandler.getErrorMessage(error)
       });
     } else {
-      console.log('Result=' + name);
-      res.json({ name: name });
+      console.log('Result=' + corpName);
+      res.json({ name: corpName });
     }
   });
 };

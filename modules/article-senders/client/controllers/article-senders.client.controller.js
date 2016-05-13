@@ -65,7 +65,7 @@
         console.log('success: ' + JSON.stringify(response));
         vm.articleSender.title = response.data.name + ' 보도자료';
       }, function (error) {
-        console.error('error: ' + error);
+        console.error('error: ' + JSON.stringify(error));
         vm.articleSender.title = '';
         if (vm.authentication.user.corpName !== '') {
           vm.articleSender.title = vm.authentication.user.corpName + ' 보도자료';

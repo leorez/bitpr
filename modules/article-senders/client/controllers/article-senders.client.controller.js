@@ -62,10 +62,10 @@
     $http
       .post('/api/crp-code-to-name', { corpCode: vm.authentication.user.corpCode })
       .then(function (response) {
-        console.log(response);
+        console.log('success: ' + JSON.stringify(response));
         vm.articleSender.title = response.data.name + ' 보도자료';
       }, function (error) {
-        console.log(error);
+        console.error('error: ' + error);
         vm.articleSender.title = '';
         if (vm.authentication.user.corpName !== '') {
           vm.articleSender.title = vm.authentication.user.corpName + ' 보도자료';

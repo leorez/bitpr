@@ -157,9 +157,18 @@ function phonesString(article) {
 var coreController = require('./modules/core/server/controllers/core.server.controller');
 
 function contentBuild(article, callback) {
-  coreController.corpCodeToName(article.corpCode, function (corpName, error) {
-    if (error)
+  coreController.corpCodeToName(article.user.corpCode, function (corpName, error) {
+    if (error) {
       console.error(error);
+      corpName = article.user.corpName;
+    } else {
+      // save corpName
+      var user = new User(article.user);
+      user.corpName = corpName;
+      user.save(function (err) {
+        if (err) console.error(err);
+      });
+    }
 
     var phones = phonesString(article);
     var content = '<pre>';

@@ -6,7 +6,8 @@
 require('./modules/users/server/models/crawled-article.server.model');
 require('./modules/users/server/models/user.server.model');
 require('./modules/article-senders/server/models/article-sender.server.model');
-var searchController = require('./modules/core/server/controllers/search.server.controller.js');
+var searchController = require('./modules/core/server/controllers/search.server.controller.js'),
+  coreController = require('./modules/core/server/controllers/core.server.controller');
 
 var config = require('./config/config'),
   mongoose = require('mongoose'),
@@ -153,8 +154,6 @@ function phonesString(article) {
 
   return phones;
 }
-
-var coreController = require('./modules/core/server/controllers/core.server.controller');
 
 function contentBuild(article, callback) {
   coreController.corpCodeToName(article.user.corpCode, function (corpName, error) {

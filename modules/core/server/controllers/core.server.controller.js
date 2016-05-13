@@ -46,7 +46,6 @@ exports.renderIndex = function (req, res) {
   });
 };
 
-
 exports.corpCodeToName = function (code, callBack) {
   // Dart OpenAPI test command
   // curl "http://dart.fss.or.kr/api/company.json?auth=8fe9565007f1da895e18858dda74b4ac56d77c58&crp_cd=005930"

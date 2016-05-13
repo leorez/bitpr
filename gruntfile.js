@@ -114,6 +114,9 @@ module.exports = function (grunt) {
           ext: 'js,html',
           watch: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
         }
+      },
+      schedulerTest: {
+        script: 'scheduler.js'
       }
     },
     concurrent: {
@@ -376,6 +379,7 @@ module.exports = function (grunt) {
   grunt.registerTask('test:client', ['env:test', 'lint', 'karma:unit']);
   grunt.registerTask('test:e2e', ['env:test', 'lint', 'dropdb', 'signup', 'server', 'protractor']);
   grunt.registerTask('test:scheduler', ['env:test', 'schedulerTest']);
+  grunt.registerTask('test:runScheduler', ['env:test', 'nodemon:schedulerTest']);
   grunt.registerTask('test:bluehouselabsms', ['env:test', 'bluehouselabsmsTest']);
 
   // Run project coverage

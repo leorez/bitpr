@@ -3,13 +3,20 @@
 		<h2>보도자료 리스트</h2>
 	</div>
 
+  <div>
+    <p>예약 전송을 취소할 수 있으며, 전송된 날짜순으로 전송결과 및 현황을 제공해 드립니다.</p>
+  </div>
 	<div class="list-group">
 		<a data-ng-repeat="item in vm.articleSenders" class="list-group-item">
-			<small class="list-group-item-text">
-				<span>{{item.created}}</span>
-			</small>
 			<h4 class="list-group-item-heading">{{item.title}}</h4>
-			<p class="list-group-item-text">{{item.content}}</p>
+      <p>{{item.status}}</p>
+      <small class="list-group-item-text">
+        <span>{{item.created}}</span>
+      </small>
+      <!--<p class="list-group-item-text" ng-bind-html="item.content"></p>-->
+      <div>
+        <button ng-show="item.status==='Reserved'">발송취소</button>
+      </div>
 		</a>
 	</div>
 </section>

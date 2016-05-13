@@ -239,6 +239,7 @@ function sendAlertSms(article) {
     "SENDER": "01021873886",
     "RECEIVERS": [cellphone]
   };
+  // smsOptions.CONTENT = "<a href='" + article._id + "'>[발송취소]</a>";
 
   sms.send(smsOptions, function (err) {
     if (err) {
@@ -281,7 +282,7 @@ function sendArticleEmails() {
             console.log(typeof diff.hours());
 
             // 예약 5분전 SMS 통보
-            if (!article.smsAlerted && diff.minutes() <= 5.0) {
+            if (!article.smsAlerted && diff.minutes() <= 5.0 && diff.minutes() > 4.0) {
               console.log('예약 5분전 SMS 통보');
               sendAlertSms(article);
             }

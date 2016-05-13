@@ -6,15 +6,15 @@ var https = require("https"),
   chalk = require('chalk');
 
 var conf = {
-  "APPID" : "bitprtest",
-  "APIKEY" : "1f96bdac175e11e6bca70cc47a1fcfae"
+  "APPID" : "bitpr",
+  "APIKEY" : "11aca76618e311e6bca70cc47a1fcfae"
 };
 var credential = 'Basic '+new Buffer(conf.APPID+':'+conf.APIKEY).toString('base64');
 
 exports.send = function (options, callback) {
-  // console.log(chalk.green('Vitual Send SMS ' + JSON.stringify(options)));
-  // callback();
-  // return;
+  console.log(chalk.green('Vitual Send SMS ' + JSON.stringify(options)));
+  callback();
+  return;
 
   var data = {
     "sender"     : options.SENDER,

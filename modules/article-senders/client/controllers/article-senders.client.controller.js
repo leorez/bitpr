@@ -59,16 +59,22 @@
 
     console.log('corpCode: ' + vm.authentication.user.corpCode);
 
+    function autoTitle(corpName) {
+      var title = corpName + ' 보도자료';
+      title += '(' + corpName + '에서 보도자료를 보내드립니다. 관심과 배려 부탁드립니다.)';
+      return title;
+    }
+
     $http
       .post('/api/crp-code-to-name', { corpCode: vm.authentication.user.corpCode })
       .then(function (response) {
         console.log('success: ' + JSON.stringify(response));
-        vm.articleSender.title = response.data.name + ' 보도자료';
+        vm.articleSender.title = autoTitle(response.data.name);
       }, function (error) {
         console.error('error: ' + JSON.stringify(error));
         vm.articleSender.title = '';
         if (vm.authentication.user.corpName !== '') {
-          vm.articleSender.title = vm.authentication.user.corpName + ' 보도자료';
+          vm.articleSender.title = autoTitle(vm.authentication.user.corpName);
         }
       });
 

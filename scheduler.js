@@ -235,7 +235,7 @@ function sendAlertSms(article) {
 
   // send sms
   var smsOptions = {
-    "CONTENT": "[비트피알] 작성하신 보도자료(" + article.title + ")가 5분후에 발송됩니다. 취소하시려면 취소버튼을 눌러주세요 <button>[취소]</button>",
+    "CONTENT": "[비트피알] 작성하신 보도자료(" + article.title + ")가 5분후에 발송됩니다. 취소하시려면 [발송취소]를 눌러주세요 <a href='http://test.bitpr.kr:9292/cancel-article-sender/" + article._id + "'>[발송취소]</a>",
     "SENDER": "01021873886",
     "RECEIVERS": [cellphone]
   };

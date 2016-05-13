@@ -155,73 +155,71 @@ function phonesString(article) {
 }
 
 var coreController = require('./modules/core/server/controllers/core.server.controller');
-function getCorpName(corpCode) {
-  coreController.corpCodeToName(corpCode, function (corpName, error) {
+
+function contentBuild(article, callback) {
+  coreController.corpCodeToName(article.corpCode, function (corpName, error) {
     if (error)
-      return '';
-    else
-      return corpName;
+      console.error(error);
+
+    var phones = phonesString(article);
+    var content = '<pre>';
+    content += '<h1>' + article.title + '</h1>';
+    content += '<p>' + corpName + ' ' + article.user.displayName + ' ' + phones + '</p>'
+    content += '<h2>보도자료</h2>';
+    content += article.content;
+    content += '</pre>';
+    callback(content);
   });
-}
-
-function contentBuild(article) {
-  var corpName = getCorpName(article.corpCode);
-  var phones = phonesString(article);
-
-  var content = '<pre>';
-  content += '<h1>' + article.title + '</h1>';
-  content += '<p>' + corpName + ' ' + article.user.displayName + ' ' + phones + '</p>'
-  content += '<h2>보도자료</h2>';
-  content += article.content;
-  content += '</pre>';
-  return content;
 }
 
 function sendArticle(article) {
   console.log('sending... '+article);
 
-  var content = contentBuild(article);
-  var sendMailOptions = {
-    to: 'noruya@gmail.com, zidell@gmail.com, smartkoh@gmail.com ',
-    subject: article.title,
-    html: content,
-    attachments: []
+  var onContentReady = function (content) {
+    var sendMailOptions = {
+      to: 'noruya@gmail.com, zidell@gmail.com, smartkoh@gmail.com ',
+      subject: article.title,
+      html: content,
+      attachments: []
+    };
+
+    attachFile(sendMailOptions, article.file, dstRoot + '/docs/');
+    attachFile(sendMailOptions, article.image1, dstRoot + '/docs/');
+    attachFile(sendMailOptions, article.image2, dstRoot + '/docs/');
+    attachFile(sendMailOptions, article.image3, dstRoot + '/docs/');
+
+    sendEmail(sendMailOptions, function (err, info) {
+      if(!err) {
+        article.status = 'Sent';
+        article.sent = new Date();
+        article.save(function (err) {
+          if (err) {
+            console.error('Error: ' + err);
+          } else {
+            console.log('Sent news : ' + article);
+          }
+        });
+
+        if (typeof  article.user.cellphone !== 'undefined' && article.user.cellphone.length > 0) {
+          var cellphone = article.user.cellphone.replace(/[^0-9]+/g, '');
+
+          // send sms
+          var smsOptions = {
+            "CONTENT": "[비트피알] 작성하신 보도자료가 발송되었습니다. (" + article.title + ")",
+            "SENDER": "01021873886",
+            "RECEIVERS": [cellphone]
+          };
+
+          sms.send(smsOptions, function (err) {
+            if (err)
+              console.error(err);
+          });
+        }
+      }
+    });
   };
 
-  attachFile(sendMailOptions, article.file, dstRoot + '/docs/');
-  attachFile(sendMailOptions, article.image1, dstRoot + '/docs/');
-  attachFile(sendMailOptions, article.image2, dstRoot + '/docs/');
-  attachFile(sendMailOptions, article.image3, dstRoot + '/docs/');
-
-  sendEmail(sendMailOptions, function (err, info) {
-    if(!err) {
-      article.status = 'Sent';
-      article.sent = new Date();
-      article.save(function (err) {
-        if (err) {
-          console.error('Error: ' + err);
-        } else {
-          console.log('Sent news : ' + article);
-        }
-      });
-
-      if (typeof  article.user.cellphone !== 'undefined' && article.user.cellphone.length > 0) {
-        var cellphone = article.user.cellphone.replace(/[^0-9]+/g, '');
-
-        // send sms
-        var smsOptions = {
-          "CONTENT": "[비트피알] 작성하신 보도자료가 발송되었습니다. (" + article.title + ")",
-          "SENDER": "01021873886",
-          "RECEIVERS": [cellphone]
-        };
-
-        sms.send(smsOptions, function (err) {
-          if (err)
-            console.error(err);
-        });
-      }
-    }
-  });
+  contentBuild(article, onContentReady);
 }
 
 /*****************************

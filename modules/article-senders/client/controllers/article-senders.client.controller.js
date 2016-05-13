@@ -57,14 +57,19 @@
     if (vm.articleSender.image2) vm.articleSender.image2 = imageRoot + vm.articleSender.image2;
     if (vm.articleSender.image3) vm.articleSender.image3 = imageRoot + vm.articleSender.image3;
 
+    console.log('corpCode: ' + vm.authentication.user.corpCode);
+
     $http
-      .post('/api/crp-code-to-name', { crpCode: vm.authentication.corpCode })
+      .post('/api/crp-code-to-name', { corpCode: vm.authentication.user.corpCode })
       .then(function (response) {
         console.log(response);
         vm.articleSender.title = response.data.name + ' 보도자료';
       }, function (error) {
         console.log(error);
         vm.articleSender.title = '';
+        if (vm.authentication.user.corpName !== '') {
+          vm.articleSender.title = vm.authentication.user.corpName + ' 보도자료';
+        }
       });
 
     vm.bill = bill;

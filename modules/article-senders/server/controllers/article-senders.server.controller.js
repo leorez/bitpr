@@ -25,12 +25,13 @@ var saveArticleSender = function (articleSender, req, res) {
   });
 };
 
-function saveImage(image) {
-  if (image) {
-    var uploadRoot = appRoot + '/uploads';
-    var filename = path.basename(image.path);
-    var savePath = uploadRoot + '/images/' + filename;
-    fs.move(image.path, savePath, function (err) {
+var _uploadRoot = appRoot + '/uploads';
+
+function saveFile(file, subpath) {
+  if (file) {
+    var filename = path.basename(file.path);
+    var savePath = _uploadRoot + subpath + filename;
+    fs.move(file.path, savePath, function (err) {
       if (err) console.error(err);
       console.log('mv success' + savePath);
     });
@@ -40,6 +41,14 @@ function saveImage(image) {
   }
 
   return undefined;
+}
+
+function saveImage(image) {
+  return saveFile(image, '/images/');
+}
+
+function saveDoc(file) {
+  return saveFile(file, '/docs/');
 }
 
 /**
@@ -68,6 +77,10 @@ exports.create = function (req, res) {
     }
 
     if (files.file) {
+      var filepath = saveDoc(files.file);
+      if (filepath)
+        articleSender.file = filepath;
+
       mammoth.convertToHtml({ path: files.file.path })
         .then(function (result) {
           articleSender.content = result.value;

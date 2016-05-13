@@ -2,7 +2,8 @@
  * Created by noruya on 16. 5. 13.
  */
 'use strict';
-var https = require("https");
+var https = require("https"),
+  chalk = require('chalk');
 
 var conf = {
   "APPID" : "bitprtest",
@@ -11,8 +12,9 @@ var conf = {
 var credential = 'Basic '+new Buffer(conf.APPID+':'+conf.APIKEY).toString('base64');
 
 exports.send = function (options, callback) {
-  callback();
-  return;
+  // console.log(chalk.green('Vitual Send SMS ' + JSON.stringify(options)));
+  // callback();
+  // return;
 
   var data = {
     "sender"     : options.SENDER,
@@ -22,7 +24,7 @@ exports.send = function (options, callback) {
 
   var body = JSON.stringify(data);
 
-  var options = {
+  var httpsOptions = {
     host: 'api.bluehouselab.com',
     port: 443,
     path: '/smscenter/v1.0/sendsms',
@@ -34,7 +36,7 @@ exports.send = function (options, callback) {
     method: 'POST'
   };
 
-  var req = https.request(options, function(res) {
+  var req = https.request(httpsOptions, function(res) {
     console.log(res.statusCode);
     var body = "";
     res.on('data', function(d) {

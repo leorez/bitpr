@@ -91,7 +91,7 @@ var search = function (usersCnt, user, since) {
         }
       }
     }, function (err) {
-      console.log(err);
+      console.error(err);
     });
   });
 };
@@ -181,7 +181,7 @@ function contentBuild(article, callback) {
 }
 
 function sendArticle(article) {
-  console.log('sending... '+article);
+  console.log('sending... ');
 
   var onContentReady = function (content) {
     var sendMailOptions = {
@@ -192,9 +192,9 @@ function sendArticle(article) {
     };
 
     attachFile(sendMailOptions, article.file, dstRoot + '/docs/');
-    attachFile(sendMailOptions, article.image1, dstRoot + '/docs/');
-    attachFile(sendMailOptions, article.image2, dstRoot + '/docs/');
-    attachFile(sendMailOptions, article.image3, dstRoot + '/docs/');
+    attachFile(sendMailOptions, article.image1, dstRoot + '/images/');
+    attachFile(sendMailOptions, article.image2, dstRoot + '/images/');
+    attachFile(sendMailOptions, article.image3, dstRoot + '/images/');
 
     sendEmail(sendMailOptions, function (err, info) {
       if(!err) {
@@ -204,7 +204,7 @@ function sendArticle(article) {
           if (err) {
             console.error('Error: ' + err);
           } else {
-            console.log('Sent news : ' + article);
+            console.log(chalk.blue('발송완료: ' + article.title));
           }
         });
 
@@ -230,13 +230,37 @@ function sendArticle(article) {
   contentBuild(article, onContentReady);
 }
 
+function sendAlertSms(article) {
+  var cellphone = article.user.cellphone.replace(/[^0-9]+/g, '');
+
+  // send sms
+  var smsOptions = {
+    "CONTENT": "[비트피알] 작성하신 보도자료(" + article.title + ")가 5분후에 발송됩니다. 취소하시려면 취소버튼을 눌러주세요 <button>[취소]</button>",
+    "SENDER": "01021873886",
+    "RECEIVERS": [cellphone]
+  };
+
+  sms.send(smsOptions, function (err) {
+    if (err) {
+      console.error(chalk.red(err));
+    } else {
+      article.smsAlerted = true;
+      article.save(function (err) {
+        if (err) {
+          console.error(chalk.red('Error: ' + err));
+        }
+      });
+    }
+  });
+}
+
 /*****************************
  ** 보도자료발송
  *****************************/
 function sendArticleEmails() {
   ArticleSender.find().sort('-reserved').populate('user').exec(function (err, articleSenders) {
     if (err) {
-      console.log(err);
+      console.error(err);
     } else {
       articleSenders.forEach(function(article) {
         if(article.status === 'Reserved') {
@@ -256,11 +280,14 @@ function sendArticleEmails() {
             console.log('diff seconds: ' + diff.seconds());
             console.log(typeof diff.hours());
 
-            if (article.reserveTime > 0 && diff.minutes() <= 5.0) {
+            // 예약 5분전 SMS 통보
+            if (!article.smsAlerted && diff.minutes() <= 5.0) {
               console.log('예약 5분전 SMS 통보');
+              sendAlertSms(article);
             }
 
-            if(diff.minutes() < 1.0) {
+            // 예약시간이 되면 발송
+            if(diff.minutes() < 0.1) {
               sendArticle(article);
             }
           }
@@ -310,7 +337,7 @@ function crawlArticlesEachUser() {
   });
 }
 
-var job = schedule.scheduleJob('*/5 * * * * *', function () {
+var job = schedule.scheduleJob('*/30 * * * * *', function () {
   console.log('start');
   /***************************
    * 보도자료 발송

@@ -104,7 +104,7 @@ describe('articleSender page tests', function () {
     page.fileEl.sendKeys(__dirname + '/test.docx');
     element(by.model('vm.articleSender.image1')).sendKeys(__dirname + '/test1.jpeg');
     element(by.model('vm.articleSender.image2')).sendKeys(__dirname + '/test2.jpeg');
-    element(by.cssContainingText('option', '1시간후')).click();
+    element(by.cssContainingText('option', '즉시')).click();
     element(by.cssContainingText('option', '2개')).click();
     expect(page.fareEl.getText()).toContain('800000원');
     element(by.css('button[type="submit"]')).click();

@@ -21,10 +21,15 @@ var ArticleSenderSchema = new Schema({
     type: Date
   },
   status: {
-    // 'None', 'Reserved', 'Sent', 'Error'
+    // 'None', 'Reserved', 'Sent', 'Error', 'Canceled'
     type: String,
     default: 'None',
     trim: true
+  },
+  smsAlerted: {
+    // 발송 5분전에 sms통보했는지 여부
+    type: Boolean,
+    default: false
   },
   title: {
     type: String,

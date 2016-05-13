@@ -6,6 +6,7 @@ var validator = require('validator'),
   appRoot = require('app-root-path'),
   request = require('request'),
   EzDeferred = require('easy-deferred'),
+  chalk = require('chalk'),
   Deferred = require('deferred-js');
 
 exports.images = function (req, res) {
@@ -57,10 +58,10 @@ exports.corpCodeToName = function (code, callBack) {
   var url = 'http://dart.fss.or.kr/api/company.json?auth=8fe9565007f1da895e18858dda74b4ac56d77c58&crp_cd=' + code;
   request(url, function (error, response, body) {
     if (error) {
-      console.error(error);
+      console.error(chalk.red(error));
       callBack('', error);
     } else {
-      console.log(body);
+      // console.log(body);
       var json = JSON.parse(body);
       if (json.err_code === '000')
         callBack(json.crp_nm_i);
@@ -73,9 +74,18 @@ exports.corpCodeToName = function (code, callBack) {
 exports.apiCorpCodeToName = function (req, res) {
   var corpCode = req.body.corpCode;
 
+  if (!corpCode) {
+    var msg = 'corpCode not exists';
+    console.error(msg);
+    res.status(400).send({
+      message: errorHandler.getErrorMessage(msg)
+    });
+    return;
+  }
+
   exports.corpCodeToName(corpCode, function (corpName, error) {
     if (error) {
-      console.log('error ' + error);
+      console.error('error ' + error);
       res.status(400).send({
         message: errorHandler.getErrorMessage(error)
       });

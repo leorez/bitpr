@@ -324,13 +324,16 @@ module.exports = function (grunt) {
 
     var user1 = {
       corpCode: '005930',
+      corpName: '거북선최고',
       firstName: 'test',
       lastName: 'user',
       email: 'test.user@meanjs.com',
       username: 'testUser',
-      displayName: 'test user',
+      displayName: '이순신',
       password: 'P@$$w0rd!!',
-      provider: 'local'
+      provider: 'local',
+      telephone: '032-1234-5678',
+      cellphone: '010-2187-3886'
     };
 
     // Use mongoose configuration
@@ -381,6 +384,8 @@ module.exports = function (grunt) {
   grunt.registerTask('test:scheduler', ['env:test', 'schedulerTest']);
   grunt.registerTask('test:runScheduler', ['env:test', 'nodemon:schedulerTest']);
   grunt.registerTask('test:bluehouselabsms', ['env:test', 'bluehouselabsmsTest']);
+
+  grunt.registerTask('dev:runScheduler', ['env:dev', 'nodemon:schedulerTest']);
 
   // Run project coverage
   grunt.registerTask('coverage', ['env:test', 'lint', 'mocha_istanbul:coverage', 'karma:unit']);

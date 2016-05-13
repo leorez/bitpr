@@ -48,9 +48,9 @@ console.log(uploadsRoot);
 
 try {
   fs.copySync(e2etestRoot + '/test.docx', uploadsRoot + '/docs/test.docx');
-  fs.copySync(e2etestRoot + '/test1.jpeg', uploadsRoot + '/docs/test1.jpeg');
-  fs.copySync(e2etestRoot + '/test2.jpeg', uploadsRoot + '/docs/test2.jpeg');
-  fs.copySync(e2etestRoot + '/test3.jpg', uploadsRoot + '/docs/test3.jpg');
+  fs.copySync(e2etestRoot + '/test1.jpeg', uploadsRoot + '/images/test1.jpeg');
+  fs.copySync(e2etestRoot + '/test2.jpeg', uploadsRoot + '/images/test2.jpeg');
+  fs.copySync(e2etestRoot + '/test3.jpg', uploadsRoot + '/images/test3.jpg');
   console.log('success copy files');
 } catch (err) {
   console.error(err);
@@ -58,6 +58,7 @@ try {
 
 var user1 = {
   corpCode: '005930',
+  corpName: '거북선',
   firstName: 'test',
   lastName: 'user',
   email: 'noruya@gmail.com',
@@ -69,12 +70,10 @@ var user1 = {
   cellphone: '010-2187-3886'
 };
 
-
-var fiveMinLeft = dateAdder.subtract(new Date(), 55, "minute");
 // 즉시발송 테스트용
 var articleSender_imediate = {
   status: 'Reserved',
-  title: '백악관, 히로시마 방문은 한국인 포함 "모든 희생자 기리려는것"',
+  title: '거북선 보도자료',
   content: 'Test Content',
   file: 'test.docx',
   image1: 'test1.jpeg',
@@ -86,9 +85,26 @@ var articleSender_imediate = {
   fare: 500000
 };
 
+// 1시간후 예약발송 테스트용
+// 테스트를 용이 하게 하기 위해 예약시간을 55분지난 시간으로 설정
+var articleSender_1hour = {
+  status: 'Reserved',
+  title: '거북선 보도자료 (1시간후)',
+  content: 'Test Content',
+  file: 'test.docx',
+  image1: 'test1.jpeg',
+  image2: 'test2.jpeg',
+  image3: 'test3.jpg',
+  reserveTime: 1,
+  reserved: dateAdder.subtract(new Date(), 55, "minute"),
+  sendCount: 1,
+  fare: 500000
+};
+
 mammoth.convertToHtml({ path: uploadsRoot + '/docs/test.docx' })
   .then(function (result) {
     articleSender_imediate.content = result.value;
+    articleSender_1hour.content = result.value;
   }, function (err) {
     console.error('err: ' + err);
   }).done();
@@ -105,13 +121,34 @@ var onReadyDatabase = function () {
       articleSender_imediate.user = user;
       var article = new ArticleSender(articleSender_imediate);
 
-      article.save(function (err) {
+      // 즉식발송
+      // article.save(function (err) {
+      //   if (err) {
+      //     console.log(err);
+      //   } else {
+      //     console.log('success save articleSender_imediate');
+      //   }
+      //
+      //   // 1hour
+      //   articleSender_1hour.user = user;
+      //   (new ArticleSender(articleSender_1hour)).save(function (err) {
+      //     if (err) {
+      //       console.log(err);
+      //     } else {
+      //       console.log('success save articleSender_1hour');
+      //     }
+      //     closeDB();
+      //   });
+      // });
+
+      // 1hour
+      articleSender_1hour.user = user;
+      (new ArticleSender(articleSender_1hour)).save(function (err) {
         if (err) {
           console.log(err);
         } else {
-          console.log('success save articleSender_imediate');
+          console.log('success save articleSender_1hour');
         }
-
         closeDB();
       });
     }

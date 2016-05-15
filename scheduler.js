@@ -185,7 +185,7 @@ function sendArticle(article) {
 
   var onContentReady = function (content) {
     var sendMailOptions = {
-      to: 'noruya@gmail.com, zidell@gmail.com, smartkoh@gmail.com ',
+      to: 'noruya@gmail.com',
       subject: article.title,
       html: content,
       attachments: []
@@ -236,7 +236,7 @@ function sendAlertSms(article) {
   // send sms
   var smsOptions = {
     "CONTENT": "[비트피알] 작성하신 보도자료(" + article.title + ")가 5분후에 발송됩니다. 취소하시려면 [발송취소]를 눌러주세요 <a href='http://test.bitpr.kr:9292/cancel-article-sender/" + article._id + "'>[발송취소]</a>",
-    "SENDER": "01021873886",
+    "SENDER": "025981234",
     "RECEIVERS": [cellphone]
   };
   // smsOptions.CONTENT = "<a href='" + article._id + "'>[발송취소]</a>";

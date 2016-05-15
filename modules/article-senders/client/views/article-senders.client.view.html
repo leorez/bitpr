@@ -9,14 +9,17 @@
 	<div class="list-group">
 		<a data-ng-repeat="item in vm.articleSenders" class="list-group-item">
 			<h4 class="list-group-item-heading">{{item.title}}</h4>
-      <p>{{item.status}}</p>
+      <p>{{item.status | status}}</p>
       <small class="list-group-item-text">
         <span>{{item.created}}</span>
       </small>
-      <!--<p class="list-group-item-text" ng-bind-html="item.content"></p>-->
       <div>
-        <button ng-show="item.status==='Reserved'">발송취소</button>
+          <label>발송시점</label>
+          <span>{{item.reserveTime | reserveTime}}</span>
       </div>
+      <div>
+      <button ng-show="item.status==='Reserved' && item.reserveTime !== 0">발송취소</button>
+    </div>
 		</a>
 	</div>
 </section>

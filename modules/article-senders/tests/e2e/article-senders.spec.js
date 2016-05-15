@@ -139,12 +139,13 @@ describe('articleSender page tests', function () {
         expect(isPrevewPage).toBeTruthy();
         if (isPrevewPage) {
           element(by.buttonText('발송')).click();
-          
-          browser.wait(function () {
-            return browser.getCurrentUrl().then(function (url) {
-              return /article-senders/.test(url);
-            });
-          }, 1000);
+          // element(by.buttonText('닫기')).click();
+
+          // browser.wait(function () {
+          //   return browser.getCurrentUrl().then(function (url) {
+          //     return /article-senders$/.test(url);
+          //   });
+          // }, 1000);
         } else {
           return false;
         }

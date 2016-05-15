@@ -145,9 +145,9 @@ function phonesString(article) {
     (typeof article.user.cellphone === 'undefined' || article.user.cellphone === ''))
     return '';
 
-  var phones = '(연락처 : ';
+  var phones = '(';
   if (typeof article.user.telephone !== 'undefined' && article.user.telephone !== '')
-    phones += article.user.telephone + ', ';
+    phones += article.user.telephone + '/ ';
   if (typeof article.user.cellphone !== 'undefined' && article.user.cellphone !== '')
     phones += article.user.cellphone;
   phones += ')';
@@ -171,9 +171,14 @@ function contentBuild(article, callback) {
 
     var phones = phonesString(article);
     var content = '<pre>';
+    content += '<h1 style="text-align: center">보도자료</h1>';
+    content += '<hr/>';
+    content += '<h3 style="text-align: center">(주) ' + corpName + '</h3>';
+    content += '<hr/>';
+    content += 'Date <span style="margin-left: 10px">' + (new Date()).format('YYYY.M.D') + '</span>';
+    content += '<p>Company <span style="margin-left: 10px">' + corpName + ' ' + article.user.displayName + ' ' + phones + '</span></p>'
+    content += '<hr/>';
     content += '<h1>' + article.title + '</h1>';
-    content += '<p>' + corpName + ' ' + article.user.displayName + ' ' + phones + '</p>'
-    content += '<h2>보도자료</h2>';
     content += article.content;
     content += '</pre>';
     callback(content);
@@ -184,6 +189,7 @@ function sendArticle(article) {
   console.log('sending... ');
 
   var onContentReady = function (content) {
+    console.log(content);
     var sendMailOptions = {
       to: 'noruya@gmail.com',
       subject: article.title,
@@ -214,7 +220,7 @@ function sendArticle(article) {
           // send sms
           var smsOptions = {
             "CONTENT": "[비트피알] 작성하신 보도자료가 발송되었습니다. (" + article.title + ")",
-            "SENDER": "01021873886",
+            "SENDER": "025981234",
             "RECEIVERS": [cellphone]
           };
 

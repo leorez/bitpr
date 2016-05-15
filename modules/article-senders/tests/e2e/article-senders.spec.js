@@ -116,6 +116,8 @@ describe('articleSender page tests', function () {
           expect(element(by.css('#image1')).isPresent()).toBeTruthy();
           expect(element(by.css('#image2')).isPresent()).toBeTruthy();
           // expect(element(by.css('#image3')).isPresent()).toBeFalsy();
+          element(by.buttonText('발송')).click();
+          element(by.buttonText('닫기')).click();
           return true;
         } else {
           return false;

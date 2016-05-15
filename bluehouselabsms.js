@@ -12,9 +12,9 @@ var conf = {
 var credential = 'Basic '+new Buffer(conf.APPID+':'+conf.APIKEY).toString('base64');
 
 exports.send = function (options, callback) {
-  console.log(chalk.green('Vitual Send SMS ' + JSON.stringify(options)));
-  callback();
-  return;
+  // console.log(chalk.green('Vitual Send SMS ' + JSON.stringify(options)));
+  // callback();
+  // return;
 
   var data = {
     "sender"     : options.SENDER,

@@ -17,6 +17,9 @@ var ArticleSenderSchema = new Schema({
   reserved: {
     type: Date
   },
+  canceled: {
+    type: Date
+  },
   sent: {
     type: Date
   },

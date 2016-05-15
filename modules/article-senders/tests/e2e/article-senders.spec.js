@@ -124,12 +124,10 @@ describe('articleSender page tests', function () {
     }, 10000);
   });
 
-  it('should be seen list page when click sendArticle button in previewPage', function () {
+  it('should be able to submit with docx file and 1시간후', function () {
     page.titleEl.sendKeys('test');
     page.fileEl.sendKeys(__dirname + '/test.docx');
-    element(by.model('vm.articleSender.image1')).sendKeys(__dirname + '/test1.jpeg');
-    element(by.model('vm.articleSender.image2')).sendKeys(__dirname + '/test2.jpeg');
-    element(by.cssContainingText('option', '즉시')).click();
+    element(by.cssContainingText('option', '1시간후')).click();
     element(by.cssContainingText('option', '2개')).click();
     expect(page.fareEl.getText()).toContain('800000원');
     element(by.css('button[type="submit"]')).click();
@@ -139,19 +137,43 @@ describe('articleSender page tests', function () {
         expect(isPrevewPage).toBeTruthy();
         if (isPrevewPage) {
           element(by.buttonText('발송')).click();
-          // element(by.buttonText('닫기')).click();
-
-          // browser.wait(function () {
-          //   return browser.getCurrentUrl().then(function (url) {
-          //     return /article-senders$/.test(url);
-          //   });
-          // }, 1000);
+          element(by.buttonText('닫기')).click();
+          return true;
         } else {
           return false;
         }
       });
     }, 10000);
   });
+
+  // it('should be seen list page when click sendArticle button in previewPage', function () {
+  //   page.titleEl.sendKeys('test');
+  //   page.fileEl.sendKeys(__dirname + '/test.docx');
+  //   element(by.model('vm.articleSender.image1')).sendKeys(__dirname + '/test1.jpeg');
+  //   element(by.model('vm.articleSender.image2')).sendKeys(__dirname + '/test2.jpeg');
+  //   element(by.cssContainingText('option', '즉시')).click();
+  //   element(by.cssContainingText('option', '2개')).click();
+  //   expect(page.fareEl.getText()).toContain('800000원');
+  //   element(by.css('button[type="submit"]')).click();
+  //   browser.wait(function () {
+  //     return browser.getCurrentUrl().then(function (url) {
+  //       var isPrevewPage = /article-senders\/([0-9a-fA-F]{24})$/.test(url);
+  //       expect(isPrevewPage).toBeTruthy();
+  //       if (isPrevewPage) {
+  //         element(by.buttonText('발송')).click();
+  //         // element(by.buttonText('닫기')).click();
+  //
+  //         // browser.wait(function () {
+  //         //   return browser.getCurrentUrl().then(function (url) {
+  //         //     return /article-senders$/.test(url);
+  //         //   });
+  //         // }, 1000);
+  //       } else {
+  //         return false;
+  //       }
+  //     });
+  //   }, 10000);
+  // });
 
   // it('should be able to submit with docx file and no images', function () {
   //   page.titleEl.sendKeys('test');
@@ -182,3 +204,19 @@ describe('articleSender page tests', function () {
   // });
 });
 
+describe('Given article-senders list page', function () {
+  beforeEach(function () {
+    browser.get('/article-senders');
+  });
+
+  describe('When click cancel button', function () {
+    it('should be able to see canceled item', function() {
+      element(by.buttonText('발송취소')).click();
+      browser.driver.sleep(1000);
+      element(by.css('.md-primary md-button md-default-theme md-ink-ripple')).click();
+      expect(true).toBeTruthy();
+      // expect(element(by.binding('item.status')).getText()).toBe('발송취소');
+    });
+  });
+
+});

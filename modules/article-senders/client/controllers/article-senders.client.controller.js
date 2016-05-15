@@ -85,6 +85,7 @@
     vm.cancel = cancel;
     vm.sendArticle = sendArticle;
 
+    // 보도자료발송 작성중 취소버튼 클릭시 실행
     function cancel() {
       var confirm = $mdDialog.confirm()
         .textContent('취소하시면 입력하신 자료가 유실됩니다. 취소하시겠습니까?')

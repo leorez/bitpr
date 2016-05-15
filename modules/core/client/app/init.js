@@ -13,6 +13,7 @@
   function bootstrapConfig($locationProvider, $httpProvider) {
     $locationProvider.html5Mode(true).hashPrefix('!');
 
+    $httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('authInterceptor');
   }
 

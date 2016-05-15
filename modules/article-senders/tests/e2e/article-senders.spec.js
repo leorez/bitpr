@@ -90,7 +90,7 @@ describe('articleSender page tests', function () {
   //
   it('should be able to display title with template', function () {
     expect(element(by.model('vm.articleSender.title')).isPresent()).toBeTruthy();
-    expect(element(by.model('vm.articleSender.title')).getAttribute('value')).toEqual('삼성전자 보도자료');
+    expect(element(by.model('vm.articleSender.title')).getAttribute('value')).toEqual('거북선최고 보도자료(거북선최고에서 보도자료를 보내드립니다. 관심과 배려 부탁드립니다.)');
   });
 
   it('should have 3 image file selectors', function () {
@@ -117,6 +117,34 @@ describe('articleSender page tests', function () {
           expect(element(by.css('#image2')).isPresent()).toBeTruthy();
           // expect(element(by.css('#image3')).isPresent()).toBeFalsy();
           return true;
+        } else {
+          return false;
+        }
+      });
+    }, 10000);
+  });
+
+  it('should be seen list page when click sendArticle button in previewPage', function () {
+    page.titleEl.sendKeys('test');
+    page.fileEl.sendKeys(__dirname + '/test.docx');
+    element(by.model('vm.articleSender.image1')).sendKeys(__dirname + '/test1.jpeg');
+    element(by.model('vm.articleSender.image2')).sendKeys(__dirname + '/test2.jpeg');
+    element(by.cssContainingText('option', '즉시')).click();
+    element(by.cssContainingText('option', '2개')).click();
+    expect(page.fareEl.getText()).toContain('800000원');
+    element(by.css('button[type="submit"]')).click();
+    browser.wait(function () {
+      return browser.getCurrentUrl().then(function (url) {
+        var isPrevewPage = /article-senders\/([0-9a-fA-F]{24})$/.test(url);
+        expect(isPrevewPage).toBeTruthy();
+        if (isPrevewPage) {
+          element(by.buttonText('발송')).click();
+          
+          browser.wait(function () {
+            return browser.getCurrentUrl().then(function (url) {
+              return /article-senders/.test(url);
+            });
+          }, 1000);
         } else {
           return false;
         }
@@ -152,3 +180,4 @@ describe('articleSender page tests', function () {
   //   expect(page.errorEl.getText()).toContain("'MS Word'가 아닙니다. 파일을 확인해주세요.");
   // });
 });
+

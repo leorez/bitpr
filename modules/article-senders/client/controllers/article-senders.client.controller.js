@@ -83,6 +83,7 @@
     vm.update = update;
     vm.remove = remove;
     vm.cancel = cancel;
+    vm.sendArticle = sendArticle;
 
     function cancel() {
       var confirm = $mdDialog.confirm()
@@ -155,10 +156,9 @@
       }
     }
 
-    $scope.send = function (id) {
+    function sendArticle() {
       console.log('send call');
-      console.log(id);
-      $http.post('/api/article-senders-send', {}).success(function (response) {
+      $http.post('/api/article-senders-send', { articleSenderId: vm.articleSender._id }).success(function (response) {
         console.log(response);
         var alert = $mdDialog.alert()
           .title('발송')
@@ -169,12 +169,15 @@
           .show(alert)
           .finally(function () {
             alert = undefined;
+            $state.go('article-senders.list', {
+              articleSenderId: response._id
+            });
           });
       }).error(function (response) {
         console.log(response.message);
         vm.error = response.message;
       });
-    };
+    }
 
     function update(isValid) {
       if (isValid) {

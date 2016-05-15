@@ -100,16 +100,27 @@ exports.create = function (req, res) {
   }
 };
 
-exports.send = function (req, res) {
+exports.sendArticle = function (req, res) {
   console.log('send ---');
   console.log(req.body);
-  var sendMailOptions = {
-    to: 'noruya@gmail.com',
-    subject: 'test mail',
-    text: '',
-    html: '<p>test html</p>'
-  };
-  res.json({ status: 'ok', message: 'success' });
+
+  ArticleSender.findById(req.body.articleSenderId).populate('user', 'displayName').exec(function (err, articleSender) {
+    // if (err) return next(err);
+    // if (!articleSender) return next(new Error('Failed to load articleSender ' + id));
+    console.log(articleSender);
+    articleSender.reserved = new Date();
+    articleSender.status = 'Reserved';
+
+    articleSender.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          messeage: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json({ status: 'ok', message: 'success' });
+      }
+    });
+  });
 };
 
 /**
@@ -121,22 +132,8 @@ exports.read = function (req, res) {
   ArticleSender.findById(req.articleSender._id).populate('user', 'displayName').exec(function (err, articleSender) {
     // if (err) return next(err);
     // if (!articleSender) return next(new Error('Failed to load articleSender ' + id));
-
     console.log(articleSender);
-    req.articleSender = articleSender;
-
-    // update reserved
-    articleSender.reserved = new Date();
-    articleSender.status = 'Reserved';
-    articleSender.save(function (err) {
-      if (err) {
-        return res.status(400).send({
-          messeage: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json(req.articleSender);
-      }
-    });
+    res.json(articleSender);
   });
 };
 

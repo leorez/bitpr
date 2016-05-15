@@ -17,7 +17,7 @@
 
     // Add the dropdown list item
     menuService.addSubMenuItem('topbar', 'article-senders', {
-      title: '발송목록',
+      title: '발송현황',
       state: 'article-senders.list'
     });
 

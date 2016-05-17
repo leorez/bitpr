@@ -21,7 +21,7 @@ var mailgun = require('mailgun-js')({
 function sendEmail(options, callback) {
   console.log('sendEmail');
   var mail = mailcomposer({
-    from: options.from || '"비트피알" <system@bitpr.kr>', // sender address
+    from: options.from || '"비트피알" <support@bitpr.kr>', // sender address
     to: options.to, // list of receivers
     subject: options.subject, // Subject line
     html: options.html, // plaintext body

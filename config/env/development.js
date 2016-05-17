@@ -66,7 +66,7 @@ module.exports = {
     sandbox: true
   },
   mailer: {
-    from: process.env.MAILER_FROM || '"비트피알" <system@bitpr.kr>',
+    from: process.env.MAILER_FROM || '"비트피알" <support@bitpr.kr>',
     options: {
       service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',
       auth: {

@@ -21,7 +21,7 @@ var config = require('./config/config'),
   dateAdder = require('add-subtract-date'),
   DateDiff = require('date-diff'),
   moment = require('moment'),
-  mailcomposer = require('mailcomposer'),
+  mail = require('./mail'),
   process = require('process'),
   sms = require('./bluehouselabsms'),
   request = require('request');
@@ -96,42 +96,6 @@ var search = function (usersCnt, user, since) {
   });
 };
 
-var api_key = 'key-52k6ubqaqzw6ir5g75mob96cqa03-xi3';
-var domain = 'bitpr.kr';
-var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
-
-function sendEmail(options, callback) {
-  console.log('sendEmail');
-  var mail = mailcomposer({
-    from: '"비트피알" <news@bitpr.kr>', // sender address
-    to: options.to, // list of receivers
-    subject: options.subject, // Subject line
-    html: options.html, // plaintext body
-    attachments: options.attachments
-  });
-
-  mail.build(function (mailBuildError, message) {
-    if (mailBuildError) {
-      console.error(mailBuildError);
-      callback(mailBuildError, message);
-      return;
-    }
-
-    var dataToSend = {
-      to: options.to,
-      message: message.toString('ascii')
-    };
-
-    console.log(message);
-
-    mailgun.messages().sendMime(dataToSend, function (error, body) {
-      console.log(body);
-      console.log(error);
-      callback(error, body);
-    });
-  });
-}
-
 var dstRoot = __dirname+'/uploads';
 
 function attachFile(sendMailOptions, file, root) {
@@ -191,6 +155,7 @@ function sendArticle(article) {
   var onContentReady = function (content) {
     console.log(content);
     var sendMailOptions = {
+      from: '"비트피알" <news@bitpr.kr>',
       to: 'noruya@gmail.com',
       subject: article.title,
       html: content,
@@ -202,7 +167,7 @@ function sendArticle(article) {
     attachFile(sendMailOptions, article.image2, dstRoot + '/images/');
     attachFile(sendMailOptions, article.image3, dstRoot + '/images/');
 
-    sendEmail(sendMailOptions, function (err, info) {
+    mail.sendEmail(sendMailOptions, function (err, info) {
       if(!err) {
         article.status = 'Sent';
         article.sent = new Date();

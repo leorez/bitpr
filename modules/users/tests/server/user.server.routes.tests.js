@@ -292,7 +292,7 @@ describe('User CRUD tests', function () {
             return done(err);
           }
 
-          res.body.message.should.equal('No account with that username has been found');
+          res.body.message.should.equal('입력하신 이메일 주소로 가입된 사용자가 없습니다.');
           return done();
         });
     });
@@ -316,7 +316,7 @@ describe('User CRUD tests', function () {
             return done(err);
           }
 
-          res.body.message.should.equal('Username field must not be blank');
+          res.body.message.should.equal('이메일 주소를 입력하세요.');
           return done();
         });
     });
@@ -340,7 +340,7 @@ describe('User CRUD tests', function () {
             return done(err);
           }
 
-          res.body.message.should.equal('It seems like you signed up using your ' + user.provider + ' account');
+          res.body.message.should.equal('암호 재설정이 불가합니다. 아마도 ' + user.provider + '의 계정으로 가입하신것 같습니다.');
           return done();
         });
     });
@@ -465,7 +465,7 @@ describe('User CRUD tests', function () {
               return done(err);
             }
 
-            res.body.message.should.equal('Password changed successfully');
+            res.body.message.should.equal('암호가 변경되었습니다.');
             return done();
           });
       });
@@ -494,7 +494,7 @@ describe('User CRUD tests', function () {
               return done(err);
             }
 
-            res.body.message.should.equal('Passwords do not match');
+            res.body.message.should.equal('암호가 맞지 않습니다.');
             return done();
           });
       });
@@ -523,7 +523,7 @@ describe('User CRUD tests', function () {
               return done(err);
             }
 
-            res.body.message.should.equal('Current password is incorrect');
+            res.body.message.should.equal('현재 암호가 맞지 않습니다.');
             return done();
           });
       });
@@ -552,7 +552,7 @@ describe('User CRUD tests', function () {
               return done(err);
             }
 
-            res.body.message.should.equal('Please provide a new password');
+            res.body.message.should.equal('새 암호를 입력하세요');
             return done();
           });
       });
@@ -573,7 +573,7 @@ describe('User CRUD tests', function () {
           return done(err);
         }
 
-        res.body.message.should.equal('User is not signed in');
+        res.body.message.should.equal('로그인이 필요합니다.');
         return done();
       });
   });
@@ -827,7 +827,7 @@ describe('User CRUD tests', function () {
             return done(userInfoErr);
           }
 
-          userInfoRes.body.message.should.equal('User is not signed in');
+          userInfoRes.body.message.should.equal('로그인이 필요합니다.');
 
           // Call the assertion callback
           return done();
@@ -845,7 +845,7 @@ describe('User CRUD tests', function () {
           return done(userInfoErr);
         }
 
-        userInfoRes.body.message.should.equal('User is not signed in');
+        userInfoRes.body.message.should.equal('로그인이 필요합니다.');
 
         // Call the assertion callback
         return done();

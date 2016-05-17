@@ -98,7 +98,7 @@
         });
 
         describe('POST error', function() {
-          var errorMessage = 'No account with that username has been found';
+          var errorMessage = '입력하신 이메일 주소로 가입된 사용자가 없습니다.';
           beforeEach(function() {
             $httpBackend.when('POST', '/api/auth/forgot', credentials).respond(400, {
               'message': errorMessage
@@ -118,7 +118,7 @@
         });
 
         describe('POST success', function() {
-          var successMessage = 'An email has been sent to the provided email with further instructions.';
+          var successMessage = '입력하신 이메일 주소로 암호재설정 이메일을 전송하였습니다.';
           beforeEach(function() {
             $httpBackend.when('POST', '/api/auth/forgot', credentials).respond({
               'message': successMessage
@@ -158,7 +158,7 @@
         });
 
         it('POST error should set scope.error to response message', function() {
-          var errorMessage = 'Passwords do not match';
+          var errorMessage = '암호가 맞지 않습니다.';
           $httpBackend.when('POST', '/api/auth/reset/' + token, passwordDetails).respond(400, {
             'message': errorMessage
           });

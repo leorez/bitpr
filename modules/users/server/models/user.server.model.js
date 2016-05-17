@@ -51,6 +51,7 @@ var UserSchema = new Schema({
     lowercase: true,
     trim: true,
     default: '',
+    required: '이메일주소는 필수입니다.',
     validate: [validateLocalStrategyEmail, '이메일 형식에 맞지않는 이메일 주소입니다.']
   },
   password: {
@@ -142,6 +143,7 @@ UserSchema.pre('save', function (next) {
   if (this.password && this.isModified('password')) {
     this.salt = crypto.randomBytes(16).toString('base64');
     this.password = this.hashPassword(this.password);
+    console.log('pre save password: ' + this.password);
   }
 
   next();
@@ -177,6 +179,7 @@ UserSchema.methods.hashPassword = function (password) {
  * Create instance method for authenticating user
  */
 UserSchema.methods.authenticate = function (password) {
+  console.log('hashed: ' + this.hashPassword(password));
   return this.password === this.hashPassword(password);
 };
 

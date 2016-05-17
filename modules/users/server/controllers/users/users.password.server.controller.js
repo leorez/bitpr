@@ -8,11 +8,47 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
-  nodemailer = require('nodemailer'),
   async = require('async'),
   crypto = require('crypto');
 
-var smtpTransport = nodemailer.createTransport(config.mailer.options);
+var mailcomposer = require('mailcomposer');
+
+var mailgun = require('mailgun-js')({
+  apiKey: 'key-52k6ubqaqzw6ir5g75mob96cqa03-xi3',
+  domain: 'bitpr.kr'
+});
+
+function sendEmail(options, callback) {
+  console.log('sendEmail');
+  var mail = mailcomposer({
+    from: options.from || '"비트피알" <system@bitpr.kr>', // sender address
+    to: options.to, // list of receivers
+    subject: options.subject, // Subject line
+    html: options.html, // plaintext body
+    attachments: options.attachments
+  });
+
+  mail.build(function (mailBuildError, message) {
+    if (mailBuildError) {
+      console.error(mailBuildError);
+      callback(mailBuildError, message);
+      return;
+    }
+
+    var dataToSend = {
+      to: options.to,
+      message: message.toString('ascii')
+    };
+
+    console.log(message);
+
+    mailgun.messages().sendMime(dataToSend, function (error, body) {
+      console.log(body);
+      console.log(error);
+      callback(error, body);
+    });
+  });
+}
 
 /**
  * Forgot for reset password (forgot POST)
@@ -28,17 +64,17 @@ exports.forgot = function (req, res, next) {
     },
     // Lookup user by username
     function (token, done) {
-      if (req.body.username) {
+      if (req.body.email) {
         User.findOne({
-          username: req.body.username.toLowerCase()
+          email: req.body.email.toLowerCase()
         }, '-salt -password', function (err, user) {
           if (err || !user) {
             return res.status(400).send({
-              message: 'No account with that username has been found'
+              message: '입력하신 이메일 주소로 가입된 사용자가 없습니다.'
             });
           } else if (user.provider !== 'local') {
             return res.status(400).send({
-              message: 'It seems like you signed up using your ' + user.provider + ' account'
+              message: '암호 재설정이 불가합니다. 아마도 ' + user.provider + '의 계정으로 가입하신것 같습니다.'
             });
           } else {
             user.resetPasswordToken = token;
@@ -51,7 +87,7 @@ exports.forgot = function (req, res, next) {
         });
       } else {
         return res.status(400).send({
-          message: 'Username field must not be blank'
+          message: '이메일을 입력해 주세요.'
         });
       }
     },
@@ -74,17 +110,18 @@ exports.forgot = function (req, res, next) {
       var mailOptions = {
         to: user.email,
         from: config.mailer.from,
-        subject: 'Password Reset',
+        subject: '[비트피알] 암호를 재설정 합니다.',
         html: emailHTML
       };
-      smtpTransport.sendMail(mailOptions, function (err) {
+
+      sendEmail(mailOptions, function (err) {
         if (!err) {
           res.send({
-            message: 'An email has been sent to the provided email with further instructions.'
+            message: '입력하신 이메일 주소로 암호재설정 이메일을 전송하였습니다.'
           });
         } else {
           return res.status(400).send({
-            message: 'Failure sending email'
+            message: '이메일 발송에 실패하였습니다.'
           });
         }
 
@@ -161,7 +198,7 @@ exports.reset = function (req, res, next) {
             });
           } else {
             return res.status(400).send({
-              message: 'Passwords do not match'
+              message: '암호가 맞지 않습니다.'
             });
           }
         } else {
@@ -184,11 +221,11 @@ exports.reset = function (req, res, next) {
       var mailOptions = {
         to: user.email,
         from: config.mailer.from,
-        subject: 'Your password has been changed',
+        subject: '[비트피알] 암호가 재설정 되었습니다.',
         html: emailHTML
       };
 
-      smtpTransport.sendMail(mailOptions, function (err) {
+      sendEmail(mailOptions, function (err) {
         done(err, 'done');
       });
     }
@@ -225,7 +262,7 @@ exports.changePassword = function (req, res, next) {
                       res.status(400).send(err);
                     } else {
                       res.send({
-                        message: 'Password changed successfully'
+                        message: '암호가 변경되었습니다.'
                       });
                     }
                   });
@@ -233,28 +270,28 @@ exports.changePassword = function (req, res, next) {
               });
             } else {
               res.status(400).send({
-                message: 'Passwords do not match'
+                message: '암호가 맞지 않습니다.'
               });
             }
           } else {
             res.status(400).send({
-              message: 'Current password is incorrect'
+              message: '현재 암호가 맞지 않습니다.'
             });
           }
         } else {
           res.status(400).send({
-            message: 'User is not found'
+            message: '해당 사용자가 없습니다.'
           });
         }
       });
     } else {
       res.status(400).send({
-        message: 'Please provide a new password'
+        message: '새 암호를 입력하세요'
       });
     }
   } else {
     res.status(400).send({
-      message: 'User is not signed in'
+      message: '로그인이 필요합니다.'
     });
   }
 };

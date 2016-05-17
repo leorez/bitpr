@@ -26,7 +26,6 @@ exports.update = function (req, res) {
     // Merge existing user
     user = _.extend(user, req.body);
     user.updated = Date.now();
-    user.displayName = user.firstName + ' ' + user.lastName;
 
     user.save(function (err) {
       if (err) {
@@ -45,7 +44,7 @@ exports.update = function (req, res) {
     });
   } else {
     res.status(400).send({
-      message: 'User is not signed in'
+      message: '로그인이 필요합니다.'
     });
   }
 };
@@ -90,7 +89,7 @@ exports.changeProfilePicture = function (req, res) {
     });
   } else {
     res.status(400).send({
-      message: 'User is not signed in'
+      message: '로그인이 필요합니다.'
     });
   }
 };

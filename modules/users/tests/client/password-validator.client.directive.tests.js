@@ -94,7 +94,7 @@
 
       expect(scope.form.password.$valid).toBeFalsy();
       expect(scope.form.password.$error.required).toBeFalsy();
-      expect(scope.passwordErrors).toEqual(['The password must be at least 10 characters long.']);
+      expect(scope.passwordErrors).toEqual(['암호는 적어도 10자이상 이여야합니다.']);
       expect(scope.requirementsColor).toEqual('primary');
       expect(scope.requirementsProgress).toEqual('80');
     });
@@ -106,7 +106,7 @@
 
       expect(scope.form.password.$valid).toBeFalsy();
       expect(scope.form.password.$error.required).toBeFalsy();
-      expect(scope.passwordErrors).toEqual(['The password must be fewer than 128 characters.']);
+      expect(scope.passwordErrors).toEqual(['암호는 128자이내여야합니다.']);
       expect(scope.requirementsColor).toEqual('primary');
       expect(scope.requirementsProgress).toEqual('80');
     });
@@ -118,7 +118,7 @@
 
       expect(scope.form.password.$valid).toBeFalsy();
       expect(scope.form.password.$error.required).toBeFalsy();
-      expect(scope.passwordErrors).toEqual(['The password may not contain sequences of three or more repeated characters.']);
+      expect(scope.passwordErrors).toEqual(['암호에 3자이상의 반복되는 문자가 포함되어있습니다.']);
       expect(scope.requirementsColor).toEqual('primary');
       expect(scope.requirementsProgress).toEqual('80');
     });
@@ -130,7 +130,7 @@
 
       expect(scope.form.password.$valid).toBeFalsy();
       expect(scope.form.password.$error.required).toBeFalsy();
-      expect(scope.passwordErrors).toEqual(['The password must contain at least one uppercase letter.']);
+      expect(scope.passwordErrors).toEqual(['암호는 적어도 하나의 대문자를 포함해야합니다.']);
       expect(scope.requirementsColor).toEqual('primary');
       expect(scope.requirementsProgress).toEqual('80');
     });
@@ -142,7 +142,7 @@
 
       expect(scope.form.password.$valid).toBeFalsy();
       expect(scope.form.password.$error.required).toBeFalsy();
-      expect(scope.passwordErrors).toEqual(['The password must contain at least one number.']);
+      expect(scope.passwordErrors).toEqual(['암호는 적어도 하나의 숫자를 포함해야합니다.']);
       expect(scope.requirementsColor).toEqual('primary');
       expect(scope.requirementsProgress).toEqual('80');
     });
@@ -154,7 +154,7 @@
 
       expect(scope.form.password.$valid).toBeFalsy();
       expect(scope.form.password.$error.required).toBeFalsy();
-      expect(scope.passwordErrors).toEqual(['The password must contain at least one special character.']);
+      expect(scope.passwordErrors).toEqual(['암호는 특수문자를 포함해야합니다.']);
       expect(scope.requirementsColor).toEqual('primary');
       expect(scope.requirementsProgress).toEqual('80');
     });

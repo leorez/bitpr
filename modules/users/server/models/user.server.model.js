@@ -51,14 +51,7 @@ var UserSchema = new Schema({
     lowercase: true,
     trim: true,
     default: '',
-    validate: [validateLocalStrategyEmail, 'Please fill a valid email address']
-  },
-  username: {
-    type: String,
-    unique: 'Username already exists',
-    required: 'Please fill in a username',
-    lowercase: true,
-    trim: true
+    validate: [validateLocalStrategyEmail, '이메일 형식에 맞지않는 이메일 주소입니다.']
   },
   password: {
     type: String,
@@ -120,19 +113,25 @@ var UserSchema = new Schema({
   /* 기업 상장코드 */
   corpCode: {
     type: String,
-    default: ''
+    default: '',
+    unique: '이미 존재하는 상장코드입니다.',
+    required: '상장코드는 필수입니다.',
+    trim: true
   },
   corpName: {
     type: String,
-    default: ''
+    default: '',
+    trim: true
   },
   telephone: {
     type: String,
-    default: ''
+    default: '',
+    trim: true
   },
   cellphone: {
     type: String,
-    default: ''
+    default: '',
+    trim: true
   }
 });
 
@@ -184,24 +183,24 @@ UserSchema.methods.authenticate = function (password) {
 /**
  * Find possible not used username
  */
-UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
-  var _this = this;
-  var possibleUsername = username.toLowerCase() + (suffix || '');
-
-  _this.findOne({
-    username: possibleUsername
-  }, function (err, user) {
-    if (!err) {
-      if (!user) {
-        callback(possibleUsername);
-      } else {
-        return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
-      }
-    } else {
-      callback(null);
-    }
-  });
-};
+// UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
+//   var _this = this;
+//   var possibleUsername = username.toLowerCase() + (suffix || '');
+//
+//   _this.findOne({
+//     username: possibleUsername
+//   }, function (err, user) {
+//     if (!err) {
+//       if (!user) {
+//         callback(possibleUsername);
+//       } else {
+//         return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
+//       }
+//     } else {
+//       callback(null);
+//     }
+//   });
+// };
 
 /**
 * Generates a random passphrase that passes the owasp test

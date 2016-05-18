@@ -24,6 +24,16 @@
           roles: ['user']
         }
       })
+      // My 보도자료
+      .state('article-senders.files', {
+        url: '/files',
+        templateUrl: 'modules/article-senders/client/views/files-article-senders.client.view.html',
+        controller: 'ArticleSendersFilesController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['user']
+        }
+      })
       .state('article-senders.create', {
         url: '/create',
         templateUrl: 'modules/article-senders/client/views/create-article-sender.client.view.html',

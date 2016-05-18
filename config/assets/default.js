@@ -30,6 +30,7 @@ module.exports = {
         'public/lib/angular-material/angular-material.js',
         'public/lib/underscore/underscore.js',
         'public/lib/angular-clipboard/angular-clipboard.js',
+        'public/lib/angular-file-saver/dist/angular-file-saver.bundle.js',
         'public/lib/ng-file-upload/ng-file-upload.js'
         // endbower
       ],

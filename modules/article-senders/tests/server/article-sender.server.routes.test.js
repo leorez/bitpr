@@ -5,7 +5,8 @@
 
 var should = require('should'),
   request = require('supertest'),
-  app = require('../../server'),
+  path = require('path'),
+  app = require(path.resolve('./config/lib/app')),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
   ArticleSender = mongoose.model('ArticleSender'),

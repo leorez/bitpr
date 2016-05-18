@@ -325,8 +325,6 @@ module.exports = function (grunt) {
     var user1 = {
       corpCode: '005930',
       corpName: '거북선최고',
-      firstName: 'test',
-      lastName: 'user',
       email: 'test.user@test.com',
       displayName: '이순신',
       password: 'P@$$w0rd!!',

@@ -10,14 +10,15 @@
     .module(app.applicationModuleName)
     .config(bootstrapConfig);
 
-  function bootstrapConfig($locationProvider, $httpProvider) {
+  function bootstrapConfig($locationProvider, $httpProvider, $compileProvider) {
     $locationProvider.html5Mode(true).hashPrefix('!');
 
     $httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('authInterceptor');
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(http?|ftp|mailto|tel|file|blob):/);
   }
 
-  bootstrapConfig.$inject = ['$locationProvider', '$httpProvider'];
+  bootstrapConfig.$inject = ['$locationProvider', '$httpProvider', '$compileProvider'];
 
   // Then define the init function for starting up the application
   angular.element(document).ready(init);

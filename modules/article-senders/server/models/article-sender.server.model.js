@@ -24,7 +24,7 @@ var ArticleSenderSchema = new Schema({
     type: Date
   },
   status: {
-    // 'None', 'Reserved', 'Sent', 'Error', 'Canceled'
+    // 'None', 'Reserved', 'Sent', 'Error', 'Canceled', 'ReSend' : 재전송
     type: String,
     default: 'None',
     trim: true

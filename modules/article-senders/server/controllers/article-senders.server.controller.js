@@ -10,6 +10,7 @@ var path = require('path'),
   appRoot = require('app-root-path'),
   _ = require('lodash');
 
+
 var saveArticleSender = function (articleSender, req, res) {
   articleSender.user = req.user;
   articleSender.save(function (err) {
@@ -122,6 +123,36 @@ exports.sendArticle = function (req, res) {
     });
   });
 };
+
+// 기사 재전송
+exports.reSendArticle = function (req, res) {
+  var articleSenders = req.body;
+  console.log(articleSenders);
+  articleSenders.forEach(function(id) {
+    ArticleSender.findById(id).populate('user', 'displayName').exec(function (err, articleSender) {
+      if (!err) {
+        if (articleSender._id !== undefined && articleSender.status === 'Sent') {
+          console.log(articleSender._id);
+          articleSender.status = 'ReSend';
+          articleSender.save(function (err) {
+            if (err) {
+              return res.status(400).send({
+                messeage: errorHandler.getErrorMessage(err)
+              });
+            }
+          });
+        }
+      } else {
+        return res.status(400).send({
+          messeage: errorHandler.getErrorMessage(err)
+        });
+      }
+    });
+  });
+
+  res.json({ status: 'ok', message: '메일이 전송되었습니다.' });
+};
+
 
 /**
  * Show the current Article sender

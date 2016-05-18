@@ -1,0 +1,63 @@
+<section>
+  <div class="page-header">
+    <h2>My 보도자료</h2>
+  </div>
+
+  <div>
+    <button type="button" class="btn btn-large btn-primary" ng-click="vm.sshareFiles()">선택된 파일 공유</button>
+    <button type="button" class="btn btn-large btn-primary" ng-click="vm.reSendArticle()">선택된 기사 재전송</button>
+  </div>
+
+  <div ng-show="vm.success" class="text-left text-success">
+    <strong ng-bind="vm.success"></strong>
+  </div>
+  <div ng-show="vm.error" class="text-left text-danger">
+    <strong ng-bind="vm.error"></strong>
+  </div>
+
+  <div class="list-group">
+    <div data-ng-repeat="item in vm.articleSenders" class="list-group-item">
+      <md-checkbox ng-checked="exists(item._id, vm.articleSelected)" ng-click="toggle(item._id, vm.articleSelected)" id="article-checkbox">
+        <h4 class="list-group-item-heading">{{item.title}}</h4>
+      </md-checkbox>
+      <div>
+        <small class="list-group-item-text">
+          <span>{{item.sent}}</span>
+        </small>
+      </div>
+      <div ng-show="item.file">
+        <label>보도자료</label>
+        <div>
+          <md-checkbox ng-checked="exists(item.file, vm.fileSelected)" ng-click="toggle(item.file, vm.fileSelected)">
+            <a href="" ng-click="vm.downloadDoc(item.file)">{{item.file}}</a>
+          </md-checkbox>
+        </div>
+      </div>
+      <div>
+        <label>사진자료</label>
+          <div ng-show="item.image1">
+            <md-checkbox ng-checked="exists(item.image1, vm.fileSelected)" ng-click="toggle(item.image1, vm.fileSelected)">
+            <a href="" ng-click="vm.downloadImage(item.image1)">{{item.image1}}</a>
+            </md-checkbox>
+          </div>
+          <div ng-show="item.image2">
+            <md-checkbox ng-checked="exists(item.image2, vm.fileSelected)" ng-click="toggle(item.image2, vm.fileSelected)">
+            <a href="" ng-click="vm.downloadImage(item.image2)">{{item.image2}}</a>
+            </md-checkbox>
+          </div>
+          <div ng-show="item.image3">
+            <md-checkbox ng-checked="exists(item.image3, vm.fileSelected)" ng-click="toggle(item.image3, vm.fileSelected)">
+            <a href="" ng-click="vm.downloadImage(item.image3)">{{item.image3}}</a>
+            </md-checkbox>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-show="vm.success" class="text-left text-success">
+    <strong ng-bind="vm.success"></strong>
+  </div>
+  <div ng-show="vm.error" class="text-left text-danger">
+    <strong ng-bind="vm.error"></strong>
+  </div>
+</section>

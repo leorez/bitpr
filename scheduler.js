@@ -263,6 +263,10 @@ function sendArticleEmails() {
               sendArticle(article);
             }
           }
+        } else if(article.status === 'ReSend') {
+          // 재전송
+          console.log(chalk.blue('재전송'));
+          sendArticle(article);
         }
       });
     }

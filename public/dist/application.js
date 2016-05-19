@@ -1,11 +1,11 @@
 (function (window) {
   'use strict';
 
-  var applicationModuleName = 'mean';
+  var applicationModuleName = 'bitpr';
 
   var service = {
     applicationModuleName: applicationModuleName,
-    applicationModuleVendorDependencies: ['ngSanitize', 'ngResource', 'ngAnimate', 'ngMessages', 'ui.router', 'ui.bootstrap', 'ngAria', 'ngMaterial', 'ngTagsInput', 'ngFileUpload', 'ngProgress', 'angular-clipboard'],
+    applicationModuleVendorDependencies: ['ngFileSaver', 'ngSanitize', 'ngResource', 'ngAnimate', 'ngMessages', 'ui.router', 'ui.bootstrap', 'ngAria', 'ngMaterial', 'ngTagsInput', 'ngFileUpload', 'ngProgress', 'angular-clipboard'],
     registerModule: registerModule
   };
 
@@ -33,13 +33,15 @@
     .module(app.applicationModuleName)
     .config(bootstrapConfig);
 
-  function bootstrapConfig($locationProvider, $httpProvider) {
+  function bootstrapConfig($locationProvider, $httpProvider, $compileProvider) {
     $locationProvider.html5Mode(true).hashPrefix('!');
 
+    $httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('authInterceptor');
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(http?|ftp|mailto|tel|file|blob):/);
   }
 
-  bootstrapConfig.$inject = ['$locationProvider', '$httpProvider'];
+  bootstrapConfig.$inject = ['$locationProvider', '$httpProvider', '$compileProvider'];
 
   // Then define the init function for starting up the application
   angular.element(document).ready(init);
@@ -121,7 +123,7 @@
 
   function menuConfig(menuService) {
     menuService.addMenuItem('topbar', {
-      title: '보도자료 발송',
+      title: '보도자료',
       state: 'article-senders',
       type: 'dropdown',
       roles: ['*']
@@ -129,8 +131,13 @@
 
     // Add the dropdown list item
     menuService.addSubMenuItem('topbar', 'article-senders', {
-      title: '발송목록',
+      title: '보도자료 발송현황',
       state: 'article-senders.list'
+    });
+
+    menuService.addSubMenuItem('topbar', 'article-senders', {
+      title: 'My 보도자료',
+      state: 'article-senders.files'
     });
 
     // Add the dropdown create item
@@ -163,6 +170,16 @@
         url: '',
         templateUrl: 'modules/article-senders/client/views/article-senders.client.view.html',
         controller: 'ArticleSendersListController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['user']
+        }
+      })
+      // My 보도자료
+      .state('article-senders.files', {
+        url: '/files',
+        templateUrl: 'modules/article-senders/client/views/files-article-senders.client.view.html',
+        controller: 'ArticleSendersFilesController',
         controllerAs: 'vm',
         data: {
           roles: ['user']
@@ -281,14 +298,25 @@
     if (vm.articleSender.image2) vm.articleSender.image2 = imageRoot + vm.articleSender.image2;
     if (vm.articleSender.image3) vm.articleSender.image3 = imageRoot + vm.articleSender.image3;
 
+    console.log('corpCode: ' + vm.authentication.user.corpCode);
+
+    function autoTitle(corpName) {
+      var title = corpName + ' 보도자료';
+      title += '(' + corpName + '에서 보도자료를 보내드립니다. 관심과 배려 부탁드립니다.)';
+      return title;
+    }
+
     $http
-      .post('/api/crp-code-to-name', { crpCode: vm.authentication.corpCode })
+      .post('/api/crp-code-to-name', { corpCode: vm.authentication.user.corpCode })
       .then(function (response) {
-        console.log(response);
-        vm.articleSender.title = response.data.name + ' 보도자료';
+        console.log('success: ' + JSON.stringify(response));
+        vm.articleSender.title = autoTitle(response.data.name);
       }, function (error) {
-        console.log(error);
+        console.error('error: ' + JSON.stringify(error));
         vm.articleSender.title = '';
+        if (vm.authentication.user.corpName !== '') {
+          vm.articleSender.title = autoTitle(vm.authentication.user.corpName);
+        }
       });
 
     vm.bill = bill;
@@ -296,7 +324,9 @@
     vm.update = update;
     vm.remove = remove;
     vm.cancel = cancel;
+    vm.sendArticle = sendArticle;
 
+    // 보도자료발송 작성중 취소버튼 클릭시 실행
     function cancel() {
       var confirm = $mdDialog.confirm()
         .textContent('취소하시면 입력하신 자료가 유실됩니다. 취소하시겠습니까?')
@@ -368,10 +398,9 @@
       }
     }
 
-    $scope.send = function (id) {
+    function sendArticle() {
       console.log('send call');
-      console.log(id);
-      $http.post('/api/article-senders-send', {}).success(function (response) {
+      $http.post('/api/article-senders-send', { articleSenderId: vm.articleSender._id }).success(function (response) {
         console.log(response);
         var alert = $mdDialog.alert()
           .title('발송')
@@ -382,12 +411,15 @@
           .show(alert)
           .finally(function () {
             alert = undefined;
+            $state.go('article-senders.list', {
+              articleSenderId: response._id
+            });
           });
       }).error(function (response) {
         console.log(response.message);
         vm.error = response.message;
       });
-    };
+    }
 
     function update(isValid) {
       if (isValid) {
@@ -419,6 +451,147 @@
   }
 }());
 
+(function () {
+  'use strict';
+
+  angular
+    .module('article-senders')
+    .controller('ArticleSendersFilesController', ArticleSendersFilesController);
+
+  ArticleSendersFilesController.$inject = ['$scope', 'Authentication', '$http', 'FileSaver', 'Blob', 'ArticleSendersService', '$mdDialog'];
+
+  function ArticleSendersFilesController($scope, Authentication, $http, FileSaver, Blob, ArticleSendersService, $mdDialog) {
+    var vm = this;
+    vm.authentication = Authentication;
+    vm.downloadDoc = downloadDoc;
+    vm.downloadImage = downloadImage;
+    vm.reSendArticle = reSendArticle;
+    vm.shareFiles = shareFiles;
+    vm.toggleDisplayed = toggleDisplayed;
+    vm.articleSenders = ArticleSendersService.query();
+    vm.articleSelected = [];
+    vm.fileSelected = [];
+    $scope.emails = [];
+
+    $scope.hide = function() {
+      $mdDialog.hide();
+    };
+    $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+    $scope.answer = function(answer) {
+      $mdDialog.hide(answer);
+    };
+
+    $scope.addEmail = function(email) {
+      console.log(email);
+      $scope.emails.push(email);
+    };
+
+    $scope.removeEmail = function (email) {
+      console.log(email);
+      $scope.emails.splice($scope.emails.indexOf(email), 1);
+    };
+
+    // 선택된 파일공유 : 이메일 입력후 전송하기
+    $scope.submitShareFiles = function () {
+      $mdDialog.hide($scope.emails);
+    };
+    
+    // 홈페이지 올리기/홈페이지 내리기
+    function toggleDisplayed(articleSender) {
+      articleSender.displayed = !articleSender.displayed;
+      articleSender.$update(function (resp) {
+      }, function (err) {
+        vm.error = err.data.message;
+      });
+    }
+
+    // 파일공유
+    function shareFiles(ev) {
+      console.log('click');
+      $mdDialog.show({
+        controller: ArticleSendersFilesController,
+        templateUrl: 'modules/article-senders/client/views/email-input-dialog.tmpl.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true,
+        fullscreen: false
+      })
+      .then(function(emails) {
+        var user = vm.authentication.user;
+
+        var data = {
+          from: user.displayName + '<' + user.email + '>',
+          emails: emails,
+          files: vm.fileSelected
+        };
+        console.log('data : ' + data);
+
+        $http.post('/api/send-files', data).then(function (resp) {
+          console.log(resp);
+          vm.success = resp.data.message;
+        }, function (err) {
+          console.error(err.data);
+          vm.error = err.data.message;
+        });
+
+      }, function() {
+        // on cancel
+      });
+    }
+
+    // 선택된 자료 재전송
+    function reSendArticle() {
+      console.log('reSendArticle');
+      $http.post('/api/re-send-article', vm.articleSelected).then(function (resp) {
+        console.log(resp);
+        vm.success = resp.data.message;
+      }, function (err) {
+        console.error(err);
+        vm.error = '에러가 발생하였습니다.';
+      });
+    }
+
+    $scope.exists = function(item, list) {
+      return list.indexOf(item) > -1;
+    };
+
+    $scope.toggle = function (item, list) {
+      var idx = list.indexOf(item);
+      if (idx > -1) {
+        list.splice(idx, 1);
+      } else {
+        list.push(item);
+      }
+
+      console.log(JSON.stringify(list));
+    };
+
+    function downloadDoc(file) {
+      delete $http.defaults.headers.common['X-Requested-With']; // See note 2
+      $http.get('/docs/' + file, { responseType: 'arraybuffer' }).success(function (data) {
+        var blob = new Blob([data], { type: 'application/docx' });
+        FileSaver.saveAs(blob, file);
+      }).error(function (data, status) {
+        console.error('Request failed with status: ' + status);
+      });
+    }
+
+    function downloadImage(file) {
+      delete $http.defaults.headers.common['X-Requested-With']; // See note 2
+      $http.get('/images/' + file, { responseType: 'arraybuffer' }).success(function (data) {
+        var blob = new Blob([data], { type: 'image/jpeg' });
+        FileSaver.saveAs(blob, file);
+      }).error(function (data, status) {
+        console.error('Request failed with status: ' + status);
+      });
+    }
+  }
+
+}());
+
+
 /**
  * Created by noruya on 16. 5. 4.
  */
@@ -429,14 +602,75 @@
     .module('article-senders')
     .controller('ArticleSendersListController', ArticleSendersListController);
 
-  ArticleSendersListController.$inject = ['ArticleSendersService'];
+  ArticleSendersListController.$inject = ['ArticleSendersService', '$mdDialog'];
 
-  function ArticleSendersListController(ArticleSendersService) {
+  function ArticleSendersListController(ArticleSendersService, $mdDialog) {
     var vm = this;
 
     vm.articleSenders = ArticleSendersService.query();
+
+    vm.cancelArticleSender = cancelArticleSender;
+    
+    // 보도자료현황의 발송취소
+    function cancelArticleSender(articleSender) {
+      console.log('clicked');
+      var confirm = $mdDialog.confirm()
+        .textContent('예약된 보도자료 발송이 취소됩니다. 정말로 취소하시겠습니까?')
+        .ok('예')
+        .cancel('아니요');
+      $mdDialog.show(confirm).then(function () {
+        articleSender.status = 'Canceled';
+        articleSender.canceled = new Date();
+        articleSender.$update(articleSender, function (response) {
+          console.log(response);
+        }, function (error) {
+          articleSender.status = 'Reserved';
+          console.error(error);
+        });
+      });
+    }
   }
 }());
+
+(function () {
+  'use strict';
+  var module = angular.module('article-senders');
+
+  module.filter('displayed', function () {
+    return function (displayed) {
+      if (displayed) return '홈페이지에서 내리기';
+      else return '홈페이지에 올리기';
+    };
+  });
+
+  module.filter('reserveTime', function () {
+    return function (input) {
+      if (input === 0) return '즉시';
+      else if (input === 999) return '공시확인후';
+      else return input + '시간후';
+    };
+  });
+
+  module.filter('status', function () {
+    return function (input) {
+      switch (input) {
+        case 'None':
+          return '작성중';
+        case 'Reserved':
+          return '발송대기';
+        case 'Canceled':
+          return '발송취소';
+        case 'Sent':
+          return '발송완료';
+        case 'Error':
+          return '발송에러';
+        default:
+          return '';
+      }
+    };
+  });
+}());
+
 
 (function () {
   'use strict';
@@ -1009,22 +1243,93 @@
 (function () {
   'use strict';
 
-  HomeController.$inject = ["$scope", "$http", "Authentication", "ngProgressFactory", "$stateParams"];
+  HomeController.$inject = ["$scope", "$location", "DisplayedArticles", "clipboard", "$mdDialog", "$http", "Authentication", "ngProgressFactory", "$stateParams"];
   angular
     .module('core')
     .controller('HomeController', HomeController);
 
-  function HomeController($scope, $http, Authentication, ngProgressFactory, $stateParams) {
+  function HomeController($scope, $location, DisplayedArticles, clipboard, $mdDialog, $http, Authentication, ngProgressFactory, $stateParams) {
     var vm = this;
 
     // This provides Authentication context.
     $scope.authentication = Authentication;
     $scope.resultArticles = [];
     $scope.progressbar = ngProgressFactory.createInstance();
+    $scope.selected = [];
 
-    // for test -------------------------------
-    $scope.resultArticles = [];
-    // ----------------------------------------
+    $scope.toggle = function (item, list) {
+      var idx = list.indexOf(item);
+      if (idx > -1) {
+        list.splice(idx, 1);
+      } else {
+        list.push(item);
+      }
+
+      console.log(JSON.stringify(list));
+    };
+
+    $scope.exists = function (item, list) {
+      return list.indexOf(item) > -1;
+    };
+
+    $scope.displayArticleToHomepage = function () {
+      // 선택된 기사 홈페이지에 올리기
+      $scope.success = $scope.error = null;
+
+      if (Authentication.user) {
+        var selected = $scope.selected;
+
+        angular.forEach(selected, function (item) {
+          var article = new DisplayedArticles({
+            title: item.title,
+            summary: item.summary,
+            media: item.media,
+            url: item.url,
+            articleAt: item.article_at
+          });
+
+          console.log('article: ' + JSON.stringify(article));
+
+          article.$save(function (response) {
+            console.log('success:' + response);
+          }, function (errorRespose) {
+            $scope.error = errorRespose.data.message;
+            console.log('failed: ' + $scope.error);
+            console.log(JSON.stringify(errorRespose));
+          });
+        });
+      }
+    };
+
+    $scope.closeDialog = function () {
+      $mdDialog.hide();
+    };
+
+    $scope.shareArticle = function ($event) {
+      // 선택된 기사 공유하기
+      // : 제목과 링크로 구성된 문자열을 만들어 클립보드로 복사한다.
+      if (Authentication.user) {
+        var selected = $scope.selected;
+        var text = '';
+        angular.forEach(selected, function (item) {
+          text += '<p>' + item.title + ' <a href="' + item.url + '">더보기</a></p>';
+        });
+        console.log(text);
+
+        clipboard.copyText(text);
+
+        var alert = $mdDialog.alert()
+          .title('기사링크가 복사되었습니다.')
+          .htmlContent('<md-content>' + text + '</md-content>')
+          .ok('닫기');
+
+        $mdDialog
+          .show(alert)
+          .finally(function () {
+            alert = undefined;
+          });
+      }
+    };
 
     $scope.goSearch = function () {
       console.log($stateParams.corpCode);
@@ -2557,7 +2862,7 @@ angular.module('users.services').factory('DisplayedArticles', ['$resource',
     }
 
     function getPopoverMsg() {
-      var popoverMsg = 'Please enter a passphrase or password with 10 or more characters, numbers, lowercase, uppercase, and special characters.';
+      var popoverMsg = '10이상 특수문자와 대소문자 숫자를 포함한 암호를 입력하세요.';
 
       return popoverMsg;
     }

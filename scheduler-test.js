@@ -86,7 +86,7 @@ var articleSender_imediate = {
 };
 
 // 1시간후 예약발송 테스트용
-// 테스트를 용이 하게 하기 위해 예약시간을 55분지난 시간으로 설정
+// 테스트를 용이 하게 하기 위해 예약시간을 54분지난 시간으로 설정
 var articleSender_1hour = {
   status: 'Reserved',
   title: '거북선 보도자료 (1시간후)',
@@ -96,7 +96,7 @@ var articleSender_1hour = {
   image2: 'test2.jpeg',
   image3: 'test3.jpg',
   reserveTime: 1,
-  reserved: dateAdder.subtract(new Date(), 55, "minute"),
+  reserved: dateAdder.subtract(new Date(), 54, "minute"),
   sendCount: 1,
   fare: 500000
 };
@@ -122,35 +122,35 @@ var onReadyDatabase = function () {
       var article = new ArticleSender(articleSender_imediate);
 
       // 즉식발송
-      // article.save(function (err) {
-      //   if (err) {
-      //     console.log(err);
-      //   } else {
-      //     console.log('success save articleSender_imediate');
-      //   }
-      //
-      //   // 1hour
-      //   articleSender_1hour.user = user;
-      //   (new ArticleSender(articleSender_1hour)).save(function (err) {
-      //     if (err) {
-      //       console.log(err);
-      //     } else {
-      //       console.log('success save articleSender_1hour');
-      //     }
-      //     closeDB();
-      //   });
-      // });
-
-      // 1hour
-      articleSender_1hour.user = user;
-      (new ArticleSender(articleSender_1hour)).save(function (err) {
+      article.save(function (err) {
         if (err) {
           console.log(err);
         } else {
-          console.log('success save articleSender_1hour');
+          console.log('success save articleSender_imediate');
         }
-        closeDB();
+
+        // 1hour
+        articleSender_1hour.user = user;
+        (new ArticleSender(articleSender_1hour)).save(function (err) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('success save articleSender_1hour');
+          }
+          closeDB();
+        });
       });
+
+      // 1hour
+      // articleSender_1hour.user = user;
+      // (new ArticleSender(articleSender_1hour)).save(function (err) {
+      //   if (err) {
+      //     console.log(err);
+      //   } else {
+      //     console.log('success save articleSender_1hour');
+      //   }
+      //   closeDB();
+      // });
     }
   });
 };

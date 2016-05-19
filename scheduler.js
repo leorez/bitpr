@@ -23,7 +23,7 @@ var config = require('./config/config'),
   moment = require('moment'),
   mail = require('./mail'),
   process = require('process'),
-  sms = require('./bluehouselabsms'),
+  sms = require('./cafe24.sms'),
   request = require('request');
 require('date-format-lite');
 
@@ -184,15 +184,16 @@ function sendArticle(article) {
 
           // send sms
           var smsOptions = {
-            "CONTENT": "[비트피알] 작성하신 보도자료가 발송되었습니다. (" + article.title + ")",
-            "SENDER": "025981234",
-            "RECEIVERS": [cellphone]
+            msg: "[비트피알] 작성하신 보도자료가 발송되었습니다. (" + article.title + ")",
+            mobile: [cellphone]
           };
 
-          sms.send(smsOptions, function (err) {
-            if (err)
-              console.error(err);
-          });
+          sms.send(smsOptions).then(function (result) {
+            console.log(result);
+            console.log(chalk.green('sms가 발송되었습니다. : ' + smsOptions.msg));
+          }).catch(function (err) {
+            console.error(chalk.red(err));
+          }).done();
         }
       }
     });
@@ -206,24 +207,23 @@ function sendAlertSms(article) {
 
   // send sms
   var smsOptions = {
-    "CONTENT": "[비트피알] 작성하신 보도자료(" + article.title + ")가 5분후에 발송됩니다. 취소하시려면 [발송취소]를 눌러주세요 <a href='http://test.bitpr.kr:9292/cancel-article-sender/" + article._id + "'>[발송취소]</a>",
-    "SENDER": "025981234",
-    "RECEIVERS": [cellphone]
+    msg: "[비트피알] 작성하신 보도자료가 5분후에 발송됩니다. 취소하시려면 [발송취소]를 눌러주세요",
+    mobile: [cellphone]
   };
-  // smsOptions.CONTENT = "<a href='" + article._id + "'>[발송취소]</a>";
 
-  sms.send(smsOptions, function (err) {
-    if (err) {
-      console.error(chalk.red(err));
-    } else {
-      article.smsAlerted = true;
-      article.save(function (err) {
-        if (err) {
-          console.error(chalk.red('Error: ' + err));
-        }
-      });
-    }
-  });
+  sms.send(smsOptions).then(function (result) {
+    console.log(result);
+    article.smsAlerted = true;
+    article.save(function (err) {
+      if (err) {
+        console.error(chalk.red('Error: ' + err));
+      } else {
+        console.log(chalk.green('sms가 발송되었습니다. : ' + smsOptions.msg));
+      }
+    });
+  }).catch(function (err) {
+    console.error(chalk.red(err));
+  }).done();
 }
 
 /*****************************
@@ -313,7 +313,7 @@ function crawlArticlesEachUser() {
   });
 }
 
-var job = schedule.scheduleJob('*/30 * * * * *', function () {
+var job = schedule.scheduleJob('*/1 * * * *', function () {
   console.log('start');
   /***************************
    * 보도자료 발송

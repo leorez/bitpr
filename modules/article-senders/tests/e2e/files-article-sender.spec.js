@@ -68,11 +68,13 @@
 
       describe('When select files and click "선택된 파일 공유"', function () {
         beforeEach(function () {
+          element.all(by.id('file-checkbox')).get(0).click();
+          element.all(by.id('file-checkbox')).get(1).click();
           element(by.buttonText('선택된 파일 공유')).click();
         });
 
-        it('Should able to see confirm dialog', function () {
-
+        it('Should able to see success message', function () {
+          expect(element.all(by.css('.text-success')).get(0).getText()).toBe('메일이 전송되었습니다.');
         });
       });
     });

@@ -100,6 +100,18 @@ module.exports = function (grunt) {
       schedulerTest: {
         files: ['scheduler.js', 'scheduler-test.js'],
         tasks: ['test:scheduler']
+      },
+      dartTest: {
+        files: ['./lib/dart.js', './lib/dart.spec.js'],
+        tasks: ['test:dart']
+      },
+      mailTest: {
+        files: ['./lib/mail.js', './lib/mail.spec.js'],
+        tasks: ['test:mail']
+      },
+      smsTest: {
+        files: ['./lib/cafe24.*.js'],
+        tasks: ['test:sms']
       }
     },
     nodemon: {
@@ -247,6 +259,15 @@ module.exports = function (grunt) {
     exec: {
       schedulerTest: {
         cmd: 'node scheduler-test.js'
+      },
+      dartTest: {
+        cmd: 'mocha lib/dart.spec.js'
+      },
+      mailTest: {
+        cmd: 'mocha lib/mail.spec.js'
+      },
+      smsTest: {
+        cmd: 'mocha lib/cafe24.sms.spec.js'
       }
     }
   });
@@ -358,7 +379,9 @@ module.exports = function (grunt) {
   });
 
   grunt.task.registerTask('schedulerTest', 'Sarting scheduler test', ['exec:schedulerTest']);
-  grunt.task.registerTask('bluehouselabsmsTest', 'Sarting BluehouselabSMS test', ['exec:bluehouselabsmsTest']);
+  grunt.task.registerTask('dartTest', 'Sarting dart test', ['exec:dartTest']);
+  grunt.task.registerTask('mailTest', 'Sarting mail test', ['exec:mailTest']);
+  grunt.task.registerTask('smsTest', 'Sarting sms test', ['exec:smsTest']);
 
   // Lint CSS and JavaScript files.
   grunt.registerTask('lint', ['sass', 'less', 'eslint', 'csslint']);
@@ -373,7 +396,9 @@ module.exports = function (grunt) {
   grunt.registerTask('test:e2e', ['env:test', 'lint', 'dropdb', 'signup', 'server', 'protractor']);
   grunt.registerTask('test:scheduler', ['env:test', 'schedulerTest']);
   grunt.registerTask('test:runScheduler', ['env:test', 'nodemon:schedulerTest']);
-  grunt.registerTask('test:bluehouselabsms', ['env:test', 'bluehouselabsmsTest']);
+  grunt.registerTask('test:dart', ['env:test', 'dartTest']);
+  grunt.registerTask('test:mail', ['env:test', 'mailTest']);
+  grunt.registerTask('test:sms', ['env:test', 'smsTest']);
 
   grunt.registerTask('dev:runScheduler', ['env:dev', 'nodemon:schedulerTest']);
 

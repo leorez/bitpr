@@ -169,7 +169,7 @@ var onReadyDatabase = function () {
 
       // 공시후 확인
       articleSender_dart.user = user;
-      (new ArticleSender(articleSender_1hour)).save(function (err) {
+      (new ArticleSender(articleSender_dart)).save(function (err) {
         if (err) {
           console.log(err);
         } else {

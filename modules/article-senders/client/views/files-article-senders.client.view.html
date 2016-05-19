@@ -39,17 +39,17 @@
           <label>사진자료</label>
             <div ng-show="item.image1">
               <md-checkbox ng-checked="exists('/images/' + item.image1, vm.fileSelected)" ng-click="toggle('/images/' + item.image1, vm.fileSelected)" id="file-checkbox">
-              <a href="" ng-click="vm.downloadImage(item.image1)">{{item.image1}}</a>
+               <a href="" ng-click="vm.downloadImage(item.image1)"><img src="{{'/images/' + item.image1}}" style="height: 30px; width: 50px;"></a>
               </md-checkbox>
             </div>
             <div ng-show="item.image2">
               <md-checkbox ng-checked="exists('/images/' + item.image2, vm.fileSelected)" ng-click="toggle('/images/' + item.image2, vm.fileSelected)" id="file-checkbox">
-              <a href="" ng-click="vm.downloadImage(item.image2)">{{item.image2}}</a>
+              <a href="" ng-click="vm.downloadImage(item.image2)"><img src="{{'/images/' + item.image2}}" style="height: 30px; width: 50px;"></a>
               </md-checkbox>
             </div>
             <div ng-show="item.image3">
               <md-checkbox ng-checked="exists('/images/' + item.image3, vm.fileSelected)" ng-click="toggle('/images/' + item.image3, vm.fileSelected)" id="file-checkbox">
-              <a href="" ng-click="vm.downloadImage(item.image3)">{{item.image3}}</a>
+              <a href="" ng-click="vm.downloadImage(item.image3)"><img src="{{'/images/' + item.image3}}" style="height: 30px; width: 50px;"></a>
               </md-checkbox>
             </div>
         </div>

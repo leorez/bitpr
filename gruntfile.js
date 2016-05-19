@@ -100,10 +100,6 @@ module.exports = function (grunt) {
       schedulerTest: {
         files: ['scheduler.js', 'scheduler-test.js'],
         tasks: ['test:scheduler']
-      },
-      bluehouselabsmsTest: {
-        files: ['bluehouselabsms.js', 'bluehouselabsms-test.js'],
-        tasks: ['test:bluehouselabsms']
       }
     },
     nodemon: {
@@ -251,9 +247,6 @@ module.exports = function (grunt) {
     exec: {
       schedulerTest: {
         cmd: 'node scheduler-test.js'
-      },
-      bluehouselabsmsTest: {
-        cmd: 'node bluehouselabsms-test.js'
       }
     }
   });

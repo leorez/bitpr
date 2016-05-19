@@ -9,7 +9,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
   async = require('async'),
-  mail = require(path.resolve('./mail')),
+  mail = require(path.resolve('./lib/mail')),
   crypto = require('crypto');
 
 /**

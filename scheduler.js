@@ -21,9 +21,9 @@ var config = require('./config/config'),
   dateAdder = require('add-subtract-date'),
   DateDiff = require('date-diff'),
   moment = require('moment'),
-  mail = require('./mail'),
+  mail = require('./lib/mail'),
   process = require('process'),
-  sms = require('./cafe24.sms'),
+  sms = require('./lib/cafe24.sms.js'),
   request = require('request');
 require('date-format-lite');
 
@@ -238,6 +238,7 @@ function sendArticleEmails() {
             sendArticle(article);
           } else if (article.reserveTime === 999) {
             console.log('공시이후 발송');
+            
           } else {
             Date.masks.default = 'YYYY-MM-DD hh:mm:ss';
             var t = dateAdder.add(article.reserved, article.reserveTime, "hour");

@@ -14,6 +14,7 @@
     vm.downloadImage = downloadImage;
     vm.reSendArticle = reSendArticle;
     vm.shareFiles = shareFiles;
+    vm.toggleDisplayed = toggleDisplayed;
     vm.articleSenders = ArticleSendersService.query();
     vm.articleSelected = [];
     vm.fileSelected = [];
@@ -43,6 +44,15 @@
     $scope.submitShareFiles = function () {
       $mdDialog.hide($scope.emails);
     };
+    
+    // 홈페이지 올리기/홈페이지 내리기
+    function toggleDisplayed(articleSender) {
+      articleSender.displayed = !articleSender.displayed;
+      articleSender.$update(function (resp) {
+      }, function (err) {
+        vm.error = err.data.message;
+      });
+    }
 
     // 파일공유
     function shareFiles(ev) {

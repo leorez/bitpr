@@ -23,6 +23,11 @@ var ArticleSenderSchema = new Schema({
   sent: {
     type: Date
   },
+  displayed: {
+    // 홈페이지에 올라갔는지 여부
+    type: Boolean,
+    default: false
+  },
   status: {
     // 'None', 'Reserved', 'Sent', 'Error', 'Canceled', 'ReSend' : 재전송
     type: String,

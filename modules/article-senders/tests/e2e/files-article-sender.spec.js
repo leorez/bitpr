@@ -95,6 +95,18 @@
           expect(element.all(by.css('.text-success')).get(0).getText()).toBe('메일이 전송되었습니다.');
         });
       });
+
+      describe('When click button 홈페이지에 올리기', function () {
+        it('Should able to see button 홈페이지에서 내리기', function () {
+          var button = element.all(by.buttonText('홈페이지에 올리기')).get(0);
+          expect(button.isPresent()).toBe(true);
+          element.all(by.buttonText('홈페이지에 올리기')).get(0).click();
+          expect(element.all(by.buttonText('홈페이지에서 내리기')).get(0).isPresent()).toBe(true);
+          element.all(by.buttonText('홈페이지에서 내리기')).get(0).click();
+          expect(element.all(by.buttonText('홈페이지에 올리기')).get(0).isPresent()).toBe(true);
+        });
+
+      });
     });
   });
 }());

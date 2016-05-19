@@ -6,7 +6,6 @@
   <div>
     <button type="button" class="btn btn-large btn-primary" ng-click="vm.shareFiles()">선택된 파일 공유</button>
     <button type="button" class="btn btn-large btn-primary" ng-click="vm.reSendArticle()">선택된 보도자료 재전송</button>
-    <button type="button" class="btn btn-large btn-primary" ng-click="vm.sendToHomepage()">선택된 보도자료 홈페이지에 올리기</button>
   </div>
 
   <div ng-show="vm.success" class="text-left text-success">
@@ -26,7 +25,12 @@
           <span>{{item.sent}}</span>
         </small>
       </div>
-      <div style="margin-left: 30px">
+      <div>
+        <button type="button" class="btn" ng-click="vm.toggleDisplayed(item)">
+          {{item.displayed | displayed}}
+        </button>
+      </div>
+      <div style="margin-left: 30px; margin-top: 10px;">
         <div ng-show="item.file">
           <label>보도자료</label>
           <div>

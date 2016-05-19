@@ -2,6 +2,13 @@
   'use strict';
   var module = angular.module('article-senders');
 
+  module.filter('displayed', function () {
+    return function (displayed) {
+      if (displayed) return '홈페이지에서 내리기';
+      else return '홈페이지에 올리기';
+    };
+  });
+
   module.filter('reserveTime', function () {
     return function (input) {
       if (input === 0) return '즉시';

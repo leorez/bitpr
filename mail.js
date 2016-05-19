@@ -7,6 +7,15 @@
   });
 
   exports.sendEmail = function(options, callback) {
+    /**
+     * var options = {
+     *  from: 발신자
+     *  to: 수신자 이메일 리스트 array
+     *  subject: 제목
+     *  html: 내용(html)
+     *  attachments: 첨부파일
+     * };
+     */
     console.log('sendEmail');
     var mail = mailcomposer({
       from: options.from || '"비트피알" <support@bitpr.kr>', // sender address
@@ -36,6 +45,12 @@
         callback(error, body);
       });
     });
+  };
+
+  exports.attachFile = function(options, filename, root) {
+    if (typeof filename !== 'undefined' && filename.length > 0) {
+      options.attachments.push({ filename: filename, path: root + filename });
+    }
   };
 
 }());

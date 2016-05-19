@@ -96,13 +96,7 @@ var search = function (usersCnt, user, since) {
   });
 };
 
-var dstRoot = __dirname+'/uploads';
 
-function attachFile(sendMailOptions, file, root) {
-  if (typeof file !== 'undefined' && file.length > 0) {
-    sendMailOptions.attachments.push({ filename: file, path: root + file });
-  }
-}
 
 function phonesString(article) {
   if((typeof article.user.telephone === 'undefined' || article.user.telephone === '') &&
@@ -149,6 +143,8 @@ function contentBuild(article, callback) {
   });
 }
 
+var dstRoot = __dirname+'/uploads';
+
 function sendArticle(article) {
   console.log('sending... ');
 
@@ -162,10 +158,10 @@ function sendArticle(article) {
       attachments: []
     };
 
-    attachFile(sendMailOptions, article.file, dstRoot + '/docs/');
-    attachFile(sendMailOptions, article.image1, dstRoot + '/images/');
-    attachFile(sendMailOptions, article.image2, dstRoot + '/images/');
-    attachFile(sendMailOptions, article.image3, dstRoot + '/images/');
+    mail.attachFile(sendMailOptions, article.file, dstRoot + '/docs/');
+    mail.attachFile(sendMailOptions, article.image1, dstRoot + '/images/');
+    mail.attachFile(sendMailOptions, article.image2, dstRoot + '/images/');
+    mail.attachFile(sendMailOptions, article.image3, dstRoot + '/images/');
 
     mail.sendEmail(sendMailOptions, function (err, info) {
       if(!err) {

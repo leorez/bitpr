@@ -41,7 +41,7 @@ module.exports = function (grunt) {
       },
       clientViews: {
         files: defaultAssets.client.views,
-        tasks: ['test:e2e'],
+        tasks: ['csslint'],
         options: {
           livereload: true
         }

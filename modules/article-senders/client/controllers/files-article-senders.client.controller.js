@@ -5,17 +5,80 @@
     .module('article-senders')
     .controller('ArticleSendersFilesController', ArticleSendersFilesController);
 
-  ArticleSendersFilesController.$inject = ['$scope', '$http', 'FileSaver', 'Blob', 'ArticleSendersService', '$mdDialog'];
+  ArticleSendersFilesController.$inject = ['$scope', 'Authentication', '$http', 'FileSaver', 'Blob', 'ArticleSendersService', '$mdDialog'];
 
-  function ArticleSendersFilesController($scope, $http, FileSaver, Blob, ArticleSendersService, $mdDialog) {
+  function ArticleSendersFilesController($scope, Authentication, $http, FileSaver, Blob, ArticleSendersService, $mdDialog) {
     var vm = this;
+    vm.authentication = Authentication;
     vm.downloadDoc = downloadDoc;
     vm.downloadImage = downloadImage;
     vm.reSendArticle = reSendArticle;
+    vm.shareFiles = shareFiles;
     vm.articleSenders = ArticleSendersService.query();
     vm.articleSelected = [];
     vm.fileSelected = [];
+    $scope.emails = [];
 
+    $scope.hide = function() {
+      $mdDialog.hide();
+    };
+    $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+    $scope.answer = function(answer) {
+      $mdDialog.hide(answer);
+    };
+
+    $scope.addEmail = function(email) {
+      console.log(email);
+      $scope.emails.push(email);
+    };
+
+    $scope.removeEmail = function (email) {
+      console.log(email);
+      $scope.emails.splice($scope.emails.indexOf(email), 1);
+    };
+
+    // 선택된 파일공유 : 이메일 입력후 전송하기
+    $scope.submitShareFiles = function () {
+      $mdDialog.hide($scope.emails);
+    };
+
+    // 파일공유
+    function shareFiles(ev) {
+      console.log('click');
+      $mdDialog.show({
+        controller: ArticleSendersFilesController,
+        templateUrl: 'modules/article-senders/client/views/email-input-dialog.tmpl.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true,
+        fullscreen: false
+      })
+      .then(function(emails) {
+        var user = vm.authentication.user;
+
+        var data = {
+          from: user.displayName + '<' + user.email + '>',
+          emails: emails,
+          files: vm.fileSelected
+        };
+        console.log('data : ' + data);
+
+        $http.post('/api/send-files', data).then(function (resp) {
+          console.log(resp);
+          vm.success = resp.data.message;
+        }, function (err) {
+          console.error(err.data);
+          vm.error = err.data.message;
+        });
+
+      }, function() {
+        // on cancel
+      });
+    }
+
+    // 선택된 자료 재전송
     function reSendArticle() {
       console.log('reSendArticle');
       $http.post('/api/re-send-article', vm.articleSelected).then(function (resp) {
@@ -23,7 +86,7 @@
         vm.success = resp.data.message;
       }, function (err) {
         console.error(err);
-        vm.err = '에러가 발생하였습니다.';
+        vm.error = '에러가 발생하였습니다.';
       });
     }
 

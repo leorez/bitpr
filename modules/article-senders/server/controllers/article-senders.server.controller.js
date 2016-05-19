@@ -8,6 +8,7 @@ var path = require('path'),
   nodemailer = require('nodemailer'),
   fs = require('fs-extra'),
   appRoot = require('app-root-path'),
+  mail = require(path.resolve('./mail')),
   _ = require('lodash');
 
 
@@ -124,11 +125,50 @@ exports.sendArticle = function (req, res) {
   });
 };
 
-// 기사 재전송
+var dstRoot = __dirname + '/../../../../uploads';
+
+// My 보도자료 파일공유
+exports.sendFiles = function (req, res) {
+  console.log('sendFiles : ' + JSON.stringify(req.body));
+  if (req.body.emails !== undefined && req.body.emails.length > 0
+    && req.body.files !== undefined && req.body.files.length > 0) {
+    var emails = req.body.emails;
+    var files = req.body.files;
+
+    var sendMailOptions = {
+      from: req.body.from,
+      to: emails.join(','),
+      subject: '파일을 공유합니다.',
+      html: '파일공유',
+      attachments: []
+    };
+
+    files.forEach(function (file) {
+      mail.attachFile(sendMailOptions, file, dstRoot);
+    });
+
+    mail.sendEmail(sendMailOptions, function (err, info) {
+      if (!err) {
+        res.json({ status: 'ok', message: '메일이 전송되었습니다.' });
+      } else {
+        return res.status(400).send({
+          message: '메일전송에 실패하였습니다.'
+        });
+      }
+    });
+
+  } else {
+    return res.status(400).send({
+      message: '발송이메일 주소나 파일이 없습니다.'
+    });
+  }
+};
+
+// My 보도자료 재전송
 exports.reSendArticle = function (req, res) {
   var articleSenders = req.body;
   console.log(articleSenders);
-  articleSenders.forEach(function(id) {
+  articleSenders.forEach(function (id) {
     ArticleSender.findById(id).populate('user', 'displayName').exec(function (err, articleSender) {
       if (!err) {
         if (articleSender._id !== undefined && articleSender.status === 'Sent') {

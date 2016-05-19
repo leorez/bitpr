@@ -1,0 +1,37 @@
+<md-dialog aria-label="Mango (Fruit)"  ng-cloak>
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>보도자료 파일공유</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+        <div>
+          <input type="text" ng-model="newEmail" placeholder="이메일주소">
+          <button type="button" class="button" ng-click="addEmail(newEmail)">+</button>
+        </div>
+        <md-list>
+          <md-list-item ng-repeat="email in emails">
+            <p>{{email}}</p>
+            <button type="button" class="button" ng-click="removeEmail(email)">-</button>
+          </md-list-item>
+        </md-list>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <span flex></span>
+      <md-button ng-click="submitShareFiles()" md-autofocus id="submit">
+        보내기
+      </md-button>
+      <md-button ng-click="cancel()" style="margin-right:20px;" id="cancel">
+        취소
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>
+

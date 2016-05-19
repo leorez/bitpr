@@ -25,5 +25,8 @@ module.exports = function (app) {
   app.route('/api/re-send-article')
     .post(articleSenders.reSendArticle);
 
+  app.route('/api/send-files')
+    .post(articleSenders.sendFiles);
+
   app.param('articleSenderId', articleSenders.articleSenderByID);
 };

@@ -52,13 +52,13 @@
       });
 
       it('Should display files', function () {
-        expect(element(by.binding('item.file')).getText()).toMatch(/[a-zA-Z].docx/);
+        expect(element(by.binding('item.file')).getText()).toMatch(/[a-zA-Z0-9_-].docx/);
       });
 
-      describe('When select files and click "선택된 기사 재전송"', function () {
+      describe('When select files and click "선택된 보도자료 재전송"', function () {
         beforeEach(function () {
           element.all(by.id('article-checkbox')).get(0).click();
-          element(by.buttonText('선택된 기사 재전송')).click();
+          element(by.buttonText('선택된 보도자료 재전송')).click();
         });
 
         it('Should able to see success message', function () {
@@ -71,9 +71,27 @@
           element.all(by.id('file-checkbox')).get(0).click();
           element.all(by.id('file-checkbox')).get(1).click();
           element(by.buttonText('선택된 파일 공유')).click();
+          element(by.model('newEmail')).sendKeys('noruya@gmail.com');
+          element(by.buttonText('+')).click();
+        });
+
+        it('Should able to add email', function () {
+          expect(element.all(by.binding('email')).get(0).getText()).toBe('noruya@gmail.com');
+        });
+
+        it('Should able to delete email', function () {
+          element.all(by.buttonText('-')).get(0).click();
+          expect(element(by.binding('email')).isPresent()).toBe(false);
+        });
+
+        it('Should able to see failed message when there is empty email list', function () {
+          element.all(by.buttonText('-')).get(0).click();
+          element(by.id('submit')).click();
+          expect(element.all(by.css('.text-danger')).get(0).getText()).not.toBe('');
         });
 
         it('Should able to see success message', function () {
+          element(by.id('submit')).click();
           expect(element.all(by.css('.text-success')).get(0).getText()).toBe('메일이 전송되었습니다.');
         });
       });

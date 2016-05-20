@@ -128,10 +128,11 @@ mammoth.convertToHtml({ path: uploadsRoot + '/docs/test.docx' })
 
 var onReadyDatabase = function () {
   var user = new User(user1);
-  var total = 1;
   var finish = 0;
+  var list = [];
+  
   function doneProc() {
-    if (++finish === total) {
+    if (++finish === list.length) {
       closeDB();
     }
   }
@@ -141,41 +142,24 @@ var onReadyDatabase = function () {
       console.log(err);
     } else {
       console.log('success save user1');
-      articleSender_imediate.user = user;
-      var article = new ArticleSender(articleSender_imediate);
+      
+      // list.push(articleSender_imediate);
+      // list.push(articleSender_1hour);
+      list.push(articleSender_dart);
+      
+      list.forEach(function (item) {
+        item.user = user;
+        var article = new ArticleSender(item);
+        article.save(function (err) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('success save articleSender');
+          }
 
-      // // 즉식발송
-      // article.save(function (err) {
-      //   if (err) {
-      //     console.log(err);
-      //   } else {
-      //     console.log('success save articleSender_imediate');
-      //   }
-      //
-      //   doneProc();
-      //
-      // });
-      //
-      // // 1hour
-      // articleSender_1hour.user = user;
-      // (new ArticleSender(articleSender_1hour)).save(function (err) {
-      //   if (err) {
-      //     console.log(err);
-      //   } else {
-      //     console.log('success save articleSender_1hour');
-      //   }
-      //   doneProc();
-      // });
+          doneProc();
 
-      // 공시후 확인
-      articleSender_dart.user = user;
-      (new ArticleSender(articleSender_dart)).save(function (err) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log('success save 공시확인후');
-        }
-        doneProc();
+        });
       });
     }
   });

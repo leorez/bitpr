@@ -20,6 +20,9 @@ var ArticleSenderSchema = new Schema({
   canceled: {
     type: Date
   },
+  smsAlertedTime: {
+    type: Date
+  },
   sent: {
     type: Date
   },

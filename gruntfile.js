@@ -396,9 +396,9 @@ module.exports = function (grunt) {
   grunt.registerTask('test:e2e', ['env:test', 'lint', 'dropdb', 'signup', 'server', 'protractor']);
   grunt.registerTask('test:scheduler', ['env:test', 'schedulerTest']);
   grunt.registerTask('test:runScheduler', ['env:test', 'nodemon:schedulerTest']);
-  grunt.registerTask('test:dart', ['env:test', 'dartTest']);
-  grunt.registerTask('test:mail', ['env:test', 'mailTest']);
-  grunt.registerTask('test:sms', ['env:test', 'smsTest']);
+  grunt.registerTask('test:dart', ['env:test', 'lint', 'dartTest']);
+  grunt.registerTask('test:mail', ['env:test', 'lint', 'mailTest']);
+  grunt.registerTask('test:sms', ['env:test', 'lint', 'smsTest']);
 
   grunt.registerTask('dev:runScheduler', ['env:dev', 'nodemon:schedulerTest']);
 

@@ -54,6 +54,10 @@ var UserSchema = new Schema({
     required: '이메일주소는 필수입니다.',
     validate: [validateLocalStrategyEmail, '이메일 형식에 맞지않는 이메일 주소입니다.']
   },
+  emailConfirmed: {
+    type: Boolean,
+    default: false
+  },
   password: {
     type: String,
     default: ''

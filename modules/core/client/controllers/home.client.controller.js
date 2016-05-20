@@ -49,6 +49,14 @@
 
           article.$save(function (response) {
             console.log('success:' + response);
+            var confirm = $mdDialog.confirm()
+              .textContent('홈페이지에 게시되었습니다. 홈페이지에 게시된 글을 확인시겠습니까?')
+              .ok('예')
+              .cancel('아니요');
+            $mdDialog.show(confirm).then(function () {
+              $location.path('/settings/displayed-list');
+            });
+
           }, function (errorRespose) {
             $scope.error = errorRespose.data.message;
             console.log('failed: ' + $scope.error);
@@ -65,27 +73,25 @@
     $scope.shareArticle = function ($event) {
       // 선택된 기사 공유하기
       // : 제목과 링크로 구성된 문자열을 만들어 클립보드로 복사한다.
-      if (Authentication.user) {
-        var selected = $scope.selected;
-        var text = '';
-        angular.forEach(selected, function (item) {
-          text += '<p>' + item.title + ' <a href="' + item.url + '">더보기</a></p>';
+      var selected = $scope.selected;
+      var text = '';
+      angular.forEach(selected, function (item) {
+        text += '<p>' + item.title + ' <a href="' + item.url + '">더보기</a></p>';
+      });
+      console.log(text);
+
+      clipboard.copyText(text);
+
+      var alert = $mdDialog.alert()
+        .title('기사링크가 복사되었습니다.')
+        .htmlContent('<md-content>' + text + '</md-content>')
+        .ok('닫기');
+
+      $mdDialog
+        .show(alert)
+        .finally(function () {
+          alert = undefined;
         });
-        console.log(text);
-
-        clipboard.copyText(text);
-
-        var alert = $mdDialog.alert()
-          .title('기사링크가 복사되었습니다.')
-          .htmlContent('<md-content>' + text + '</md-content>')
-          .ok('닫기');
-
-        $mdDialog
-          .show(alert)
-          .finally(function () {
-            alert = undefined;
-          });
-      }
     };
 
     $scope.goSearch = function () {

@@ -8,7 +8,7 @@ var path = require('path'),
   nodemailer = require('nodemailer'),
   fs = require('fs-extra'),
   appRoot = require('app-root-path'),
-  mail = require(path.resolve('./mail')),
+  mail = require(path.resolve('./lib/mail')),
   _ = require('lodash');
 
 

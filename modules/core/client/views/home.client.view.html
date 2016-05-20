@@ -7,7 +7,7 @@
         </span>
   </div>
 
-  <div style="margin-top: 10px; margin-bottom: 10px;">
+  <div ng-show="resultArticles.length > 0" style="margin-top: 10px; margin-bottom: 10px;">
     <button ng-show="authentication.user" type="button" class="btn btn-large btn-primary" ng-click="displayArticleToHomepage()">선택된 기사 홈페이지에 올리기</button>
     <button type="button" class="btn btn-large btn-primary" ng-click="shareArticle()">선택된 기사 공유하기</button>
   </div>

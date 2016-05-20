@@ -101,6 +101,21 @@ var articleSender_1hour = {
   fare: 500000
 };
 
+// 공시후 확인
+var articleSender_dart = {
+  status: 'Reserved',
+  title: '거북선 보도자료 (공시확인후)',
+  content: 'Test Content',
+  file: 'test.docx',
+  image1: 'test1.jpeg',
+  image2: 'test2.jpeg',
+  image3: 'test3.jpg',
+  reserveTime: 999,
+  reserved: new Date(),
+  sendCount: 1,
+  fare: 500000
+};
+
 mammoth.convertToHtml({ path: uploadsRoot + '/docs/test.docx' })
   .then(function (result) {
     articleSender_imediate.content = result.value;
@@ -113,6 +128,14 @@ mammoth.convertToHtml({ path: uploadsRoot + '/docs/test.docx' })
 
 var onReadyDatabase = function () {
   var user = new User(user1);
+  var total = 1;
+  var finish = 0;
+  function doneProc() {
+    if (++finish === total) {
+      closeDB();
+    }
+  }
+
   user.save(function (err) {
     if (err) {
       console.log(err);
@@ -121,27 +144,19 @@ var onReadyDatabase = function () {
       articleSender_imediate.user = user;
       var article = new ArticleSender(articleSender_imediate);
 
-      // 즉식발송
-      article.save(function (err) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log('success save articleSender_imediate');
-        }
-
-        // 1hour
-        articleSender_1hour.user = user;
-        (new ArticleSender(articleSender_1hour)).save(function (err) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('success save articleSender_1hour');
-          }
-          closeDB();
-        });
-      });
-
-      // 1hour
+      // // 즉식발송
+      // article.save(function (err) {
+      //   if (err) {
+      //     console.log(err);
+      //   } else {
+      //     console.log('success save articleSender_imediate');
+      //   }
+      //
+      //   doneProc();
+      //
+      // });
+      //
+      // // 1hour
       // articleSender_1hour.user = user;
       // (new ArticleSender(articleSender_1hour)).save(function (err) {
       //   if (err) {
@@ -149,8 +164,19 @@ var onReadyDatabase = function () {
       //   } else {
       //     console.log('success save articleSender_1hour');
       //   }
-      //   closeDB();
+      //   doneProc();
       // });
+
+      // 공시후 확인
+      articleSender_dart.user = user;
+      (new ArticleSender(articleSender_dart)).save(function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('success save 공시확인후');
+        }
+        doneProc();
+      });
     }
   });
 };

@@ -5,9 +5,9 @@
     .module('article-senders')
     .controller('ArticleSendersFilesController', ArticleSendersFilesController);
 
-  ArticleSendersFilesController.$inject = ['$scope', 'Authentication', '$http', 'FileSaver', 'Blob', 'ArticleSendersService', '$mdDialog'];
+  ArticleSendersFilesController.$inject = ['$scope', 'ReportersService', 'Authentication', '$http', 'FileSaver', 'Blob', 'ArticleSendersService', '$mdDialog'];
 
-  function ArticleSendersFilesController($scope, Authentication, $http, FileSaver, Blob, ArticleSendersService, $mdDialog) {
+  function ArticleSendersFilesController($scope, ReportersService, Authentication, $http, FileSaver, Blob, ArticleSendersService, $mdDialog) {
     var vm = this;
     vm.authentication = Authentication;
     vm.downloadDoc = downloadDoc;
@@ -25,9 +25,6 @@
     };
     $scope.cancel = function() {
       $mdDialog.cancel();
-    };
-    $scope.answer = function(answer) {
-      $mdDialog.hide(answer);
     };
 
     $scope.addEmail = function(email) {
@@ -88,16 +85,67 @@
       });
     }
 
+    ReporterSelectDlgController.$inject = ['$scope', '$mdDialog', 'ReportersService'];
+    function ReporterSelectDlgController($scope, $mdDialog, ReportersService) {
+      $scope.reporters = ReportersService.query();
+      $scope.reporterSelected = [];
+      $scope.exists = function(item, list) {
+        return list.indexOf(item) > -1;
+      };
+
+      $scope.toggle = function (item, list) {
+        var idx = list.indexOf(item);
+        if (idx > -1) {
+          list.splice(idx, 1);
+        } else {
+          list.push(item);
+        }
+
+        console.log(JSON.stringify(list));
+      };
+
+      console.log(JSON.stringify($scope.reporters));
+      $scope.hide = function() {
+        $mdDialog.hide();
+      };
+      $scope.cancel = function() {
+        $mdDialog.cancel();
+      };
+      // 선택된 파일공유 : 이메일 입력후 전송하기
+      $scope.submit = function () {
+        $mdDialog.hide($scope.reporterSelected);
+      };
+    }
+
     // 선택된 자료 재전송
-    function reSendArticle() {
+    function reSendArticle(ev) {
       console.log('reSendArticle');
-      $http.post('/api/re-send-article', vm.articleSelected).then(function (resp) {
-        console.log(resp);
-        vm.success = resp.data.message;
-      }, function (err) {
-        console.error(err);
-        vm.error = '에러가 발생하였습니다.';
+      $mdDialog.show({
+        controller: ReporterSelectDlgController,
+        templateUrl: 'modules/article-senders/client/views/reporters-dialog.tmpl.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true,
+        fullscreen: false
+      })
+      .then(function(reporters) {
+        var data = {
+          reporters: reporters,
+          articleSenders: vm.articleSelected
+        };
+
+        $http.post('/api/re-send-article', data).then(function (resp) {
+          console.log(resp);
+          vm.success = resp.data.message;
+        }, function (err) {
+          console.error(err);
+          vm.error = '에러가 발생하였습니다.';
+        });
+      }, function () {
+        // on cancel
       });
+
+
     }
 
     $scope.exists = function(item, list) {

@@ -153,7 +153,7 @@ function sendArticle(article) {
     console.log(content);
     var sendMailOptions = {
       from: '"비트피알" <news@bitpr.kr>',
-      to: 'noruya@gmail.com',
+      to: article.emails || 'noruya@gmail.com',
       subject: article.title,
       html: content,
       attachments: []

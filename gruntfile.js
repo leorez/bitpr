@@ -272,10 +272,10 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.event.on('coverage', function(lcovFileContents, done) {
+  grunt.event.on('coverage', function (lcovFileContents, done) {
     // Set coverage config so karma-coverage knows to run coverage
     testConfig.coverage = true;
-    require('coveralls').handleInput(lcovFileContents, function(err) {
+    require('coveralls').handleInput(lcovFileContents, function (err) {
       if (err) {
         return done(err);
       }
@@ -353,7 +353,9 @@ module.exports = function (grunt) {
     mongoose.connect(function (db) {
       var mongoose = require('mongoose'),
         schemaUser = require('./modules/users/server/models/user.server.model'),
-        User = mongoose.model('User');
+        schemaRepoter = require('./modules/article-senders/server/models/reporter.server.model'),
+        User = mongoose.model('User'),
+        Reporter = mongoose.model('Reporter');
 
       var user = new User(user1);
       user.save(function (err) {
@@ -362,7 +364,72 @@ module.exports = function (grunt) {
         } else {
           console.log('success signup test user');
         }
-        db.connection.db.close(done);
+
+        var reporter1 = {
+          name: 'reporter1',
+          corpName: 'corpName1',
+          email: 'reporter1@gmail.com',
+          telephone: '02-98760-5432',
+          cellphone: '010-9876-5432',
+          priority: 0
+        };
+
+        var reporter2 = {
+          name: 'reporter2',
+          corpName: 'corpName2',
+          email: 'reporter2@gmail.com',
+          telephone: '02-98760-5431',
+          cellphone: '010-9876-5431',
+          priority: 1
+        };
+
+        var reporter = new Reporter(reporter1);
+        reporter.save(function (err) {
+          db.connection.db.close(done);
+        });
+
+      });
+    });
+  });
+
+  grunt.task.registerTask('insertRepoter', 'Insert Repoter', function () {
+    // async mode
+    var done = this.async();
+
+    // Use mongoose configuration
+    var mongoose = require('./config/lib/mongoose.js');
+
+    mongoose.connect(function (db) {
+      var mongoose = require('mongoose'),
+        schemaRepoter = require('./modules/article-senders/server/models/reporter.server.model'),
+        Reporter = mongoose.model('Reporter');
+
+      var reporter1 = {
+        name: '김기자',
+        corpName: 'YTN',
+        email: 'reporter1@gmail.com',
+        telephone: '02-98760-5432',
+        cellphone: '010-9876-5432',
+        priority: 0
+      };
+
+      var reporter2 = {
+        name: '박기자',
+        corpName: 'MBN',
+        email: 'reporter2@gmail.com',
+        telephone: '02-98760-5431',
+        cellphone: '010-9876-5431',
+        priority: 1
+      };
+
+      Reporter.remove();
+      var reporter = new Reporter(reporter1);
+      reporter.save(function (err) {
+
+        var reporter = new Reporter(reporter2);
+        reporter.save(function (err) {
+          db.connection.db.close(done);
+        });
       });
     });
   });
@@ -382,6 +449,8 @@ module.exports = function (grunt) {
   grunt.task.registerTask('dartTest', 'Sarting dart test', ['exec:dartTest']);
   grunt.task.registerTask('mailTest', 'Sarting mail test', ['exec:mailTest']);
   grunt.task.registerTask('smsTest', 'Sarting sms test', ['exec:smsTest']);
+
+  grunt.registerTask('reporter', ['env:dev', 'insertRepoter']);
 
   // Lint CSS and JavaScript files.
   grunt.registerTask('lint', ['sass', 'less', 'eslint', 'csslint']);

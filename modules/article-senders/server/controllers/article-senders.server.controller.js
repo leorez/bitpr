@@ -166,7 +166,16 @@ exports.sendFiles = function (req, res) {
 
 // My 보도자료 재전송
 exports.reSendArticle = function (req, res) {
-  var articleSenders = req.body;
+  var reporters = req.body.reporters;
+  var emails = '';
+  reporters.forEach(function (item, index) {
+    emails += item.corpName + item.name + ' <' + item.email + '>';
+    if (index !== reporters.length - 1) {
+      emails += ',';
+    }
+  });
+
+  var articleSenders = req.body.articleSenders;
   console.log(articleSenders);
   articleSenders.forEach(function (id) {
     ArticleSender.findById(id).populate('user', 'displayName').exec(function (err, articleSender) {
@@ -174,6 +183,7 @@ exports.reSendArticle = function (req, res) {
         if (articleSender._id !== undefined && articleSender.status === 'Sent') {
           console.log(articleSender._id);
           articleSender.status = 'ReSend';
+          articleSender.emails = emails;
           articleSender.save(function (err) {
             if (err) {
               return res.status(400).send({

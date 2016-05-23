@@ -37,6 +37,11 @@ var ArticleSenderSchema = new Schema({
     default: 'None',
     trim: true
   },
+  emails: {
+    type: String,
+    default: '',
+    trim: true
+  },
   smsAlerted: {
     // 발송 5분전에 sms통보했는지 여부
     type: Boolean,

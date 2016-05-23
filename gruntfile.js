@@ -422,13 +422,13 @@ module.exports = function (grunt) {
         priority: 1
       };
 
-      var reporter2 = {
+      var reporter3 = {
         name: '남기자',
         corpName: 'SBS',
         email: 'zidell@gmail.com',
         telephone: '02-98760-5431',
         cellphone: '010-9876-5431',
-        priority: 1
+        priority: 2
       };
 
       Reporter.remove();
@@ -437,7 +437,10 @@ module.exports = function (grunt) {
 
         var reporter = new Reporter(reporter2);
         reporter.save(function (err) {
-          db.connection.db.close(done);
+          var reporter = new Reporter(reporter3);
+          reporter.save(function (err) {
+            db.connection.db.close(done);
+          });
         });
       });
     });

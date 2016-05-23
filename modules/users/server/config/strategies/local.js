@@ -23,7 +23,12 @@ module.exports = function () {
         return done(err);
       }
       console.log('user: ' + user);
-      if (!user || !user.authenticate(password)) {
+      if (user && !user.emailConfirmed) {
+        return done(null, false, {
+          message: '이메일 인증이 필요합니다.'
+        });
+      }
+      else if (!user || !user.authenticate(password)) {
         return done(null, false, {
           message: '이메일 또는 암호가 잘못입력되었습니다.'
         });

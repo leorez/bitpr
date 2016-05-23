@@ -11,6 +11,12 @@
   function routeConfig($stateProvider) {
     // Users state routing
     $stateProvider
+      .state('authentication.emailauth', {
+        url: '/ea',
+        templateUrl: 'modules/users/client/views/authentication/emailauth.client.view.html',
+        controller: 'AuthenticationController',
+        controllerAs: 'vm'
+      })
       .state('settings', {
         abstract: true,
         url: '/settings',
@@ -90,6 +96,12 @@
         data: {
           pageTitle: 'Signup'
         }
+      })
+      .state('authentication.emailauthinfo', {
+        url: '/emailauth-info',
+        templateUrl: 'modules/users/client/views/authentication/emailauth-info.client.view.html',
+        controller: 'AuthenticationController',
+        controllerAs: 'vm'
       })
       .state('authentication.signin', {
         url: '/signin?err',

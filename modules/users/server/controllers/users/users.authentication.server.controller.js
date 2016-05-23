@@ -7,6 +7,8 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
+  mail = require(path.resolve('./lib/mail')),
+  keygen = require("keygenerator"),
   User = mongoose.model('User');
 
 // URLs for which user can't be redirected on signin
@@ -25,7 +27,8 @@ exports.signup = function (req, res) {
   // Init user and add missing fields
   var user = new User(req.body);
   user.provider = 'local';
-  user.displayName = user.firstName + ' ' + user.lastName;
+  var key = keygen._();
+  user.key = key;
 
   // Then save the user
   user.save(function (err) {
@@ -38,12 +41,47 @@ exports.signup = function (req, res) {
       user.password = undefined;
       user.salt = undefined;
 
-      req.login(user, function (err) {
+      var link = 'http://localhost:3000/ea/' + key;
+      var content = '<p>' + user.displayName + '님, </p>';
+      content += '<div>아래링크를 클릭하시고 회원가입을 완료하세요.</div>';
+      content += '<a href="' + link + '">' + link + '</a>';
+
+      var options = {
+        from: '"비트피알" <support@bitpr.kr>',
+        to: user.email,
+        subject: '[비트피알] 이메일 인증으로 회원가입을 완료하세요.',
+        html: content
+      };
+
+      mail.sendEmail(options, function (err, info) {
+        if (!err) {
+          res.json(user);
+        } else {
+          res.status(400).send(err);
+        }
+      });
+    }
+  });
+};
+
+/**
+ * 이메일 인증
+ */
+exports.emailauth = function (req, res) {
+  var key = req.params.key;
+  console.log(key);
+  User.findOne({ key: key }, function (err, user) {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      console.log(JSON.stringify(user));
+      user.emailConfirmed = true;
+      user.save(function (err) {
         if (err) {
           res.status(400).send(err);
-        } else {
-          res.json(user);
+          return;
         }
+        res.redirect('/authentication/signin?result=success-signup');
       });
     }
   });

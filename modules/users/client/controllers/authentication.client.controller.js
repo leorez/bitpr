@@ -5,9 +5,9 @@
     .module('users')
     .controller('AuthenticationController', AuthenticationController);
 
-  AuthenticationController.$inject = ['$scope', 'UsersService', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator'];
+  AuthenticationController.$inject = ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator'];
 
-  function AuthenticationController($scope, UsersService, $state, $http, $location, $window, Authentication, PasswordValidator) {
+  function AuthenticationController($scope, $state, $http, $location, $window, Authentication, PasswordValidator) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -15,6 +15,12 @@
     vm.signup = signup;
     vm.signin = signin;
     vm.callOauthProvider = callOauthProvider;
+    vm.email = $state.params.email;
+
+    console.log(JSON.stringify($location.search()));
+    if ($location.search().result === 'success-signup') {
+      vm.success = '회원등록이 완료되었습니다.';
+    }
 
     // Get an eventual error defined in the URL query string:
     vm.error = $location.search().err;
@@ -34,11 +40,8 @@
       }
 
       $http.post('/api/auth/signup', vm.credentials).success(function (response) {
-        // If successful we assign the response to the global user model
-        vm.authentication.user = response;
-
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'home', $state.previous.params);
+        $state.go('authentication.emailauthinfo');
       }).error(function (response) {
         vm.error = response.message;
       });

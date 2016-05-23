@@ -11,7 +11,7 @@ describe('Users E2E Tests:', function () {
   var user2 = {
     corpCode: '005931',
     displayName: '이순신',
-    email: 'test.user2@meanjs.com',
+    email: 'testuser@gmail.com',
     password: 'testtest!09AA'
   };
 
@@ -191,9 +191,14 @@ describe('Users E2E Tests:', function () {
 
       browser.wait(function () {
         return browser.getCurrentUrl().then(function (url) {
-          return /\//.test(url);
+          return /\/emailauth-info/.test(url);
+          // var pageOk = /\/emailauth-info/.test(url);
+          // if (pageOk) {
+          //   expect(element(by.binding('vm.email')).getText()).toBe('noruya@gmail.com');
+          // }
+          // return pageOk;
         });
-      }, 1000);
+      }, 10000);
     });
 
     it('Should report Email already exists', function () {

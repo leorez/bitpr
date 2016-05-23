@@ -137,6 +137,12 @@ var UserSchema = new Schema({
     type: String,
     default: '',
     trim: true
+  },
+  /* 이메일 인증키 */
+  key: {
+    type: String,
+    default: '',
+    trim: true
   }
 });
 

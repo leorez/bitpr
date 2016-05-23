@@ -9,6 +9,8 @@ var path = require('path'),
   fs = require('fs-extra'),
   appRoot = require('app-root-path'),
   mail = require(path.resolve('./lib/mail')),
+  hwp = require(path.resolve('./lib/hwp/hwp')),
+  PlainText = require(path.resolve('./lib/hwp/converter/plainText')),
   _ = require('lodash');
 
 
@@ -53,6 +55,21 @@ function saveDoc(file) {
   return saveFile(file, '/docs/');
 }
 
+function docType(file) {
+  console.log(file);
+  var ext = path.extname(file);
+  console.log(ext);
+
+  var docExts = ['.doc', '.docx'];
+  if (docExts.indexOf(ext) !== -1)
+    return 'DOC';
+
+  if (ext === '.hwp')
+    return 'HWP';
+
+  return 'UNKOWN';
+}
+
 /**
  * Create a Article sender
  */
@@ -83,17 +100,45 @@ exports.create = function (req, res) {
       if (filepath)
         articleSender.file = filepath;
 
-      mammoth.convertToHtml({ path: files.file.path })
-        .then(function (result) {
-          articleSender.content = result.value;
-          saveArticleSender(articleSender, req, res);
+      var type = docType(files.file.name);
+      console.log('***** type : ' + type);
+      console.log('***** filepath: ' + filepath);
 
-        }, function (err) {
-          console.log('err: ' + err);
-          res.status(400).send({
-            message: '\'MS Word\'가 아닙니다. 파일을 확인해주세요.'
-          });
-        }).done();
+      if (type === 'DOC') {
+        // MS 워드
+        mammoth.convertToHtml({ path: files.file.path })
+          .then(function (result) {
+            articleSender.content = result.value;
+            saveArticleSender(articleSender, req, res);
+
+          }, function (err) {
+            console.error('err: ' + err);
+            res.status(400).send({
+              message: '\'MS Word\'가 아닙니다. 파일을 확인해주세요.'
+            });
+          }).done();
+      } else if (type === 'HWP') {
+        // 한글
+        hwp.open(files.file.path, { 'type': 'hwp', 'saveTree': false }, function (err, doc) {
+          if (err) {
+            console.error(err);
+            res.status(400).send({
+              message: '한글파일을 변환할 수 없습니다.'
+            });
+            return;
+          }
+          var content = doc.convertTo(new PlainText);
+          console.log(content);
+          articleSender.content = content;
+          saveArticleSender(articleSender, req, res);
+        });
+      } else {
+        // 파일형식 에러
+        console.error('');
+        res.status(400).send({
+          message: '\'MS Word\'와 \'한글\'파일만 지원합니다.'
+        });
+      }
     } else {
       saveArticleSender(articleSender, req, res);
     }

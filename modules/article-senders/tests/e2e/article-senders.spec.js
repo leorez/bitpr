@@ -126,6 +126,33 @@ describe('articleSender page tests', function () {
     }, 10000);
   });
 
+  it('should be able to submit with hwp file and images', function () {
+    page.titleEl.sendKeys('test');
+    page.fileEl.sendKeys(__dirname + '/test.hwp');
+    element(by.model('vm.articleSender.image1')).sendKeys(__dirname + '/test1.jpeg');
+    element(by.model('vm.articleSender.image2')).sendKeys(__dirname + '/test2.jpeg');
+    element(by.cssContainingText('option', '즉시')).click();
+    element(by.cssContainingText('option', '2개')).click();
+    expect(page.fareEl.getText()).toContain('800000원');
+    element(by.css('button[type="submit"]')).click();
+    browser.wait(function () {
+      return browser.getCurrentUrl().then(function (url) {
+        var isPrevewPage = /article-senders\/([0-9a-fA-F]{24})$/.test(url);
+        expect(isPrevewPage).toBeTruthy();
+        if (isPrevewPage) {
+          expect(element(by.css('#image1')).isPresent()).toBeTruthy();
+          expect(element(by.css('#image2')).isPresent()).toBeTruthy();
+          // expect(element(by.css('#image3')).isPresent()).toBeFalsy();
+          element(by.buttonText('발송')).click();
+          element(by.buttonText('닫기')).click();
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }, 10000);
+  });
+
   it('should be able to submit with docx file and 1시간후', function () {
     page.titleEl.sendKeys('test');
     page.fileEl.sendKeys(__dirname + '/test.docx');

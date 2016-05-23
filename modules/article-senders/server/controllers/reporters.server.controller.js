@@ -23,7 +23,7 @@
   };
 
   /**
-   * Show the current Article sender
+   * Show the current Reporter
    */
   exports.read = function (req, res) {
     console.log('read');
@@ -35,7 +35,7 @@
   };
 
   /**
-   * Update a Article sender
+   * Update a Reporter
    */
   exports.update = function (req, res) {
     var reporter = req.reporter;
@@ -53,7 +53,7 @@
   };
 
   /**
-   * Delete an Article sender
+   * Delete an Reporter
    */
   exports.delete = function (req, res) {
     var reporter = req.reporter;
@@ -70,10 +70,10 @@
   };
 
   /**
-   * List of Article senders
+   * List of Reporters
    */
   exports.list = function (req, res) {
-    Reporter.find().sort('-created').exec(function (err, reporters) {
+    Reporter.find().sort('priority').exec(function (err, reporters) {
       if (err) {
         return res.status(400).send({
           messeage: errorHandler.getErrorMessage(err)

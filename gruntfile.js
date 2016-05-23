@@ -407,7 +407,7 @@ module.exports = function (grunt) {
       var reporter1 = {
         name: '김기자',
         corpName: 'YTN',
-        email: 'reporter1@gmail.com',
+        email: 'noruya@gmail.com',
         telephone: '02-98760-5432',
         cellphone: '010-9876-5432',
         priority: 0
@@ -416,7 +416,16 @@ module.exports = function (grunt) {
       var reporter2 = {
         name: '박기자',
         corpName: 'MBN',
-        email: 'reporter2@gmail.com',
+        email: 'smartkoh@gmail.com',
+        telephone: '02-98760-5431',
+        cellphone: '010-9876-5431',
+        priority: 1
+      };
+
+      var reporter2 = {
+        name: '남기자',
+        corpName: 'SBS',
+        email: 'zidell@gmail.com',
         telephone: '02-98760-5431',
         cellphone: '010-9876-5431',
         priority: 1
@@ -450,7 +459,8 @@ module.exports = function (grunt) {
   grunt.task.registerTask('mailTest', 'Sarting mail test', ['exec:mailTest']);
   grunt.task.registerTask('smsTest', 'Sarting sms test', ['exec:smsTest']);
 
-  grunt.registerTask('reporter', ['env:dev', 'insertRepoter']);
+  grunt.registerTask('dev:reporter', ['env:dev', 'insertRepoter']);
+  grunt.registerTask('prod:reporter', ['env:prod', 'insertRepoter']);
 
   // Lint CSS and JavaScript files.
   grunt.registerTask('lint', ['sass', 'less', 'eslint', 'csslint']);

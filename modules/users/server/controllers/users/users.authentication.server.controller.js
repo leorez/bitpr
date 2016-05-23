@@ -41,7 +41,7 @@ exports.signup = function (req, res) {
       user.password = undefined;
       user.salt = undefined;
 
-      var link = 'http://localhost:3000/ea/' + key;
+      var link = 'http://' + req.headers.host + '/ea/' + key;
       var content = '<p>' + user.displayName + '님, </p>';
       content += '<div>아래링크를 클릭하시고 회원가입을 완료하세요.</div>';
       content += '<a href="' + link + '">' + link + '</a>';

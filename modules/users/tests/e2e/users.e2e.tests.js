@@ -378,6 +378,18 @@ describe('Users E2E Tests:', function () {
   //   });
   // });
 
+  describe('Upload picture tests', function () {
+    beforeEach(function () {
+      browser.get('/settings/picture');
+    });
+
+    it('Should be able to upload picture', function () {
+      element(by.model('vm.file')).sendKeys('');
+      element(by.buttonText('올리기')).click();
+      
+    });
+  });
+
   describe('Forgot password tests', function () {
 
     beforeEach(function () {
@@ -390,13 +402,7 @@ describe('Users E2E Tests:', function () {
       element(by.css('button[type=submit]')).click();
       expect(element.all(by.css('.text-danger')).get(0).getText()).toBe('입력하신 이메일 주소로 가입된 사용자가 없습니다.');
     });
-
-    // it('Should be able to send email', function () {
-    //   element(by.model('vm.credentials.email')).sendKeys(user1.email);
-    //   element(by.css('button[type=submit]')).click();
-    //   browser.wait(function () {
-    //     return element.all(by.css('.text-success')).get(0).getText() === '입력하신 이메일 주소로 암호재설정 이메일을 전송하였습니다.';
-    //   }, 5000);
-    // });
   });
+
+
 });

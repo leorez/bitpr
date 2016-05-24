@@ -12,6 +12,7 @@
 
     vm.user = Authentication.user;
     vm.imageURL = vm.user.profileImageURL;
+    console.log(vm.imageURL);
     vm.uploadProfilePicture = uploadProfilePicture;
 
     vm.cancelUpload = cancelUpload;

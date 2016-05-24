@@ -4,12 +4,13 @@
  * Module dependencies
  */
 var _ = require('lodash'),
-  fs = require('fs'),
+  fs = require('fs-extra'),
   path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   multer = require('multer'),
   config = require(path.resolve('./config/config')),
+  appRoot = require('app-root-path'),
   User = mongoose.model('User');
 
 /**
@@ -67,8 +68,16 @@ exports.changeProfilePicture = function (req, res) {
           message: 'Error occurred while uploading profile picture'
         });
       } else {
-        console.log(req);
+        console.log(req.files.newProfilePicture);
         user.profileImageURL = config.uploads.profileUpload.dest + req.files.newProfilePicture.name;
+        var savePath = appRoot + '/' + user.profileImageURL;
+        fs.move(req.files.newProfilePicture.path, savePath, function (err) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          console.log('mv success' + savePath);
+        });
 
         user.save(function (saveError) {
           if (saveError) {

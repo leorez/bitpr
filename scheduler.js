@@ -97,8 +97,6 @@ var search = function (usersCnt, user, since) {
   });
 };
 
-
-
 function phonesString(article) {
   if((typeof article.user.telephone === 'undefined' || article.user.telephone === '') &&
     (typeof article.user.cellphone === 'undefined' || article.user.cellphone === ''))
@@ -202,7 +200,7 @@ function sendArticle(article) {
 function sendAlertSms(article) {
   var cellphone = article.user.cellphone.replace(/[^0-9]+/g, '');
 
-  var cancelShortUrl = 'http://bitpr.kr/iejifew89';
+  var cancelShortUrl = 'http://goo.gl/xI16rE';
   // send sms
   var smsOptions = {
     msg: '[비트피알] 보도자료가 5분후 발송됩니다. 발송취소 ' +  cancelShortUrl,

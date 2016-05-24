@@ -4,6 +4,7 @@ var appRoot = require('app-root-path');
 module.exports = function (app) {
   // Root routing
   var core = require('../controllers/core.server.controller');
+  var shortenurl = require('../controllers/shortenurl.server.controller');
 
   // Define error pages
   app.route('/server-error').get(core.renderServerError);
@@ -15,4 +16,5 @@ module.exports = function (app) {
   app.route('/*').get(core.renderIndex);
   app.route('/search').post(core.search);
   app.route('/api/crp-code-to-name').post(core.apiCorpCodeToName);
+  app.route('/e/:shortenurl').get(shortenurl.resolve);
 };

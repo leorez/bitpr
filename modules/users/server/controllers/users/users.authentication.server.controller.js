@@ -8,7 +8,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   passport = require('passport'),
   mail = require(path.resolve('./lib/mail')),
-  keygen = require("keygenerator"),
+  keygen = require('keygenerator'),
   User = mongoose.model('User');
 
 // URLs for which user can't be redirected on signin

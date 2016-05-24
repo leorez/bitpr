@@ -27,7 +27,7 @@ exports.create = function (req, res) {
 };
 
 exports.list = function (req, res) {
-  DisplayedArticle.find().sort('-created').populate('user', 'displayName').exec(function (err, articles) {
+  DisplayedArticle.find({ user: req.user._id }).sort('-created').populate('user', 'email').exec(function (err, articles) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -53,7 +53,7 @@ exports.delete = function (req, res) {
 };
 
 exports.displayedArticleByID = function (req, res, next, id) {
-  DisplayedArticle.findById(id).populate('user', 'displayName').exec(function (err, article) {
+  DisplayedArticle.findById(id).populate('user', 'email').exec(function (err, article) {
     if (err) return next(err);
     if (!article) return next(new Error('Failed to load article' + id));
     req.article = article;

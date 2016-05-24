@@ -257,7 +257,7 @@ exports.delete = function (req, res) {
  * List of Article senders
  */
 exports.list = function (req, res) {
-  ArticleSender.find({ user: req.user._id }).sort('-created').populate('user', 'displayName').exec(function (err, articleSenders) {
+  ArticleSender.find({ user: req.user._id }).sort('-created').populate('user', 'email').exec(function (err, articleSenders) {
     if (err) {
       return res.status(400).send({
         messeage: errorHandler.getErrorMessage(err)
@@ -269,7 +269,7 @@ exports.list = function (req, res) {
 };
 
 exports.articleSenderByID = function (req, res, next, id) {
-  ArticleSender.findById(id).populate('user', 'displayName').exec(function (err, articleSender) {
+  ArticleSender.findById(id).populate('user', 'email').exec(function (err, articleSender) {
     if (err) return next(err);
     if (!articleSender) return next(new Error('Failed to load articleSender ' + id));
 

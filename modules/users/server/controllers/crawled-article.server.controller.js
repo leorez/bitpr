@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
   _ = require('lodash');
 
 exports.list = function (req, res) {
-  CrawledArticle.find().sort('-created').exec(function (err, articles) {
+  CrawledArticle.find({user: req.user._id}).sort('-created').populate('user', 'email').exec(function (err, articles) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

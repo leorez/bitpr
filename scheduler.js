@@ -200,7 +200,7 @@ function sendArticle(article) {
 function sendAlertSms(article) {
   var cellphone = article.user.cellphone.replace(/[^0-9]+/g, '');
 
-  var cancelShortUrl = 'http://goo.gl/xI16rE';
+  var cancelShortUrl = 'http://goo.gl/9SLq8K';
   // send sms
   var smsOptions = {
     msg: '[비트피알] 보도자료가 5분후 발송됩니다. 발송취소 ' +  cancelShortUrl,

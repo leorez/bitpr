@@ -1,14 +1,14 @@
 (function () {
   'use strict';
   var passport = require('passport'),
-    NaverStrategy = require('passport-naver').Strategy,
+    DaumStrategy = require('passport-daum-oauth2').Strategy,
     users = require('../../controllers/users.server.controller');
 
   module.exports = function (config) {
-    passport.use(new NaverStrategy({
-      clientID: config.naver.clientID,
-      clientSecret: config.naver.clientSecret,
-      callbackURL: config.naver.callbackURL,
+    passport.use(new DaumStrategy({
+      clientID: config.daum.clientID,
+      clientSecret: config.daum.clientSecret,
+      callbackURL: config.daum.callbackURL,
       profileFields: ['id', 'name', 'displayName', 'emails', 'photos']
     },
     function (req, accessToken, refreshToken, profile, done) {
@@ -23,8 +23,8 @@
         displayName: profile.displayName,
         email: profile.emails ? profile.emails[0].value : undefined,
         username: profile.id || generateUsername(profile),
-        provider: 'naver',
-        profileImageURL: providerData.profile_image,
+        provider: 'daum',
+        profileImageURL: providerData.imagePath,
         providerIdentifierField: 'id',
         providerData: providerData
       };

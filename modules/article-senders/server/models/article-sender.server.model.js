@@ -80,10 +80,6 @@ var ArticleSenderSchema = new Schema({
     default: 1,
     required: 'ReserveTime cannot be blank'
   },
-  beToDart: {
-    type: Boolean,
-    default: false
-  },
   sendCount: {
     type: Number,
     default: 1,
@@ -96,6 +92,11 @@ var ArticleSenderSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
+  },
+  dspType: {
+    // 공시유형
+    type: String,
+    trim: true
   }
 });
 

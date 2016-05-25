@@ -113,7 +113,8 @@ var articleSender_dart = {
   reserveTime: 999,
   reserved: new Date(),
   sendCount: 1,
-  fare: 500000
+  fare: 500000,
+  dspType: 'A'
 };
 
 mammoth.convertToHtml({ path: uploadsRoot + '/docs/test.docx' })

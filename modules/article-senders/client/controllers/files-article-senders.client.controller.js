@@ -19,6 +19,8 @@
     vm.articleSelected = [];
     vm.fileSelected = [];
     $scope.emails = [];
+    vm.error = '';
+    vm.success = '';
 
     $scope.hide = function() {
       $mdDialog.hide();
@@ -53,6 +55,8 @@
 
     // 파일공유
     function shareFiles(ev) {
+      vm.error = '';
+      vm.success = '';
       console.log('click');
       $mdDialog.show({
         controller: ArticleSendersFilesController,
@@ -119,6 +123,8 @@
 
     // 선택된 자료 재전송
     function reSendArticle(ev) {
+      vm.error = '';
+      vm.success = '';
       console.log('reSendArticle');
       $mdDialog.show({
         controller: ReporterSelectDlgController,

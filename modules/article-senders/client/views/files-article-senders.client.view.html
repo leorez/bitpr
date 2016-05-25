@@ -22,7 +22,9 @@
       </md-checkbox>
       <div>
         <small class="list-group-item-text">
-          <span>{{item.sent}}</span>
+          <p>생성일시 : {{item.created | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+          <p>전송일시 : {{item.sent | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+          <p>상태 : {{item.status | status}}</p>
         </small>
       </div>
       <div>

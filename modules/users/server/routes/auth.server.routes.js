@@ -32,6 +32,14 @@ module.exports = function (app) {
   app.route('/api/auth/kakao').get(users.oauthCall('kakao'));
   app.route('/api/auth/kakao/callback').get(users.oauthCallback('kakao'));
 
+  // Setting the naver oauth routes
+  app.route('/api/auth/naver').get(users.oauthCall('naver'));
+  app.route('/api/auth/naver/callback').get(users.oauthCallback('naver'));
+
+  // Setting the naver oauth routes
+  app.route('/api/auth/daum').get(users.oauthCall('daum'));
+  app.route('/api/auth/daum/callback').get(users.oauthCallback('daum'));
+
   // // Setting the twitter oauth routes
   // app.route('/api/auth/twitter').get(users.oauthCall('twitter'));
   // app.route('/api/auth/twitter/callback').get(users.oauthCallback('twitter'));

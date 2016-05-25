@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   var passport = require('passport'),
-    DaumStrategy = require('passport-naver').Strategy,
+    DaumStrategy = require('passport-daum').Strategy,
     users = require('../../controllers/users.server.controller');
 
   module.exports = function (config) {

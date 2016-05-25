@@ -1,10 +1,19 @@
 <section class="row">
   <div class="col-xs-offset-1 col-xs-10 col-md-offset-4 col-md-4">
-    <div ng-show="vm.message" class="text-center text-success">
+    <div ng-show="vm.message" class="text-center text-danger">
       <strong>{{vm.message}}</strong>
     </div>
     <form name="vm.userForm" ng-submit="vm.updateUserProfile(vm.userForm.$valid)" class="signin" novalidate autocomplete="off">
       <fieldset>
+        <div class="form-group" show-errors>
+          <label for="email">이메일</label>
+          <input type="email" id="email" name="email" class="form-control" ng-model="vm.user.email" placeholder="이메일" lowercase required>
+          <button ng-show="!vm.user.emailConfirmed" type="button" ng-click="vm.emailConfirm()">이메일 인증</button>
+          <div ng-messages="vm.userForm.email.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">이메일은 필수입니다.</p>
+            <p class="help-block error-text" ng-message="email">이메일이 유효하지 않습니다.</p>
+          </div>
+        </div>
         <div class="form-group" show-errors>
           <label for="corpCode">상장코드</label>
           <input type="text" id="corpCode" name="corpCode" class="form-control" ng-model="vm.user.corpCode" placeholder="상장코드" required>
@@ -21,15 +30,6 @@
           <input type="text" id="displayName" name="displayName" class="form-control" ng-model="vm.user.displayName" placeholder="성명" required>
           <div ng-messages="vm.userForm.displayName.$error" role="alert">
             <p class="help-block error-text" ng-message="required">성명을 입력하세요.</p>
-          </div>
-        </div>
-        <div class="form-group" show-errors>
-          <label for="email">이메일</label>
-          <input type="email" id="email" name="email" class="form-control" ng-model="vm.user.email" placeholder="이메일" lowercase required>
-          <button ng-show="!vm.user.emailConfirmed" type="button" ng-click="vm.emailConfirm()">이메일 인증</button>
-          <div ng-messages="vm.userForm.email.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">이메일은 필수입니다.</p>
-            <p class="help-block error-text" ng-message="email">이메일이 유효하지 않습니다.</p>
           </div>
         </div>
         <div class="form-group" show-errors>

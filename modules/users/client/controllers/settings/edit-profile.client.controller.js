@@ -28,12 +28,16 @@
           vm.user.emailConfirmed = response.emailConfirmed;
           console.log('emailConfirmed: ' + response.emailConfirmed);
           var invalidCorpcode = (vm.user.corpCode && /^\d{6}|\d{8}$/.test(vm.user.corpCode) === false);
+          if (invalidCorpcode) {
+            vm.user.corpCode = '';
+          }
+
           if (invalidCorpcode || !vm.user.emailConfirmed) {
             if (vm.user.provider !== 'local')
               vm.message = vm.user.provider.toUpperCase() + ' 계정으로 로그인되었습니다. 계속하시려면 ';
 
             if (invalidCorpcode && !vm.user.emailConfirmed) {
-              vm.message += '상장코드 변경 및 이메일 인증이 필요합니다.';
+              vm.message += '이메일 인증및 상장코드 변경이 필요합니다.';
             } else if (!vm.user.emailConfirmed) {
               vm.message += '이메일 인증이 필요합니다.';
             } else if (invalidCorpcode) {

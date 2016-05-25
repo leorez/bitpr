@@ -13,7 +13,7 @@
     vm.error = null;
     vm.form = {};
     vm.articleSender = articleSender;
-    vm.articleSender.dstType = 'A';
+    vm.articleSender.dspType = 'A';
     vm.authentication = Authentication;
     var reserveTimes = [0, 999].concat(_.range(1, 24));
     reserveTimes.push(24, 48, 72); // 24: 1일후, 48: 2일후, 72: 3일후, 999: 공시확인후

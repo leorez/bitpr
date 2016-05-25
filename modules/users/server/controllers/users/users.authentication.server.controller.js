@@ -79,7 +79,7 @@ exports.emailConfirmed = function (req, res) {
     });
   }
 
-  User.findOne({ email: req.body.email}, function (err, user) {
+  User.findOne({ email: req.body.email }, function (err, user) {
     if (err) {
       res.status(400).send(err);
     } else {

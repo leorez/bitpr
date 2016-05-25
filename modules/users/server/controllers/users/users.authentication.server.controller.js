@@ -10,6 +10,7 @@ var _ = require('lodash'),
   passport = require('passport'),
   mail = require(path.resolve('./lib/mail')),
   keygen = require('keygenerator'),
+  uniquid = require('uniquid'),
   User = mongoose.model('User');
 
 // URLs for which user can't be redirected on signin
@@ -213,7 +214,7 @@ exports.oauthCallback = function (strategy) {
           return res.redirect('/authentication/signin');
         }
 
-        if (!user.emailConfirmed || user.corpCode === '000000') {
+        if (!user.emailConfirmed || (user.corpCode && /^\d{6}|\d{8}$/.test(user.corpCode) === false)) {
           return res.redirect('/settings/profile?confirmed=false');
         }
 
@@ -255,7 +256,7 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
 
           User.findUniqueUsername(possibleUsername, null, function (availableUsername) {
             user = new User({
-              corpCode: '000000',
+              corpCode: uniquid(),
               firstName: providerUserProfile.firstName,
               lastName: providerUserProfile.lastName,
               username: availableUsername,

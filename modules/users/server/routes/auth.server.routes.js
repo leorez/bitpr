@@ -19,6 +19,8 @@ module.exports = function (app) {
   app.route('/api/auth/signin').post(users.signin);
   app.route('/api/auth/signout').get(users.signout);
   app.route('/ea/:key').get(users.emailauth);
+  app.route('/ea/request').post(users.emailauthReq);
+  app.route('/api/emailconfirmed').post(users.emailConfirmed);
 
   // Setting the facebook oauth routes
   app.route('/api/auth/facebook').get(users.oauthCall('facebook', {
@@ -26,33 +28,37 @@ module.exports = function (app) {
   }));
   app.route('/api/auth/facebook/callback').get(users.oauthCallback('facebook'));
 
-  // Setting the twitter oauth routes
-  app.route('/api/auth/twitter').get(users.oauthCall('twitter'));
-  app.route('/api/auth/twitter/callback').get(users.oauthCallback('twitter'));
+  // Setting the kakao oauth routes
+  app.route('/api/auth/kakao').get(users.oauthCall('kakao'));
+  app.route('/api/auth/kakao/callback').get(users.oauthCallback('kakao'));
 
-  // Setting the google oauth routes
-  app.route('/api/auth/google').get(users.oauthCall('google', {
-    scope: [
-      'https://www.googleapis.com/auth/userinfo.profile',
-      'https://www.googleapis.com/auth/userinfo.email'
-    ]
-  }));
-  app.route('/api/auth/google/callback').get(users.oauthCallback('google'));
-
-  // Setting the linkedin oauth routes
-  app.route('/api/auth/linkedin').get(users.oauthCall('linkedin', {
-    scope: [
-      'r_basicprofile',
-      'r_emailaddress'
-    ]
-  }));
-  app.route('/api/auth/linkedin/callback').get(users.oauthCallback('linkedin'));
-
-  // Setting the github oauth routes
-  app.route('/api/auth/github').get(users.oauthCall('github'));
-  app.route('/api/auth/github/callback').get(users.oauthCallback('github'));
-
-  // Setting the paypal oauth routes
-  app.route('/api/auth/paypal').get(users.oauthCall('paypal'));
-  app.route('/api/auth/paypal/callback').get(users.oauthCallback('paypal'));
+  // // Setting the twitter oauth routes
+  // app.route('/api/auth/twitter').get(users.oauthCall('twitter'));
+  // app.route('/api/auth/twitter/callback').get(users.oauthCallback('twitter'));
+  //
+  // // Setting the google oauth routes
+  // app.route('/api/auth/google').get(users.oauthCall('google', {
+  //   scope: [
+  //     'https://www.googleapis.com/auth/userinfo.profile',
+  //     'https://www.googleapis.com/auth/userinfo.email'
+  //   ]
+  // }));
+  // app.route('/api/auth/google/callback').get(users.oauthCallback('google'));
+  //
+  // // Setting the linkedin oauth routes
+  // app.route('/api/auth/linkedin').get(users.oauthCall('linkedin', {
+  //   scope: [
+  //     'r_basicprofile',
+  //     'r_emailaddress'
+  //   ]
+  // }));
+  // app.route('/api/auth/linkedin/callback').get(users.oauthCallback('linkedin'));
+  //
+  // // Setting the github oauth routes
+  // app.route('/api/auth/github').get(users.oauthCall('github'));
+  // app.route('/api/auth/github/callback').get(users.oauthCallback('github'));
+  //
+  // // Setting the paypal oauth routes
+  // app.route('/api/auth/paypal').get(users.oauthCall('paypal'));
+  // app.route('/api/auth/paypal/callback').get(users.oauthCallback('paypal'));
 };

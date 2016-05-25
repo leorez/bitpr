@@ -35,6 +35,10 @@ module.exports = {
   app: {
     title: defaultEnvConfig.app.title + ' - Test Environment'
   },
+  kakao: {
+    clientID: process.env.KAKAO_ID || '0801e3f49b5368fab6affab03f069572',
+    callbakURL: '/api/auth/kakao/callback'
+  },
   facebook: {
     clientID: process.env.FACEBOOK_ID || 'APP_ID',
     clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',

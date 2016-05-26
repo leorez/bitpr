@@ -50,7 +50,8 @@ module.exports = {
       'modules/core/client/app/config.js',
       'modules/core/client/app/init.js',
       'modules/*/client/*.js',
-      'modules/*/client/**/*.js'
+      'modules/*/client/**/*.js',
+      'uploads/embed.js'
     ],
     img: [
       'modules/**/*/img/**/*.jpg',
@@ -58,7 +59,10 @@ module.exports = {
       'modules/**/*/img/**/*.gif',
       'modules/**/*/img/**/*.svg'
     ],
-    views: ['modules/*/client/views/**/*.html'],
+    views: [
+      'modules/*/client/views/**/*.html',
+      'uploads/embed-test.html'
+    ],
     templates: ['build/templates.js'],
     e2eTests: [
       'modules/*/tests/e2e/*.js'

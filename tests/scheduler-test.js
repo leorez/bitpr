@@ -3,10 +3,10 @@
  */
 'use strict';
 
-require('./modules/users/server/models/user.server.model');
-require('./modules/article-senders/server/models/article-sender.server.model');
+require('./../modules/users/server/models/user.server.model.js');
+require('./../modules/article-senders/server/models/article-sender.server.model.js');
 
-var config = require('./config/config'),
+var config = require('./../config/config'),
   chalk = require('chalk'),
   process = require('process'),
   mongoose = require('mongoose'),

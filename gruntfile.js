@@ -98,7 +98,7 @@ module.exports = function (grunt) {
         }
       },
       schedulerTest: {
-        files: ['scheduler.js', 'scheduler-test.js'],
+        files: ['scheduler.js', './tests/scheduler-test.js'],
         tasks: ['test:scheduler']
       },
       dartTest: {

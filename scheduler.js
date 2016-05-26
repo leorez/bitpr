@@ -113,6 +113,7 @@ function phonesString(article) {
 }
 
 function contentBuild(article, callback) {
+  console.log(article);
   coreController.corpCodeToName(article.user.corpCode, function (corpName, error) {
     if (error) {
       console.error(error);

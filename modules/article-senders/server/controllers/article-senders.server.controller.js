@@ -5,6 +5,7 @@ var path = require('path'),
   mammoth = require('mammoth'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   ArticleSender = mongoose.model('ArticleSender'),
+  User = mongoose.model('User'),
   nodemailer = require('nodemailer'),
   fs = require('fs-extra'),
   appRoot = require('app-root-path'),
@@ -250,6 +251,20 @@ exports.delete = function (req, res) {
     } else {
       res.json(articleSender);
     }
+  });
+};
+
+exports.listForEmbed = function (req, res) {
+  User.findOne({ corpCode: req.params.corpCode}).exec(function (err, user) {
+    ArticleSender.find({ user: user._id }, { title: 1, content: 1, created: 1 }).sort('-created').exec(function (err, articleSenders) {
+      if (err) {
+        return res.status(400).send({
+          messeage: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(articleSenders);
+      }
+    });
   });
 };
 

@@ -26,4 +26,10 @@
 
 #articleGroup .item-summary {
   color: darkgray;
+  display: block;
+}
+
+#articleGroup .item-content-none {
+  color: black;
+  display: none;
 }

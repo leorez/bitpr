@@ -3,10 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>홈페이지 임베디드 스크립트 테스트</title>
-  <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
-  <!--<link rel="stylesheet" type="text/css" href="css/embed.css">-->
 </head>
 <body>
+
+<div class="page-header">
+  <h3>홈페이지 임베디드 스크립트 테스트</h3>
+</div>
+
+<div class="center">------------------ Embeded start --------------------</div>
 
 <div id="bitpr_thread"></div>
 <script>
@@ -16,6 +20,8 @@
    */
   var bitpr_config = {
     corpCode: '005930',  // 기업상장코드
+    type: 'REPORT', // 자료유령 : SEARCH(검색된기사), REPORT(보도자료)
+    target: 'bitpr_thread', // 자료가 표시될 Element Id
     host: ''  // 수정하지 마세요.
   };
 
@@ -30,9 +36,9 @@
   })();
   // ------------------------------------------------
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments
-  powered by Disqus.</a></noscript>
+<noscript>자바스크립트를 활성화 해주세요. (주)비트피알</noscript>
 
+<div>------------------ Embeded end --------------------</div>
 
 </body>
 </html>

@@ -113,9 +113,7 @@
       tmp.innerHTML = html;
       return tmp.textContent || tmp.innerText || "";
     }
-
-    var l = len || 200;
-    return stripHTML(this.substring(0, l)) + '...';
+    return stripHTML(this.substring(0, len || 200)) + '...';
   };
 
   Date.prototype.format = function(format) {

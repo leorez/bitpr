@@ -255,7 +255,7 @@ exports.delete = function (req, res) {
 };
 
 exports.listForEmbed = function (req, res) {
-  User.findOne({ corpCode: req.params.corpCode}).exec(function (err, user) {
+  User.findOne({ corpCode: req.params.corpCode }).exec(function (err, user) {
     ArticleSender.find({ user: user._id }, { title: 1, content: 1, created: 1 }).sort('-created').exec(function (err, articleSenders) {
       if (err) {
         return res.status(400).send({

@@ -10,6 +10,7 @@
   function ArticleSendersController($scope, $mdDialog, $http, $state, articleSender, $location, Authentication, ArticleSendersService, Upload) {
     var vm = this;
 
+    console.log(Authentication.user);
     vm.error = null;
     vm.form = {};
     vm.articleSender = articleSender;

@@ -38,7 +38,9 @@ exports.list = function (req, res) {
     }
   };
 
-  var options, query;
+  var options,
+    query;
+  
   var corpCode = req.params.corpCode;
   if (corpCode) {
     User.findOne({ corpCode: corpCode }).exec(function (err, user) {

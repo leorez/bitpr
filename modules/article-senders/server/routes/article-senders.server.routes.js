@@ -11,7 +11,7 @@ module.exports = function (app) {
     uploadDir: __dirname + '/tmp'
   }));
 
-  app.route('/api/article-senders/:corpCode')
+  app.route('/api/article-senders/embed/:corpCode')
     .get(articleSenders.listForEmbed);
 
   app.route('/api/article-senders').all(articleSendersPolicy.isAllowed)

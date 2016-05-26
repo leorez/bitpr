@@ -44,9 +44,9 @@
   };
 
   if (bitpr_config.type === 'SEARCH') {
-    xhttp.open("GET", bitpr_config.host + '/api/displayed-articles/' + bitpr_config.corpCode, true);
+    xhttp.open("GET", bitpr_config.host + '/api/displayed-articles/embed/' + bitpr_config.corpCode, true);
   } else {
-    xhttp.open("GET", bitpr_config.host + '/api/article-senders/' + bitpr_config.corpCode, true);
+    xhttp.open("GET", bitpr_config.host + '/api/article-senders/embed/' + bitpr_config.corpCode, true);
   }
   xhttp.send();
 

@@ -22,7 +22,6 @@ var saveArticleSender = function (articleSender, req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      articleSender.user = req.user;
       res.json(articleSender);
     }
   });

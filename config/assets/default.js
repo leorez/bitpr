@@ -32,8 +32,7 @@ module.exports = {
         'public/lib/angular-clipboard/angular-clipboard.js',
         'public/lib/angular-file-saver/dist/angular-file-saver.bundle.js',
         'public/lib/angular-file-upload/dist/angular-file-upload.js',
-        'public/lib/ng-file-upload/ng-file-upload.js',
-        'public/lib/async/dist/async.js'
+        'public/lib/ng-file-upload/ng-file-upload.js'
         // endbower
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']

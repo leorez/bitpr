@@ -52,7 +52,7 @@
 
           article.$save(function (response) {
             console.log('success:' + response);
-            if (++done == total)
+            if (++done === total)
               deferred.resolve();
           }, function (errorRespose) {
             $scope.error = errorRespose.data.message;

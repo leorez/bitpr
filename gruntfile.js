@@ -345,7 +345,8 @@ module.exports = function (grunt) {
       provider: 'local',
       telephone: '032-1234-5678',
       cellphone: '010-2187-3886',
-      emailConfirmed: true
+      emailConfirmed: true,
+      roles: ['user', 'admin']
     };
 
     // Use mongoose configuration

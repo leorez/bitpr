@@ -1,0 +1,42 @@
+<section>
+  <div class="page-header">
+    <h1>기자등록</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="vm.form.reporterForm" class="form-horizontal" ng-submit="vm.save(vm.form.reporterForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="name">이름</label>
+          <input name="name" type="text" ng-model="vm.reporter.name" id="name" class="form-control" placeholder="이름" required>
+          <div ng-messages="vm.form.reporterForm.name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">기자이름을 입력해주세요</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="corpName">회사명</label>
+          <input name="corpName" data-ng-model="vm.reporter.corpName" id="corpName" class="form-control" placeholder="회사명">
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="email">이메일</label>
+          <input name="email" data-ng-model="vm.reporter.email" id="email" class="form-control" placeholder="이메일">
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="telephone">전화</label>
+          <input name="telephone" data-ng-model="vm.reporter.telephone" id="telephone" class="form-control" placeholder="전화">
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="cellphone">휴대폰</label>
+          <input name="cellphone" data-ng-model="vm.reporter.cellphone" id="cellphone" class="form-control" placeholder="휴대폰">
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">{{vm.reporter._id ? '수정' : '등록'}}</button>
+          <button type="button" class="btn btn-default" ui-sref="admin.reporters">취소</button>
+        </div>
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
+

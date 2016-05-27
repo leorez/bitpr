@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('users.admin')
+    .module('reporters.admin')
     .run(menuConfig);
 
   menuConfig.$inject = ['menuService'];
@@ -10,8 +10,8 @@
   // Configuring the Users module
   function menuConfig(menuService) {
     menuService.addSubMenuItem('topbar', 'admin', {
-      title: '사용자 관리',
-      state: 'admin.users'
+      title: '기자 관리',
+      state: 'admin.reporters'
     });
   }
 }());

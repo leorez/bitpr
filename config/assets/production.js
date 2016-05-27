@@ -32,7 +32,8 @@ module.exports = {
         'public/lib/angular-clipboard/angular-clipboard.js',
         'public/lib/angular-file-saver/dist/angular-file-saver.bundle.min.js',
         'public/lib/angular-file-upload/dist/angular-file-upload.min.js',
-        'public/lib/ng-file-upload/ng-file-upload.min.js'
+        'public/lib/ng-file-upload/ng-file-upload.min.js',
+        'public/lib/async/dist/async.min.js'
         // endbower
       ]
     },

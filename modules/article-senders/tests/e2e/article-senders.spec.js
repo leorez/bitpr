@@ -6,8 +6,34 @@
 describe('articleSender page tests', function () {
   var page;
 
+  var signout = function () {
+    // Make sure user is signed out first
+    browser.get('http://localhost:3001/authentication/signout');
+    // Delete all cookies
+    browser.driver.manage().deleteAllCookies();
+  };
+
   beforeEach(function () {
-    browser.get('/article-senders/create');
+    signout();
+
+    var user1 = {
+      email: 'test.user@test.com',
+      password: 'P@$$w0rd!!'
+    };
+
+    browser.get('/authentication/signin');
+
+    element(by.model('vm.credentials.email')).sendKeys(user1.email);
+    element(by.model('vm.credentials.password')).sendKeys(user1.password);
+    element(by.css('button[type=submit]')).click();
+
+    return browser.wait(function () {
+      return browser.getCurrentUrl().then(function (url) {
+        browser.get('/article-senders/create');
+        return /\//.test(url);
+      });
+    }, 1000);
+
     page = require('./article-senders.po.js');
   });
 

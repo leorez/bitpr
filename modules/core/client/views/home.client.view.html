@@ -22,7 +22,7 @@
             <span class="media">{{item.media}}</span>
             <span class="media">{{item.article_at}}</span>
           </h4>
-          <p class="list-group-item-text item-summary">{{item.summary}}</p>
+          <p class="list-group-item-text item-summary" ng-bind-html="item.summary"></p>
         </a>
       </md-checkbox>
     </div>

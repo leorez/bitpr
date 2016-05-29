@@ -1,0 +1,27 @@
+<section>
+  <div class="page-header">
+    <h1>기자리스트</h1>
+  </div>
+  <div>
+    <button ui-sref="admin.reporters-create" class="btn btn-default">추가</button>
+  </div>
+  <div class="list-group">
+    <div ng-repeat="reporter in vm.reporters" class="list-group-item">
+      <p class="pull-right">
+        <a class="btn btn-primary" ui-sref="admin.reporters-edit({reporterId: reporter._id})">
+          <i class="glyphicon glyphicon-edit"></i>
+        </a>
+        <a class="btn btn-primary" ng-click="vm.remove(reporter)">
+          <i class="glyphicon glyphicon-trash"></i>
+        </a>
+      </p>
+      <img ng-src="{{reporter.profileImageURL}}" class="card-profile-picture pull-left" />
+      <h4 class="list-group-item-heading">{{reporter.corpName}} {{reporter.name}}</h4>
+      <small class="list-group-item-text">
+        <p ng-bind="reporter.email"></p>
+        <p>{{reporter.telephone}} / {{reporter.cellphone}}</p>
+      </small>
+    </div>
+  </div>
+
+</section>

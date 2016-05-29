@@ -5,7 +5,7 @@
     .module('core')
     .controller('HomeController', HomeController);
 
-  function HomeController($scope, $location, DisplayedArticles, clipboard, $mdDialog, $http, Authentication, ngProgressFactory, $stateParams) {
+  function HomeController($scope, $q, $location, DisplayedArticles, clipboard, $mdDialog, $http, Authentication, ngProgressFactory, $stateParams) {
     var vm = this;
 
     // This provides Authentication context.
@@ -33,8 +33,11 @@
       // 선택된 기사 홈페이지에 올리기
       $scope.success = $scope.error = null;
 
+      var deferred = $q.defer();
       if (Authentication.user) {
         var selected = $scope.selected;
+        var total = selected.length;
+        var done = 0;
 
         angular.forEach(selected, function (item) {
           var article = new DisplayedArticles({
@@ -49,19 +52,22 @@
 
           article.$save(function (response) {
             console.log('success:' + response);
-            var confirm = $mdDialog.confirm()
-              .textContent('홈페이지에 게시되었습니다. 홈페이지에 게시된 글을 확인시겠습니까?')
-              .ok('예')
-              .cancel('아니요');
-            $mdDialog.show(confirm).then(function () {
-              $location.path('/settings/displayed-list');
-            });
-
+            if (++done === total)
+              deferred.resolve();
           }, function (errorRespose) {
             $scope.error = errorRespose.data.message;
             console.log('failed: ' + $scope.error);
             console.log(JSON.stringify(errorRespose));
+            deferred.reject();
           });
+        });
+
+        var confirm = $mdDialog.confirm()
+          .textContent('홈페이지에 게시되었습니다. 홈페이지에 게시된 글을 확인시겠습니까?')
+          .ok('예')
+          .cancel('아니요');
+        $mdDialog.show(confirm).then(function () {
+          $location.path('/settings/displayed-list');
         });
       }
     };

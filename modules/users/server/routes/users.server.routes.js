@@ -17,6 +17,12 @@ module.exports = function (app) {
     .get(displayedArticles.list)
     .post(displayedArticles.create);
 
+  app.route('/api/displayed-articles/embed/:corpCode')
+    .get(displayedArticles.list);
+
+  app.route('/api/displayed-articles')
+    .get(displayedArticles.list);
+
   app.route('/api/displayed-articles/:displayedArticleId')
     .delete(displayedArticles.delete);
 

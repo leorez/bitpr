@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 npm install
 grunt build
-sudo forever restart server.js
-sudo forever restart scheduler.js
+forever restart server.js
+forever restart scheduler.js
 

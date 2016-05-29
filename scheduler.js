@@ -97,8 +97,6 @@ var search = function (usersCnt, user, since) {
   });
 };
 
-
-
 function phonesString(article) {
   if((typeof article.user.telephone === 'undefined' || article.user.telephone === '') &&
     (typeof article.user.cellphone === 'undefined' || article.user.cellphone === ''))
@@ -115,6 +113,7 @@ function phonesString(article) {
 }
 
 function contentBuild(article, callback) {
+  console.log(article);
   coreController.corpCodeToName(article.user.corpCode, function (corpName, error) {
     if (error) {
       console.error(error);
@@ -202,10 +201,10 @@ function sendArticle(article) {
 function sendAlertSms(article) {
   var cellphone = article.user.cellphone.replace(/[^0-9]+/g, '');
 
-  var cancelShortUrl = 'http://bitpr.kr/iejifew89';
+  var cancelShortUrl = 'http://goo.gl/9SLq8K';
   // send sms
   var smsOptions = {
-    msg: '[비트피알] 보도자료가 5분후 발송됩니다. 발송취소 ' +  cancelShortUrl,
+    msg: '[비트피알] 보도자료가 5분후 발송됩니다. 발송취소 : ' +  cancelShortUrl,
     mobile: [cellphone]
   };
 
@@ -233,6 +232,74 @@ function strDateToDate(strDate, strTime) {
   return new Date(dt);
 }
 
+/**
+ * 공시이후 발송
+ */
+function sendAfterDarted(article) {
+  console.log('공시이후 발송');
+  var options = {
+    crp_cd: article.user.corpCode,
+    start_dt: article.reserved.format('YYYYMMDD'),
+    fin_rpt: 'Y',
+    dsp_tp: article.dspType
+  };
+
+  console.log('send parameters : ' + JSON.stringify(options));
+
+  dart.searchMockTest(options, function (error, data) {
+    if (!error) {
+      console.log(chalk.green(JSON.stringify(data)));
+      data.list.forEach(function (item) {
+        var rcp_dt = strDateToDate(item.rcp_dt, article.reserved.format('hh:mm:ss'));
+        console.log(chalk.blue(rcp_dt));
+        var diff = new DateDiff(article.reserved, rcp_dt);
+        console.log(chalk.red(diff.days()));
+
+        if (diff.days() >= 0) {
+          console.log(chalk.blue('공시확인됨 발송 : ' + article));
+          if (!article.smsAlerted) {
+            console.log(chalk.blue('예약 5분전 SMS 통보'));
+            sendAlertSms(article);
+          } else {
+
+            var diff = new DateDiff(new Date(), article.smsAlertedTime);
+            console.log(chalk.green(diff.minutes()));
+            if (diff.minutes() >= 5.0) {
+              console.log(chalk.blue('발송'));
+              sendArticle(article);
+            }
+          }
+        }
+      });
+    }
+  });
+}
+
+/**
+ * 예약발송
+ */
+function sendReserved(article) {
+  Date.masks.default = 'YYYY-MM-DD hh:mm:ss';
+  var t = dateAdder.add(article.reserved, article.reserveTime, "hour");
+  var diff = new DateDiff(t, new Date());
+  console.log(t.format());
+  console.log('diff hours: ' + diff.hours());
+  console.log('diff minutes: ' + diff.minutes());
+  console.log('diff seconds: ' + diff.seconds());
+  console.log(typeof diff.hours());
+
+  // 예약 5분전 SMS 통보
+  if (!article.smsAlerted && diff.minutes() <= 5.0 && diff.minutes() > 4.0) {
+    console.log('예약 5분전 SMS 통보');
+    sendAlertSms(article);
+  }
+
+  // 예약시간이 되면 발송
+  if (diff.minutes() < 0.1) {
+    sendArticle(article);
+  }
+}
+
 /*****************************
  ** 보도자료발송
  *****************************/
@@ -250,66 +317,11 @@ function sendArticleEmails() {
             sendArticle(article);
           } else if (article.reserveTime === 999) {
             // 공시이후 발송
-            console.log('공시이후 발송');
-            var options = {
-              crp_cd: article.user.corpCode,
-              start_dt: article.reserved.format('YYYYMMDD'),
-              fin_rpt: 'Y',
-              dsp_tp: 'B',
-              bsn_tp: ''
-            };
-
-            console.log('send parameters : ' + JSON.stringify(options));
-
-            dart.search(options, function (error, data) {
-              if (!error) {
-                console.log(chalk.green(JSON.stringify(data)));
-                 data.list.forEach(function (item) {
-                   var rcp_dt = strDateToDate(item.rcp_dt, article.reserved.format('hh:mm:ss'));
-                   console.log(chalk.blue(rcp_dt));
-                   var diff = new DateDiff(article.reserved, rcp_dt);
-                   console.log(chalk.red(diff.days()));
-
-                   if (diff.days() >= 0) {
-                     console.log(chalk.blue('공시확인됨 발송 : ' + article));
-                     if (!article.smsAlerted) {
-                       console.log(chalk.blue('예약 5분전 SMS 통보'));
-                       sendAlertSms(article);
-                     } else {
-                       
-                       var diff = new DateDiff(new Date(), article.smsAlertedTime);
-                       console.log(chalk.green(diff.minutes()));
-                       if (diff.minutes() >= 5.0) {
-                         console.log(chalk.blue('발송'));
-                         sendArticle(article);
-                       }
-                     }
-                   }
-                 });
-              }
-            });
+            sendAfterDarted(article);
 
           } else {
             // 예약발송
-            Date.masks.default = 'YYYY-MM-DD hh:mm:ss';
-            var t = dateAdder.add(article.reserved, article.reserveTime, "hour");
-            var diff = new DateDiff(t, new Date());
-            console.log(t.format());
-            console.log('diff hours: ' + diff.hours());
-            console.log('diff minutes: ' + diff.minutes());
-            console.log('diff seconds: ' + diff.seconds());
-            console.log(typeof diff.hours());
-
-            // 예약 5분전 SMS 통보
-            if (!article.smsAlerted && diff.minutes() <= 5.0 && diff.minutes() > 4.0) {
-              console.log('예약 5분전 SMS 통보');
-              sendAlertSms(article);
-            }
-
-            // 예약시간이 되면 발송
-            if(diff.minutes() < 0.1) {
-              sendArticle(article);
-            }
+            sendReserved(article);
           }
         } else if(article.status === 'ReSend') {
           // 재전송

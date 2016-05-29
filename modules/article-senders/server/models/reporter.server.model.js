@@ -44,7 +44,12 @@ var ReporterSchema = new Schema({
     validate: [validateLocalStrategyEmail, '형식에 맞지않는 이메일 주소입니다.']
   },
   priority: {
+    // 발송우선순위 낮을수록 우선순위가 높다.
     type: Number
+  },
+  profileImageURL: {
+    type: String,
+    default: 'modules/users/client/img/profile/default.png'
   }
 });
 

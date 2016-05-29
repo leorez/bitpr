@@ -1,0 +1,35 @@
+.content {
+  margin-top: 50px;
+}
+.undecorated-link:hover {
+  text-decoration: none;
+}
+
+#articleGroup {
+  margin-top: 12px;
+}
+
+#articleGroup .title {
+  font-size: large;
+  font-weight: bold;
+}
+
+#articleGroup .media {
+  font-size: small;
+  color: lightgrey;
+}
+
+#articleGroup .item {
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+#articleGroup .item-summary {
+  color: darkgray;
+  display: block;
+}
+
+#articleGroup .item-content-none {
+  color: black;
+  display: none;
+}

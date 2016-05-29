@@ -38,6 +38,20 @@ module.exports = {
       }
     }
   },
+  daum: {
+    clientID: process.env.DAUM_ID || '7435275087308742551',
+    clientSecret: process.env.DAUM_SECRET || '8b1fc351505fff8c0f3b8363317c9d5d',
+    callbackURL: '/api/auth/daum/callback'
+  },
+  naver: {
+    clientID: process.env.NAVER_ID || 'G1gAlVr0vgGNOCzprgY8',
+    clientSecret: process.env.NAVER_SECRET || 'd9MsJTW6ex',
+    callbackURL: '/api/auth/naver/callback'
+  },
+  kakao: {
+    clientID: process.env.KAKAO_ID || '0801e3f49b5368fab6affab03f069572',
+    callbackURL: '/api/auth/kakao/callback'
+  },
   facebook: {
     clientID: process.env.FACEBOOK_ID || 'APP_ID',
     clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',

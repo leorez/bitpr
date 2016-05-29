@@ -10,13 +10,15 @@
   function ArticleSendersController($scope, $mdDialog, $http, $state, articleSender, $location, Authentication, ArticleSendersService, Upload) {
     var vm = this;
 
+    console.log('auth: ' + JSON.stringify(Authentication.user));
     vm.error = null;
     vm.form = {};
     vm.articleSender = articleSender;
+    vm.articleSender.dspType = 'A';
     vm.authentication = Authentication;
-    var reserveTimes = _.range(0, 24);
-    reserveTimes.push(24, 48, 72, 999); // 24: 1일후, 48: 2일후, 72: 3일후, 999: 공시확인후
-    vm.articleSender.reserveTimeOptions = [];
+    var reserveTimes = [0, 999].concat(_.range(1, 24));
+    reserveTimes.push(24, 48, 72); // 24: 1일후, 48: 2일후, 72: 3일후, 999: 공시확인후
+    vm.reserveTimeOptions = [];
     reserveTimes.forEach(function (item) {
       var text = item + '시간후';
       switch (item) {
@@ -37,9 +39,21 @@
           break;
       }
       var data = { text: text, data: item };
-      vm.articleSender.reserveTimeOptions.push(data);
+      vm.reserveTimeOptions.push(data);
     });
-    vm.articleSender.sendCounts = [1, 2, 4, 6, 8, 10];
+    vm.sendCounts = [1, 2, 4, 6, 8, 10];
+    vm.dspTypes = [
+      { data: 'A', text: '정기공시' },
+      { data: 'B', text: '주요사항보고' },
+      { data: 'C', text: '발행공시' },
+      { data: 'D', text: '지분공시' },
+      { data: 'E', text: '기타공시' },
+      { data: 'F', text: '외부감사관련' },
+      { data: 'G', text: '펀드공시' },
+      { data: 'H', text: '자산유동화' },
+      { data: 'I', text: '거래소공시' },
+      { data: 'J', text: '공정위공시' }
+    ];
     vm.articleSender.reserveTime = 0;
     vm.articleSender.sendCount = 1;
     vm.articleSender.beToDart = true;

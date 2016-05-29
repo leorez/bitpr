@@ -5,6 +5,7 @@ var path = require('path'),
   mammoth = require('mammoth'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   ArticleSender = mongoose.model('ArticleSender'),
+  User = mongoose.model('User'),
   nodemailer = require('nodemailer'),
   fs = require('fs-extra'),
   appRoot = require('app-root-path'),
@@ -23,7 +24,6 @@ var saveArticleSender = function (articleSender, req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      articleSender.user = req.user;
       res.json(articleSender);
     }
   });
@@ -298,11 +298,25 @@ exports.delete = function (req, res) {
   });
 };
 
+exports.listForEmbed = function (req, res) {
+  User.findOne({ corpCode: req.params.corpCode }).exec(function (err, user) {
+    ArticleSender.find({ user: user._id }, { title: 1, content: 1, created: 1 }).sort('-created').exec(function (err, articleSenders) {
+      if (err) {
+        return res.status(400).send({
+          messeage: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(articleSenders);
+      }
+    });
+  });
+};
+
 /**
  * List of Article senders
  */
 exports.list = function (req, res) {
-  ArticleSender.find({ user: req.user._id }).sort('-created').populate('user', 'displayName').exec(function (err, articleSenders) {
+  ArticleSender.find({ user: req.user._id }).sort('-created').populate('user', 'email').exec(function (err, articleSenders) {
     if (err) {
       return res.status(400).send({
         messeage: errorHandler.getErrorMessage(err)
@@ -314,7 +328,7 @@ exports.list = function (req, res) {
 };
 
 exports.articleSenderByID = function (req, res, next, id) {
-  ArticleSender.findById(id).populate('user', 'displayName').exec(function (err, articleSender) {
+  ArticleSender.findById(id).populate('user', 'email').exec(function (err, articleSender) {
     if (err) return next(err);
     if (!articleSender) return next(new Error('Failed to load articleSender ' + id));
 

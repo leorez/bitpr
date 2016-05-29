@@ -3,12 +3,14 @@
 /**
  * Module dependencies
  */
-var path = require('path'),
+var _ = require('lodash'),
+  path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
   mail = require(path.resolve('./lib/mail')),
-  keygen = require("keygenerator"),
+  keygen = require('keygenerator'),
+  uniquid = require('uniquid'),
   User = mongoose.model('User');
 
 // URLs for which user can't be redirected on signin
@@ -16,6 +18,28 @@ var noReturnUrls = [
   '/authentication/signin',
   '/authentication/signup'
 ];
+
+function sendEmailAuth(req, key, user, res) {
+  var link = 'http://' + req.headers.host + '/ea/' + key;
+  var content = '<p>' + user.displayName + '님, </p>';
+  content += '<div>아래링크를 클릭하시고 회원가입을 완료하세요.</div>';
+  content += '<a href="' + link + '">' + link + '</a>';
+
+  var options = {
+    from: '"비트피알" <support@bitpr.kr>',
+    to: user.email,
+    subject: '[비트피알] 이메일 인증으로 회원가입을 완료하세요.',
+    html: content
+  };
+
+  mail.sendEmail(options, function (err, info) {
+    if (!err) {
+      res.json(user);
+    } else {
+      res.status(400).send(err);
+    }
+  });
+}
 
 /**
  * Signup
@@ -41,31 +65,65 @@ exports.signup = function (req, res) {
       user.password = undefined;
       user.salt = undefined;
 
-      var link = 'http://' + req.headers.host + '/ea/' + key;
-      var content = '<p>' + user.displayName + '님, </p>';
-      content += '<div>아래링크를 클릭하시고 회원가입을 완료하세요.</div>';
-      content += '<a href="' + link + '">' + link + '</a>';
-
-      var options = {
-        from: '"비트피알" <support@bitpr.kr>',
-        to: user.email,
-        subject: '[비트피알] 이메일 인증으로 회원가입을 완료하세요.',
-        html: content
-      };
-
-      mail.sendEmail(options, function (err, info) {
-        if (!err) {
-          res.json(user);
-        } else {
-          res.status(400).send(err);
-        }
-      });
+      sendEmailAuth(req, key, user, res);
     }
   });
 };
 
 /**
- * 이메일 인증
+ * 이메일 인증여부
+ */
+exports.emailConfirmed = function (req, res) {
+  if (!req.user) {
+    return res.status(400).send({
+      message: '로그인이 필요합니다.'
+    });
+  }
+
+  User.findOne({ email: req.body.email }, function (err, user) {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.json(user);
+    }
+  });
+};
+
+/**
+ * 이메일 인증 요청
+ * 인증이메일을 전송한다.
+ */
+exports.emailauthReq = function (req, res) {
+  if (!req.user) {
+    return res.status(400).send({
+      message: '로그인이 필요합니다.'
+    });
+  }
+
+  var user = req.user;
+  user = _.extend(user, req.body);
+  console.log(req.user);
+
+  var key = keygen._();
+  user.key = key;
+
+  // Then save the user
+  user.save(function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      // Remove sensitive data before login
+      req.session.redirect_to = '/settings/profile';
+      sendEmailAuth(req, key, user, res);
+    }
+  });
+};
+
+/**
+ * 이메일 인증 완료
+ * 인증이메일의 링크를 클릭하여 호출됨
  */
 exports.emailauth = function (req, res) {
   var key = req.params.key;
@@ -81,7 +139,7 @@ exports.emailauth = function (req, res) {
           res.status(400).send(err);
           return;
         }
-        res.redirect('/authentication/signin?result=success-signup');
+        res.redirect(req.session.redirect_to || '/authentication/signin?result=success-signup');
       });
     }
   });
@@ -128,6 +186,7 @@ exports.oauthCall = function (strategy, scope) {
     if (noReturnUrls.indexOf(req.query.redirect_to) === -1) {
       req.session.redirect_to = req.query.redirect_to;
     }
+
     // Authenticate
     passport.authenticate(strategy, scope)(req, res, next);
   };
@@ -143,6 +202,7 @@ exports.oauthCallback = function (strategy) {
     delete req.session.redirect_to;
 
     passport.authenticate(strategy, function (err, user, redirectURL) {
+      console.log('*** user = ' + user);
       if (err) {
         return res.redirect('/authentication/signin?err=' + encodeURIComponent(errorHandler.getErrorMessage(err)));
       }
@@ -152,6 +212,10 @@ exports.oauthCallback = function (strategy) {
       req.login(user, function (err) {
         if (err) {
           return res.redirect('/authentication/signin');
+        }
+
+        if (!user.emailConfirmed || (user.corpCode && /^\d{6}|\d{8}$/.test(user.corpCode) === false)) {
+          return res.redirect('/settings/profile?confirmed=false');
         }
 
         return res.redirect(redirectURL || sessionRedirectURL || '/');
@@ -192,11 +256,12 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
 
           User.findUniqueUsername(possibleUsername, null, function (availableUsername) {
             user = new User({
+              corpCode: uniquid(),
               firstName: providerUserProfile.firstName,
               lastName: providerUserProfile.lastName,
               username: availableUsername,
               displayName: providerUserProfile.displayName,
-              email: providerUserProfile.email,
+              email: providerUserProfile.email || availableUsername + '@bitpr.kr',
               profileImageURL: providerUserProfile.profileImageURL,
               provider: providerUserProfile.provider,
               providerData: providerUserProfile.providerData

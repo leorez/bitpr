@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
   path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   DisplayedArticle = mongoose.model('DisplayedArticle'),
+  User = mongoose.model('User'),
   _ = require('lodash');
 
 exports.create = function (req, res) {
@@ -27,7 +28,7 @@ exports.create = function (req, res) {
 };
 
 exports.list = function (req, res) {
-  DisplayedArticle.find().sort('-created').populate('user', 'displayName').exec(function (err, articles) {
+  var onFinish = function(err, articles) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -35,7 +36,32 @@ exports.list = function (req, res) {
     } else {
       res.json(articles);
     }
-  });
+  };
+
+  var options,
+    query;
+  
+  var corpCode = req.params.corpCode;
+  if (corpCode) {
+    User.findOne({ corpCode: corpCode }).exec(function (err, user) {
+      if (err) {
+        return res.status(400).send({
+          message: 'not found corpCode'
+        });
+      }
+      options = { user: user._id };
+      query = DisplayedArticle.find(options).sort('-created');
+      query.exec(function (err, articles) {
+        onFinish(err, articles);
+      });
+    });
+  } else {
+    options = { user: req.user._id };
+    query = DisplayedArticle.find(options).sort('-created').populate('user', 'email');
+    query.exec(function (err, articles) {
+      onFinish(err, articles);
+    });
+  }
 };
 
 exports.delete = function (req, res) {
@@ -53,7 +79,7 @@ exports.delete = function (req, res) {
 };
 
 exports.displayedArticleByID = function (req, res, next, id) {
-  DisplayedArticle.findById(id).populate('user', 'displayName').exec(function (err, article) {
+  DisplayedArticle.findById(id).populate('user', 'email').exec(function (err, article) {
     if (err) return next(err);
     if (!article) return next(new Error('Failed to load article' + id));
     req.article = article;

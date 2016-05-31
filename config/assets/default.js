@@ -6,7 +6,7 @@ module.exports = {
       css: [
         // bower:css
         'public/lib/bootstrap/dist/css/bootstrap.css',
-        'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+        // 'public/lib/bootstrap/dist/css/bootstrap-theme.css',
         'public/lib/ngprogress/ngProgress.css',
         'public/lib/ng-tags-input/ng-tags-input.css',
         'public/lib/ng-tags-input/ng-tags-input.bootstrap.css',
@@ -32,7 +32,9 @@ module.exports = {
         'public/lib/angular-clipboard/angular-clipboard.js',
         'public/lib/angular-file-saver/dist/angular-file-saver.bundle.js',
         'public/lib/angular-file-upload/dist/angular-file-upload.js',
-        'public/lib/ng-file-upload/ng-file-upload.js'
+        'public/lib/ng-file-upload/ng-file-upload.js',
+        'public/lib/highcharts/highcharts.js',
+        'public/lib/highcharts/highcharts-more.js'
         // endbower
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']

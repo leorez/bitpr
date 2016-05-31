@@ -16,6 +16,8 @@
     vm.articleSender = articleSender;
     vm.articleSender.dspType = 'A';
     vm.authentication = Authentication;
+    vm.downloadImage = downloadImage;
+
     var reserveTimes = [0, 999].concat(_.range(1, 24));
     reserveTimes.push(24, 48, 72); // 24: 1일후, 48: 2일후, 72: 3일후, 999: 공시확인후
     vm.reserveTimeOptions = [];
@@ -220,6 +222,16 @@
           $location.path('');
         });
       }
+    }
+
+    function downloadImage(file) {
+      delete $http.defaults.headers.common['X-Requested-With']; // See note 2
+      $http.get('/images/' + file, { responseType: 'arraybuffer' }).success(function (data) {
+        var blob = new Blob([data], { type: 'image/jpeg' });
+        FileSaver.saveAs(blob, file);
+      }).error(function (data, status) {
+        console.error('Request failed with status: ' + status);
+      });
     }
   }
 }());

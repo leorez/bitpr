@@ -1,25 +1,93 @@
 <section>
 	<div class="page-header">
-		<h2>보도자료 발송현황</h2>
+    <a ui-sref="article-senders.create" class="btn btn-primary pull-right">새 보도자료 작성</a>
+		<h2>보도자료</h2>
 	</div>
 
   <div>
     <p>예약 전송을 취소할 수 있으며, 전송된 날짜순으로 전송결과 및 현황을 제공해 드립니다.</p>
   </div>
-	<div class="list-group">
-		<a data-ng-repeat="item in vm.articleSenders" class="list-group-item">
-			<h4 class="list-group-item-heading">{{item.title}}</h4>
-      <p>{{item.status | status}}</p>
-      <small class="list-group-item-text">
-        <span>{{item.created | date:'yyyy-MM-dd HH:mm:ss'}}</span>
-      </small>
-      <div>
-          <label>발송시점</label>
-          <span>{{item.reserveTime | reserveTime}}</span>
+
+  <div role="tabpanel">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="pull-right">
+        <form action="" class="form-inline">
+          <select name="" id="" class="form-control">
+            <option value="">최신순</option>
+            <option value="">성공순**</option>
+            <option value="">오래된순</option>
+            <option value="">대상미디어순</option>
+            <option value="">발송수순</option>
+          </select>
+          <input class="form-control" type="text" placeholder="검색어">
+        </form>
+      </li>
+      <li role="presentation" class="active">
+        <a href="#all" aria-controls="all" role="tab" data-toggle="tab">전체(283)</a>
+      </li>
+      <li role="presentation">
+        <a href="#waiting" aria-controls="tab" role="tab" data-toggle="tab">발송대기(1)</a>
+      </li>
+      <li role="presentation">
+        <a href="#sent" aria-controls="tab" role="tab" data-toggle="tab">발송완료(218)</a>
+      </li>
+      <li role="presentation">
+        <a href="#cancelled" aria-controls="tab" role="tab" data-toggle="tab">취소 및 실패(10)</a>
+      </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+
+      <div role="tabpanel" class="tab-pane active" id="all">
+
+        <div class="news-item" data-ng-repeat="item in vm.articleSenders">
+          <div class="row">
+            <div class="divider col-sm-8">
+              <h3><a ui-sref="article-senders.preview">{{item.title}}</a></h3>
+              <p><a ui-sref="article-senders.preview">{{item.content | summary}}</a></p>
+              <a ng-show="item.image1" href="" ng-click="vm.downloadImage(item.image1)"><img src="{{'/images/' + item.image1}}"></a>
+              <a ng-show="item.image2" href="" ng-click="vm.downloadImage(item.image2)"><img src="{{'/images/' + item.image2}}"></a>
+              <a ng-show="item.image3" href="" ng-click="vm.downloadImage(item.image3)"><img src="{{'/images/' + item.image3}}"></a>
+            </div>
+            <div class="col-sm-4">
+              <div>상태 : <span for="" class="label label-default">{{item.status | status}}</span></div>
+              <div>작성일 : {{item.created | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+              <div>발송시점 : {{item.reserveTime | reserveTime}}</div>
+              <div>희망보도 갯수 : {{item.sendCount}}</div>
+              <div>
+                <span ng-show="item.status === 'Reserved' && item.reserveTime !== 0">
+                  <a ng-click="vm.cancelArticleSender(item)" class="btn btn-link">발송취소</a>|
+                </span>
+                <span ng-show="item.status === 'Sent'">
+                  <a href="" class="btn btn-link">재발송</a>|
+                </span>
+                <a href="./press-write.html" class="btn btn-link">수정</a>|
+                <a href="" class="btn btn-link">삭제</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-      <button type="button" ng-show="item.status==='Reserved' && item.reserveTime !== 0" ng-click="vm.cancelArticleSender(item)">발송취소</button>
     </div>
-		</a>
-	</div>
+    <!-- Tab panes -->
+    <ul class="pagination pagination-centered">
+      <li>
+        <a href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li><a href="#">1</a></li>
+      <li><a href="#">2</a></li>
+      <li><a href="#">3</a></li>
+      <li><a href="#">4</a></li>
+      <li><a href="#">5</a></li>
+      <li>
+        <a href="#" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </div>
 </section>

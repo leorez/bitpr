@@ -1,3 +1,115 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+body {
+    overflow-y: scroll;
+}
+*.mt0 {
+    margin-top: 0;
+}
+body * {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+}
+body h1, body h2, body h3, body h4, body h5 {
+    font-weight: 300;
+}
+textarea {
+    line-height: 1.7em;
+}
+.divider {
+    padding-right: 14px;
+    border-right:1px solid #ddd;
+}
+
+#content-container {
+    margin-top: 40px;
+}
+.tab-content {
+    margin-top: 20px;
+}
+.news-item {
+    padding: 15px;
+    border: 1px solid #ddd;
+    color: #666;
+    float: left;
+    width: 100%;
+    margin-bottom: 15px;
+}
+.news-item a {
+    padding: 3px;
+    color: #999!important;
+}
+.news-item img {
+    float:left;
+    margin-right: 5px;
+    height: 50px;
+}
+.news-item h3 {
+    font-size: 20px;
+    margin-top: 0;
+    white-space : nowrap;
+    text-overflow : ellipsis;
+    -o-text-overflow : ellipsis;
+    overflow : hidden;
+    -moz-binding : url('ellipsis.xml#ellipsis');
+    text-overflow : ellipsis;
+}
+.news-item h3 a {
+    color: #444!important;
+}
+
+
+#content-container #press-info td {
+    padding: 0;
+}
+#content-container #press-info span,
+#content-container #press-info input,
+#content-container #press-info select {
+    border: 0;
+}
+#content-container #press-logo {
+    margin: 10px;
+}
+
+#content-container .content-row {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+#content-container .content-label {
+    color: #ccc;
+}
+#content-container .content-editable {
+    color: #666;
+    line-height: 1.6em;
+    font-size: 16px;
+}
+#content-container.press-write .content-editable:hover {
+    outline: 1px dashed blue;
+}
+#content-container .press-headline .content-editable {
+    font-size: 30px;
+    line-height: 1.2em;
+}
+#content-container .press-sub-headline {
+    margin-bottom: 50px;
+}
+#content-container .press-sub-headline .content-editable {
+    font-size: 22px;
+    color: #666;
+    line-height: 1.2em;
+}
+#content-container .press-attach a {
+    display: inline-block;
+    margin: 5px 0;
+}
+#content-container .press-attach a img {
+    max-height: 100px;
+}
+
+#content-container.press-info .content-label {
+    visibility: hidden;
+}
+
 .indent-10 {
     text-indent: 10px;
 }

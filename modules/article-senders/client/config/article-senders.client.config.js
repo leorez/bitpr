@@ -9,28 +9,21 @@
 
   function menuConfig(menuService) {
     menuService.addMenuItem('topbar', {
+      title: '대시보드',
+      state: 'dashboard',
+      roles: ['user', 'admin']
+    });
+
+    menuService.addMenuItem('topbar', {
       title: '보도자료',
-      state: 'article-senders',
-      type: 'dropdown',
-      roles: ['*']
+      state: 'article-senders.list',
+      roles: ['user', 'admin']
     });
 
-    // Add the dropdown list item
-    menuService.addSubMenuItem('topbar', 'article-senders', {
-      title: '보도자료 발송현황',
-      state: 'article-senders.list'
-    });
-
-    menuService.addSubMenuItem('topbar', 'article-senders', {
-      title: 'My 보도자료',
-      state: 'article-senders.files'
-    });
-
-    // Add the dropdown create item
-    menuService.addSubMenuItem('topbar', 'article-senders', {
-      title: '보도자료발송',
-      state: 'article-senders.create',
-      roles: ['user']
+    menuService.addMenuItem('topbar', {
+      title: '기사모니터링',
+      state: 'monitoring',
+      roles: ['user', 'admin']
     });
   }
 }());

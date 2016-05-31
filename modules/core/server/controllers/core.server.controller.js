@@ -46,7 +46,7 @@ exports.renderIndex = function (req, res) {
   });
 };
 
-exports.corpCodeToName = function (code, callBack) {
+exports.corpInfo = function (code, callBack) {
   // Dart OpenAPI test command
   // curl "http://dart.fss.or.kr/api/company.json?auth=8fe9565007f1da895e18858dda74b4ac56d77c58&crp_cd=005930"
   // dart open api key: 8fe9565007f1da895e18858dda74b4ac56d77c58
@@ -63,14 +63,14 @@ exports.corpCodeToName = function (code, callBack) {
       // console.log(body);
       var json = JSON.parse(body);
       if (json.err_code === '000')
-        callBack(json.crp_nm_i);
+        callBack(json);
       else
         callBack('', json.err_code);
     }
   });
 };
 
-exports.apiCorpCodeToName = function (req, res) {
+exports.apiCorpInfo = function (req, res) {
   var corpCode = req.body.corpCode;
 
   if (!corpCode) {
@@ -82,15 +82,15 @@ exports.apiCorpCodeToName = function (req, res) {
     return;
   }
 
-  exports.corpCodeToName(corpCode, function (corpName, error) {
+  exports.corpInfo(corpCode, function (info, error) {
     if (error) {
       console.error('error ' + error);
       res.status(400).send({
         message: errorHandler.getErrorMessage(error)
       });
     } else {
-      console.log('Result=' + corpName);
-      res.json({ name: corpName });
+      console.log('Result=' + info);
+      res.json(info);
     }
   });
 };
@@ -123,7 +123,15 @@ exports.search = function (req, res) {
       search(keyword, req, res);
     });
 
-    exports.corpCodeToName(def, keyword);
+    exports.corpInfo(keyword, function (info, err) {
+      if (err) {
+        res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        search(info.crp_nm_i, req, res);
+      }
+    });
 
   } else {
     search(keyword, req, res);

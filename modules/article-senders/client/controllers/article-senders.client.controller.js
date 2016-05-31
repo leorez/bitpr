@@ -13,10 +13,35 @@
     console.log('auth: ' + JSON.stringify(Authentication.user));
     vm.error = null;
     vm.form = {};
+    vm.authentication = Authentication;
+    vm.user = Authentication.user;
     vm.articleSender = articleSender;
     vm.articleSender.dspType = 'A';
-    vm.authentication = Authentication;
-    vm.downloadImage = downloadImage;
+
+    if (!vm.articleSender.contact)
+      vm.articleSender.contact = vm.user.telephone + ' / ' + vm.user.cellphone;
+    if (!vm.articleSender.sender)
+      vm.articleSender.sender = vm.user.displayName;
+    if (!vm.articleSender.subheadline)
+      vm.articleSender.subheadline = '<p># 전통적 비수기 1Q ... 전년 동기 대비 매출 40%, 영업이익 42%늘어</p>\
+      <p># 보호 필름과 케이스 의존성 탈피 가시화... 기타 제품 9배 성장</p>\
+      <p># 애플 워치 및 차량용 제품 인기</p>';
+    if (!vm.articleSender.lead) {
+      vm.articleSender.lead = '<p>농림축산식품부(이하 농식품부)와 농협은행은 5.23일 펀드운용사를 대상으로 농식품 투자플랫폼사업(이하 플랫폼사업) 설명회를 개최할 계획이다.</p>';
+      vm.articleSender.lead += '<p>농식품 투자플랫폼은 농업인이 첨단온실, 버섯재배사와 같은 농업시설을 매각후 재임차(SaleLease-back)하고 환매할 수 있는 새로운 농업금융 지원 시스템이다.</p>';
+    }
+    if (!vm.articleSender.main) {
+      vm.articleSender.main = '<p>농식품 투자플랫폼은 농업인이 첨단온실, 버섯재배사와 같은 농업시설을 매각후 재임차(SaleLease-back)하고 환매할 수 있는 새로운 농업금융 지원 시스템이다.</p>';
+      vm.articleSender.main += '<p>이 날 설명회는 플랫폼사업에 필요한 자본을 조달하기 위해서 농식품 모태펀드 운용사 10여 곳을 대상으로 진행된다.</p>';
+      vm.articleSender.main += '<p>설명회에서 농식품부와 농협은행은 플랫폼사업의 개요와 그간 발굴한 사업대상자 후보 농업법인을 소개한다. </p>';
+      vm.articleSender.main += '<p>사업대상자 후보인 A농업법인은 파프리카 유리온실 확장을 희망하는데, 기존 방식에 따르면 담보능력이 부족하여 자금조달에 어려움이 있고, 대출을 받더라도 매년 대출원금과 이자를 상환해야 하는 부채가 증가하여 실패시 재기가 어려운 문제가 있다.</p>';
+    }
+    if (!vm.articleSender.detail) {
+      vm.articleSender.detail = '세부사실';
+    }
+    if (!vm.articleSender.corpSummary) {
+      vm.articleSender.corpSummary = '<p>(주)뉴로스 각종 첨단기술의 복합체인 가스터빈엔진 개발경험을 보유한 연구진들이 모여 창업한 벤처기업이며, 냉동공조 분야, 항공추진 분야, 지능형 로봇 분야, 발전 및 에너지 분야, 기술자문 용역 및 소프트웨어 개발 분야 등 첨단기술을 활용한 고부가가치 미래 사업에 주력하고 있는 기업입니다.</p>';
+    }
 
     var reserveTimes = [0, 999].concat(_.range(1, 24));
     reserveTimes.push(24, 48, 72); // 24: 1일후, 48: 2일후, 72: 3일후, 999: 공시확인후
@@ -73,8 +98,6 @@
     if (vm.articleSender.image2) vm.articleSender.image2 = imageRoot + vm.articleSender.image2;
     if (vm.articleSender.image3) vm.articleSender.image3 = imageRoot + vm.articleSender.image3;
 
-    console.log('corpCode: ' + vm.authentication.user.corpCode);
-
     function autoTitle(corpName) {
       var title = corpName + ' 보도자료';
       title += '(' + corpName + '에서 보도자료를 보내드립니다. 관심과 배려 부탁드립니다.)';
@@ -82,13 +105,21 @@
     }
 
     $http
-      .post('/api/crp-code-to-name', { corpCode: vm.authentication.user.corpCode })
+      .post('/api/crp-info', { corpCode: vm.authentication.user.corpCode })
       .then(function (response) {
         console.log('success: ' + JSON.stringify(response));
-        vm.articleSender.title = autoTitle(response.data.name);
+        vm.articleSender.corpInfo = response.data;
+        vm.articleSender.title = autoTitle(response.data.crp_nm_i);
       }, function (error) {
         console.error('error: ' + JSON.stringify(error));
-        vm.articleSender.title = '';
+        vm.articleSender.corpInfo = {
+          crp_nm: '(주) 비트피알',
+          crp_nm_i: '비트피알',
+          adr: '서울시 마포구 독막로 331 22F(도화동, 마스터즈타워)',
+          hm_url: 'http://www.bitpr.kr'
+        };
+
+        vm.articleSender.title = autoTitle(vm.articleSender.corpInfo.crp_nm_i);
         if (vm.authentication.user.corpName !== '') {
           vm.articleSender.title = autoTitle(vm.authentication.user.corpName);
         }
@@ -100,6 +131,7 @@
     vm.remove = remove;
     vm.cancel = cancel;
     vm.sendArticle = sendArticle;
+    vm.clear = clear;
 
     // 보도자료발송 작성중 취소버튼 클릭시 실행
     function cancel() {
@@ -224,14 +256,9 @@
       }
     }
 
-    function downloadImage(file) {
-      delete $http.defaults.headers.common['X-Requested-With']; // See note 2
-      $http.get('/images/' + file, { responseType: 'arraybuffer' }).success(function (data) {
-        var blob = new Blob([data], { type: 'image/jpeg' });
-        FileSaver.saveAs(blob, file);
-      }).error(function (data, status) {
-        console.error('Request failed with status: ' + status);
-      });
+    function clear(obj) {
+      console.log('clear');
+      obj = '';
     }
   }
 }());

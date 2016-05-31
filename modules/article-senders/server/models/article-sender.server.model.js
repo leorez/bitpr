@@ -63,7 +63,17 @@ var ArticleSenderSchema = new Schema({
     type: String,
     trim: true
   },
+  fileOrigin: {
+    // 보도자료 원본이름
+    type: String,
+    trim: true
+  },
   image1: {
+    type: String,
+    trim: true
+  },
+  image1Orgin: {
+    // 원본이름
     type: String,
     trim: true
   },
@@ -71,7 +81,17 @@ var ArticleSenderSchema = new Schema({
     type: String,
     trim: true
   },
+  image2Orgin: {
+    // 원본이름
+    type: String,
+    trim: true
+  },
   image3: {
+    type: String,
+    trim: true
+  },
+  image3Orgin: {
+    // 원본이름
     type: String,
     trim: true
   },
@@ -95,6 +115,41 @@ var ArticleSenderSchema = new Schema({
   },
   dspType: {
     // 공시유형
+    type: String,
+    trim: true
+  },
+  sender: {
+    // 발송인
+    type: String,
+    trim: true
+  },
+  contact: {
+    // 연락처
+    type: String,
+    trim: true
+  },
+  subheadline: {
+    // 서브헤드라인
+    type: String,
+    trim: true
+  },
+  lead: {
+    // 리드
+    type: String,
+    trim: true
+  },
+  main: {
+    // 본문
+    type: String,
+    trim: true
+  },
+  detail: {
+    // 세부사실
+    type: String,
+    trim: true
+  },
+  corpSummary: {
+    // 회사요약
     type: String,
     trim: true
   }

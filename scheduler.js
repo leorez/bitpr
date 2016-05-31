@@ -114,14 +114,15 @@ function phonesString(article) {
 
 function contentBuild(article, callback) {
   console.log(article);
-  coreController.corpCodeToName(article.user.corpCode, function (corpName, error) {
+  coreController.corpInfo(article.user.corpCode, function (info, error) {
+    var corpName
     if (error) {
       console.error(error);
       corpName = article.user.corpName;
     } else {
       // save corpName
       var user = new User(article.user);
-      user.corpName = corpName;
+      user.corpName = info.crp_nm;
       user.save(function (err) {
         if (err) console.error(err);
       });
@@ -131,7 +132,7 @@ function contentBuild(article, callback) {
     var content = '<pre>';
     content += '<h1 style="text-align: center">보도자료</h1>';
     content += '<hr/>';
-    content += '<h3 style="text-align: center">(주) ' + corpName + '</h3>';
+    content += '<h3 style="text-align: center">' + corpName + '</h3>';
     content += '<hr/>';
     content += 'Date <span style="margin-left: 10px">' + (new Date()).format('YYYY.M.D') + '</span>';
     content += '<p>Company <span style="margin-left: 10px">' + corpName + ' ' + article.user.displayName + ' ' + phones + '</span></p>'

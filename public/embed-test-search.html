@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>홈페이지 임베디드 스크립트 테스트</title>
+</head>
+<body>
+
+<div class="page-header">
+  <h3>홈페이지 임베디드 스크립트 테스트</h3>
+</div>
+
+<div class="center">------------------ Embeded start --------------------</div>
+
+<div id="bitpr_thread"></div>
+<script>
+  /**
+   * 기업상장코드를 변경하세요.
+   * bitpr_config.corpCode
+   */
+  var bitpr_config = {
+    corpCode: '005930',  // 기업상장코드
+    type: 'SEARCH', // 자료유령 : SEARCH(검색된기사), REPORT(보도자료)
+    target: 'bitpr_thread', // 자료가 표시될 Element Id
+    host: ''  // 수정하지 마세요.
+  };
+
+  // -----------------------------------------------
+  // 아래 코드는 변경하지 마십시요.
+  (function () {
+    var d = document, s = d.createElement('script');
+    s.src = bitpr_config.host + '/embed.js';
+    s.crossorigin = 'anonymous';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+  // ------------------------------------------------
+</script>
+<noscript>자바스크립트를 활성화 해주세요. (주)비트피알</noscript>
+
+<div>------------------ Embeded end --------------------</div>
+
+</body>
+</html>

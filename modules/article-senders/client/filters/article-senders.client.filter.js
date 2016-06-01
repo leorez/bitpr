@@ -21,7 +21,7 @@
     return function (input) {
       switch (input) {
         case 'None':
-          return '작성중';
+          return '-';
         case 'Reserved':
           return '발송대기';
         case 'Canceled':
@@ -30,6 +30,10 @@
           return '발송완료';
         case 'Error':
           return '발송에러';
+        case 'ReSend':
+          return '재발송중';
+        case 'Temporary':
+          return '임시저장';
         default:
           return '';
       }

@@ -32,10 +32,10 @@ var ArticleSenderSchema = new Schema({
     default: false
   },
   status: {
-    // 'None', 'Reserved', 'Sent', 'Error', 'Canceled', 'ReSend' : 재전송
+    // 'None': 상태없음, 'Reserved': 예약, 'Sent': 발송완료, 'Error': 에러, 'Canceled': 취소, 'ReSend': 재전송, 'Temporary': 임시저장
     type: String,
-    default: 'None',
-    trim: true
+    enum: ['None', 'Reserved', 'Sent', 'Error', 'Canceled', 'ReSend', 'Temporary'],
+    default: 'None'
   },
   emails: {
     type: String,
@@ -51,13 +51,12 @@ var ArticleSenderSchema = new Schema({
     type: String,
     default: '',
     trim: true,
-    required: 'Title cannot be blank'
+    required: '헤드라인은 필수입니다.'
   },
   content: {
     type: String,
     default: '',
-    trim: true,
-    required: 'Content cannot be blank'
+    trim: true
   },
   file: {
     type: String,

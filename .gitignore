@@ -79,5 +79,5 @@ uploads/docs/*.*
 
 server.sh
 public/dist/*.*
-public/dist/*.*.*
+public/dist/*.css
 

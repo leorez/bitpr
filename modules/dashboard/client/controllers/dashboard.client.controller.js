@@ -9,7 +9,7 @@
 
   function DashboardController($scope) {
     var vm = this;
-
+    /* eslint-disable */
     Highcharts.chart('news-count', {
       chart: {
         type: 'line'
@@ -48,6 +48,7 @@
       }]
     });
 
+    // eslint-disable-next-line no-use-before-define
     Highcharts.chart('news-percent', {
       chart: {
         plotBackgroundColor: null,
@@ -96,6 +97,7 @@
         }]
       }]
     });
+    /* eslint-disable */
   }
 }());
 

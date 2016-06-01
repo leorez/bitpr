@@ -22,10 +22,11 @@
       vm.articleSender.contact = vm.user.telephone + ' / ' + vm.user.cellphone;
     if (!vm.articleSender.sender)
       vm.articleSender.sender = vm.user.displayName;
-    if (!vm.articleSender.subheadline)
-      vm.articleSender.subheadline = '<p># 전통적 비수기 1Q ... 전년 동기 대비 매출 40%, 영업이익 42%늘어</p>\
-      <p># 보호 필름과 케이스 의존성 탈피 가시화... 기타 제품 9배 성장</p>\
-      <p># 애플 워치 및 차량용 제품 인기</p>';
+    if (!vm.articleSender.subheadline) {
+      vm.articleSender.subheadline = '<p># 전통적 비수기 1Q ... 전년 동기 대비 매출 40%, 영업이익 42%늘어</p>';
+      vm.articleSender.subheadline += '<p># 보호 필름과 케이스 의존성 탈피 가시화... 기타 제품 9배 성장</p>';
+      vm.articleSender.subheadline += '<p># 애플 워치 및 차량용 제품 인기</p>';
+    }
     if (!vm.articleSender.lead) {
       vm.articleSender.lead = '<p>농림축산식품부(이하 농식품부)와 농협은행은 5.23일 펀드운용사를 대상으로 농식품 투자플랫폼사업(이하 플랫폼사업) 설명회를 개최할 계획이다.</p>';
       vm.articleSender.lead += '<p>농식품 투자플랫폼은 농업인이 첨단온실, 버섯재배사와 같은 농업시설을 매각후 재임차(SaleLease-back)하고 환매할 수 있는 새로운 농업금융 지원 시스템이다.</p>';

@@ -39,18 +39,19 @@
   module.filter('summary', function () {
     return function (input) {
       return input.summary(250);
-    }
+    };
   });
 
   // len만큼 요약된 문자열 반환
+  /* eslint-disable */
   String.prototype.summary = function(len) {
-    function stripHTML(html)
-    {
+    function stripHTML(html) {
       var tmp = document.implementation.createHTMLDocument("New").body;
       tmp.innerHTML = html;
       return tmp.textContent || tmp.innerText || "";
     }
     return stripHTML(this.substring(0, len || 200)) + '...';
   };
+  /* eslint-disable */
 }());
 

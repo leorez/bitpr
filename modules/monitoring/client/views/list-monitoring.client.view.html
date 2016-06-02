@@ -1,0 +1,65 @@
+<section>
+  <div data-ng-controller="SettingsController" class="container-fluid" data-ng-init="crawledArticles()">
+
+    <div id="content-container" class="container news-index">
+
+      <div class="page-header">
+        <a ui-sref="settings.config" class="btn btn-default pull-right">키워드 편집</a>
+        <h1>기사 모니터링</h1>
+      </div>
+
+
+      <div class="row">
+        <div>
+          <div style="margin-bottom: 10px;">
+            <button type="button" class="btn btn-large btn-primary" ng-click="shareArticle()">공유하기</button>
+          </div>
+
+          <table class="table table-bordered">
+            <thead>
+
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in articles">
+              <td><input type="checkbox" class="checkbox" ng-checked="exists(item, selected)" ng-click="toggle(item, selected)"></td>
+              <td><span class="label" ng-class="{'label-default': item.displayed === false, 'label-primary': item.displayed}" ng-click="toggleDisplayed(item)">{{item.displayed | displayed}}</span></td>
+              <td>
+                <a ng-href="{{item.url}}" target="_blank">
+                  <h4 class="list-group-item-heading title">
+
+                    <span>{{item.title}}</span>
+                    <span class="media">{{item.media}}</span>
+                    <span class="media">{{item.articleAt | date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                  </h4>
+                  <p class="list-group-item-text item-summary" ng-bind-html="item.summary"></p>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+          <ul class="pagination pagination-centered">
+            <li>
+              <a href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li>
+              <a href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+
+    </div> <!-- /container -->
+
+  </div>
+</section>

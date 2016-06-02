@@ -1,5 +1,5 @@
 <section class="row" data-ng-controller="SettingsController" data-ng-init="getConfig()">
-  <h3 class="col-md-16 text-center">환경 설정</h3>
+  <h3 class="col-md-16 text-center">키워드 편집</h3>
   <div class="col-md-16">
     <fieldset>
       <div class="form-group">
@@ -13,11 +13,11 @@
           <select data-ng-model="user.crawlTimeMinutes" ng-options="o as o+'분' for o in mList"></select>
         </div>
       </div>
-      <div class="form-group">
-        <label class="control-label checkbox-inline">
-          <intput type="checkbox" data-ng-model="user.enabledCrawler" id="enabledCrawler"> 수집가능여부
-        </label>
-      </div>
+      <!--<div class="form-group">-->
+        <!--<label class="control-label checkbox-inline">-->
+          <!--<intput type="checkbox" data-ng-model="user.enabledCrawler" id="enabledCrawler"> 수집가능여부-->
+        <!--</label>-->
+      <!--</div>-->
       <div class="text-center form-group">
         <button ng-click="saveConfig()" type="submit" class="btn btn-large btn-primary" id="saveConfigBtn">저장</button>
       </div>

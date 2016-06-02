@@ -17,10 +17,10 @@
 
     vm.cancelArticleSender = cancelArticleSender;
     vm.downloadImage = downloadImage;
-    
+
     // 보도자료현황의 발송취소
     function cancelArticleSender(articleSender, $http) {
-     if ($window.confirm('예약된 보도자료 발송이 취소됩니다. 취소하시겠습니까?')) {
+      if ($window.confirm('예약된 보도자료 발송이 취소됩니다. 취소하시겠습니까?')) {
         articleSender.status = 'Canceled';
         articleSender.canceled = new Date();
 

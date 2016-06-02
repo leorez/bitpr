@@ -5,9 +5,28 @@
     .module('core')
     .run(menuConfig);
 
-  menuConfig.$inject = ['menuService'];
+  menuConfig.$inject = ['menuService', 'Authentication'];
 
-  function menuConfig(menuService) {
+  function menuConfig(menuService, Authentication) {
+
+    menuService.addMenuItem('topbar', {
+      title: '대시보드',
+      state: 'dashboard',
+      roles: ['user', 'admin']
+    });
+
+    menuService.addMenuItem('topbar', {
+      title: '보도자료',
+      state: 'article-senders.list',
+      roles: ['user', 'admin']
+    });
+
+    menuService.addMenuItem('topbar', {
+      title: '기사모니터링',
+      state: 'monitoring.list',
+      roles: ['user', 'admin']
+    });
+
     menuService.addMenu('account', {
       roles: ['user']
     });
@@ -20,18 +39,8 @@
     });
 
     menuService.addSubMenuItem('account', 'settings', {
-      title: '환경설정',
+      title: '키워드편집',
       state: 'settings.config'
-    });
-
-    menuService.addSubMenuItem('account', 'settings', {
-      title: '수집된 기사목록',
-      state: 'settings.crawled-list'
-    });
-
-    menuService.addSubMenuItem('account', 'settings', {
-      title: '홈페이지에 게시된 기사목록',
-      state: 'settings.displayed-list'
     });
 
     menuService.addSubMenuItem('account', 'settings', {
@@ -44,10 +53,12 @@
       state: 'settings.picture'
     });
 
-    menuService.addSubMenuItem('account', 'settings', {
-      title: '암호변경',
-      state: 'settings.password'
-    });
+    if (Authentication.user.provider === 'local') {
+      menuService.addSubMenuItem('account', 'settings', {
+        title: '암호변경',
+        state: 'settings.password'
+      });
+    }
 
     // menuService.addSubMenuItem('account', 'settings', {
     //   title: 'Manage Social Ac경counts',

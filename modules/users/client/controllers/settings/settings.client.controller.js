@@ -5,9 +5,9 @@
     .module('users')
     .controller('SettingsController', SettingsController);
 
-  SettingsController.$inject = ['$scope', '$http', '$location', 'UsersService', 'Authentication', 'DisplayedArticles', 'CrawledArticles', 'ngProgressFactory', 'clipboard', '$mdDialog'];
+  SettingsController.$inject = ['$state', '$scope', '$http', '$location', 'UsersService', 'Authentication', 'DisplayedArticles', 'CrawledArticles', 'ngProgressFactory', 'clipboard', '$mdDialog'];
 
-  function SettingsController($scope, $http, $location, UsersService, Authentication, DisplayedArticles, CrawledArticles, ngProgressFactory, clipboard, $mdDialog) {
+  function SettingsController($state, $scope, $http, $location, UsersService, Authentication, DisplayedArticles, CrawledArticles, ngProgressFactory, clipboard, $mdDialog) {
     var vm = this;
 
     vm.user = Authentication.user;
@@ -79,35 +79,13 @@
       }
     };
 
-    $scope.displayArticleToHomepage = function () {
-      // 선택된 기사 홈페이지에 올리기
-      $scope.success = $scope.error = null;
-
-      if (Authentication.user) {
-        var selected = $scope.selected;
-
-        angular.forEach(selected, function (item) {
-          var article = new DisplayedArticles({
-            title: item.title,
-            summary: item.summary,
-            media: item.media,
-            url: item.url,
-            articleAt: item.articleAt
-          });
-
-          console.log('article: ' + JSON.stringify(article));
-
-          article.$save(function (response) {
-            console.log('success:' + response);
-            $location.path('/settings/displayed-list');
-
-          }, function (errorRespose) {
-            $scope.error = errorRespose.data.message;
-            console.log('failed: ' + $scope.error);
-            console.log(JSON.stringify(errorRespose));
-          });
-        });
-      }
+    // 홈페이지 올리기/내리기
+    $scope.toggleDisplayed = function(crawledArticle) {
+      crawledArticle.displayed = !crawledArticle.displayed;
+      crawledArticle.$update(function (response) {
+      }, function (err) {
+        vm.error = err.data.message;
+      });
     };
 
     $scope.crawledArticles = function () {

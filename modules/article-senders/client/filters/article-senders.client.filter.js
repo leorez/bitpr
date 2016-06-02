@@ -4,8 +4,8 @@
 
   module.filter('displayed', function () {
     return function (displayed) {
-      if (displayed) return '홈페이지에서 내리기';
-      else return '홈페이지에 올리기';
+      if (displayed) return '게시중';
+      else return '게시';
     };
   });
 

@@ -38,6 +38,11 @@ var CrawledArticleSchema = new Schema({
     default: '',
     required: 'Url cannot be blank'
   },
+  displayed: {
+    // 홈페이지 게시여부
+    type: Boolean,
+    default: false
+  },
   articleAt: {
     type: Date,
     required: 'ArticleAt cannot be blank'

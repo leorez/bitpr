@@ -15,7 +15,7 @@
         templateUrl: 'modules/dashboard/client/views/dashboard.client.view.html',
         controllerAs: 'vm',
         data: {
-          roles: ['user']
+          roles: ['user', 'admin']
         }
       });
   }

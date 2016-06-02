@@ -48,7 +48,7 @@
       })
       .state('article-senders.edit', {
         url: '/:articleSenderId/edit',
-        templateUrl: 'modules/article-senders/client/views/edit-article-sender.client.view.html',
+        templateUrl: 'modules/article-senders/client/views/create-article-sender.client.view.html',
         controller: 'ArticleSendersController',
         controllerAs: 'vm',
         resolve: {

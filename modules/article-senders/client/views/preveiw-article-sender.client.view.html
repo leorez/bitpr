@@ -1,56 +1,136 @@
-<section>
-	<div class="page-header">
-		<h2>보도자료 미리보기</h2>
-	</div>
-  <div class="col-md-12">
-    <div>
-      <label>발송시점 : </label>
-      <label>{{vm.articleSender.reserveTime}}시간후</label>
-    </div>
-    <div>
-      <label>희망보도갯수 : </label>
-      <label>{{vm.articleSender.sendCount}}개</label>
-    </div>
-    <!--<div>-->
-    <!--<label>공시여부: </label>-->
-    <!--<label>{{vm.articleSender.beToDart}}</label>-->
-    <!--</div>-->
+<section id="content-container" class="container press-info">
+  <div class="page-header">
+    <h1>보도자료 작성</h1>
   </div>
-	<div class="col-md-12">
-		<div>
-			<label>발신자 : news@bitpr.kr</label>
-		</div>
-		<div>
-			{{vm.authentication.user.displayName}} ({{vm.authentication.user.telephone}} / {{vm.authentication.user.cellphone}})
-		</div>
-		<div class="page-header">
-			<h3>{{vm.articleSender.title}}</h3>
-		</div>
-		<div ng-bind-html="vm.articleSender.content"></div>
-	</div>
-  <div class="col-md-12">
-    <div ng-show="vm.articleSender.image1.length > 0">
-      <img ng-src="{{vm.articleSender.image1}}" id="image1">
+
+  <div class="row">
+    <div class="col-sm-2 text-center divider">
+      <div id="press-logo">
+        <img ng-src="/modules/article-senders/client/img/default-corp.png" alt="" class="img-responsive"/>
+      </div>
     </div>
-  </div>
-  <div class="col-md-12">
-    <div ng-show="vm.articleSender.image2.length > 0">
-      <img ng-src="{{vm.articleSender.image2}}" id="image2">
+    <div class="col-sm-6">
+      <h2 class="mt0">{{vm.user.corpInfo.crp_nm}}</h2>
+      <br><br>
+      <ul>
+        <li>{{vm.user.corpInfo.adr}}</li>
+        <li>{{vm.user.corpInfo.hm_url}}</li>
+      </ul>
     </div>
-  </div>
-  <div class="col-md-12">
-    <div ng-show="vm.articleSender.image3.length > 0">
-      <img ng-src="{{vm.articleSender.image3}}" id="image3">
+    <div class="col-sm-4">
+      <table id="press-info" class="table table-bordered table-condensed">
+        <tr>
+          <th>발송시점</th>
+          <td>
+            <input type="text" class="form-control bg-white" value="{{vm.articleSender.reserveTime | reserveTime}}" readonly>
+          </td>
+        </tr>
+        <tr ng-show="vm.articleSender.reserveTime === 999">
+          <th>공시유형</th>
+          <td>
+            <input type="text" class="form-control bg-white" value="{{vm.articleSender.dspType}}" readonly>
+          </td>
+        </tr>
+        <tr>
+          <th>연락처</th>
+          <td>
+            <input type="text" class="form-control" data-ng-model="vm.articleSender.contact">
+          </td>
+        </tr>
+        <tr>
+          <th>발송인</th>
+          <td>
+            <input type="text" class="form-control" data-ng-model="vm.articleSender.sender">
+          </td>
+        </tr>
+        <tr>
+          <th>희망보도 갯수</th>
+          <td>
+            <input type="text" class="form-control" data-ng-model="vm.articleSender.sendCount">
+          </td>
+        </tr>
+        <tr ng-hide="vm.articleSender._id">
+          <th>결제금액</th>
+          <td>
+            <input type="text" class="form-control" value="{{vm.articleSender.fare | number}}원" readonly>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 
-	<div class="form-group">
-		<button type="button" class="btn btn-primary btn-lg" ng-click="vm.sendArticle()">발송</button>
-		<a class="btn btn-default btn-lg" ui-sref="article-senders.edit({ articleSenderId : vm.articleSender._id })">수정</a>
-		<button type="button" class="btn btn-default btn-lg">취소</button>
-	</div>
+  <hr>
+  <br>
+  <div class="row content-row press-headline">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8 btn-group">
+      <div class="content-editable" contenteditable=false ng-model="vm.articleSender.title"></div>
+    </div>
+    <div class="ol-sm-2"></div>
+  </div>
 
-	<div data-ng-show="error" class="text-danger">
-		<strong data-ng-bind="error"></strong>
-	</div>
+  <div class="row content-row press-sub-headline">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div class="content-editable" contenteditable=false strip-br="true" strip-tags="true" select-non-editable="true" placeholder="서브헤드라인 없음" ng-model="vm.articleSender.subheadline"></div>
+    </div>
+    <div class="ol-sm-2"></div>
+  </div>
+
+  <div class="row content-row press-lead">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div class="content-editable" contenteditable=false strip-br="true" strip-tags="true" select-non-editable="true"  ng-model="vm.articleSender.lead" placeholder="리드는 필수입니다." required></div>
+    </div>
+    <div class="ol-sm-2"></div>
+  </div>
+
+  <div class="row content-row press-body">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div class="content-editable" ng-model="vm.articleSender.main" contenteditable=false strip-br="true" strip-tags="true" select-non-editable="true"  placeholder="본문은 필수입니다." required></div>
+    </div>
+    <div class="ol-sm-2"></div>
+  </div>
+  <div class="row content-row press-detail">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div class="content-editable" ng-model="vm.articleSender.detail" contenteditable=false strip-br="true" strip-tags="true" select-non-editable="true" placeholder="세부사실 없음"></div>
+    </div>
+    <div class="ol-sm-2"></div>
+  </div>
+
+  <div class="row content-row press-addition">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div class="content-editable" ng-model="vm.articleSender.corpSummary" contenteditable=false strip-br="true" strip-tags="true" select-non-editable="true" placeholder="추가사실 없음"></div>
+    </div>
+    <div class="ol-sm-2"></div>
+  </div>
+
+  <div class="row content-row press-attach">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div id="content-images">
+        <a ng-repeat="image in vm.imageQueue">
+          <img ng-src="{{image}}">
+        </a>
+      </div>
+    </div>
+    <div class="ol-sm-2"></div>
+  </div>
+
+  <br>
+  <hr>
+
+  <div ng-show="vm.articleSender._id">
+    <a type="button" class="btn btn-default btn-lg" ui-sref="article-senders.list"><span class="glyphicon glyphicon-chevron-left"></span> 뒤로</a>
+    <a type="button" class="btn btn-info btn-lg pull-right">재발송</a>
+    <a type="button" ui-sref="article-senders.edit({articleSenderId: vm.articleSender._id})" class="btn btn-default btn-lg pull-right" style="margin-right:10px;">수정</a>
+  </div>
+
+  <div ng-show="vm.error" class="text-danger">
+    <strong ng-bind="vm.error"></strong>
+  </div>
+  <br><br>
 </section>

@@ -88,3 +88,10 @@ a:hover .header-profile-image {
 #articleGroup .item-summary {
   color: darkgray;
 }
+
+.clearer {
+  pointer-events: auto;
+  text-decoration: none;
+  cursor: pointer;
+  margin-left: 100px;
+}

@@ -34,7 +34,8 @@ module.exports = {
         'public/lib/angular-file-upload/dist/angular-file-upload.min.js',
         'public/lib/ng-file-upload/ng-file-upload.min.js',
         'public/lib/highcharts/highcharts.js',
-        'public/lib/highcharts/highcharts-more.js'
+        'public/lib/highcharts/highcharts-more.js',
+        'public/lib/angular-contenteditable/angular-contenteditable.js'
         // endbower
       ]
     },

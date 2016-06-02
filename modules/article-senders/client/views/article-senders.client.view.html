@@ -45,8 +45,8 @@
         <div class="news-item" data-ng-repeat="item in vm.articleSenders">
           <div class="row">
             <div class="divider col-sm-8">
-              <h3><a ui-sref="article-senders.preview">{{item.title}}</a></h3>
-              <p><a ui-sref="article-senders.preview">{{item.content | summary}}</a></p>
+              <h3><a ui-sref="article-senders.preview({articleSenderId: item._id})">{{item.title}}</a></h3>
+              <p><a ui-sref="article-senders.preview({articleSenderId: item._id})">{{item.content | summary}}</a></p>
               <a ng-show="item.image1" href="" ng-click="vm.downloadImage(item.image1)"><img src="{{'/images/' + item.image1}}"></a>
               <a ng-show="item.image2" href="" ng-click="vm.downloadImage(item.image2)"><img src="{{'/images/' + item.image2}}"></a>
               <a ng-show="item.image3" href="" ng-click="vm.downloadImage(item.image3)"><img src="{{'/images/' + item.image3}}"></a>
@@ -63,8 +63,8 @@
                 <span ng-show="item.status === 'Sent'">
                   <a href="" class="btn btn-link">재발송</a>|
                 </span>
-                <a href="./press-write.html" class="btn btn-link">수정</a>|
-                <a href="" class="btn btn-link">삭제</a>
+                <a ui-sref="article-senders.edit({articleSenderId: item._id})" class="btn btn-link">수정</a>|
+                <a href="#" class="btn btn-link" ng-click="vm.remove(item)">삭제</a>
               </div>
             </div>
           </div>

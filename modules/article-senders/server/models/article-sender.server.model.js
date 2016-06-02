@@ -140,7 +140,8 @@ var ArticleSenderSchema = new Schema({
   main: {
     // 본문
     type: String,
-    trim: true
+    trim: true,
+    required: '본문은 필수입니다.'
   },
   detail: {
     // 세부사실

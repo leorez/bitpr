@@ -87,7 +87,7 @@
     display: inline-block;
     margin: 5px 0;
 }
-#content-container .press-attach a img {
+#content-container .press-attach img {
     max-height: 100px;
 }
 
@@ -102,4 +102,8 @@
 #content-container.press-info .table-item {
     text-indent: 10px;
     vertical-align: middle;
+}
+
+.bg-white {
+    background: #FFFFFF;
 }

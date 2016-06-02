@@ -3,7 +3,7 @@
 		<h1>보도자료 작성</h1>
 	</div>
 
-  <form name="vm.form.articleSenderForm" class="form-horizontal" ng-submit="vm.bill(vm.form.articleSenderForm.$valid)" novalidate>
+  <form name="vm.form.articleSenderForm" class="form-horizontal" ng-submit="vm.save(vm.form.articleSenderForm.$valid)" novalidate>
     <fieldset>
       <div class="row">
         <div class="col-sm-2 text-center divider">
@@ -12,16 +12,22 @@
           </div>
         </div>
         <div class="col-sm-6">
-          <h2 class="mt0">{{vm.articleSender.corpInfo.crp_nm}}</h2>
+          <h2 class="mt0">{{vm.user.corpInfo.crp_nm}}</h2>
           <br><br>
           <ul>
-            <li>{{vm.articleSender.corpInfo.adr}}</li>
-            <li>{{vm.articleSender.corpInfo.hm_url}}</li>
+            <li>{{vm.user.corpInfo.adr}}</li>
+            <li>{{vm.user.corpInfo.hm_url}}</li>
           </ul>
         </div>
         <div class="col-sm-4">
           <table id="press-info" class="table table-bordered table-condensed">
-            <tr>
+            <tr ng-hide="vm.articleSender._id">
+              <th>유형</th>
+              <td>
+                <select class="form-control" data-ng-model="vm.articleSender.type" ng-options="t for t in vm.types"></select>
+              </td>
+            </tr>
+            <tr ng-hide="vm.articleSender._id">
               <th>발송시점</th>
               <td>
                 <select class="form-control" data-ng-model="vm.articleSender.reserveTime" ng-options="t.data as t.text for t in vm.reserveTimeOptions"></select>
@@ -41,16 +47,16 @@
               <th>발송인</th>
               <td><input type="text" class="form-control" data-ng-model="vm.articleSender.sender"></td>
             </tr>
-            <tr>
+            <tr ng-hide="vm.articleSender._id">
               <th>희망보도 갯수</th>
               <td>
                 <select class="form-control" ng-change="vm.onSendCountChanged()" data-ng-model="vm.articleSender.sendCount" id="sendCount" ng-options="c as c+'개' for c in vm.sendCounts"></select>
               </td>
             </tr>
-            <tr>
+            <tr ng-hide="vm.articleSender._id">
               <th>결제금액</th>
               <td>
-                <input type="text" class="form-control" value="{{vm.articleSender.fare}}원" readonly>
+                <input type="text" class="form-control" value="{{vm.articleSender.fare | number}}원" readonly>
               </td>
             </tr>
           </table>
@@ -62,8 +68,8 @@
       <div class="row content-row press-headline">
         <div class="col-sm-2 content-label text-right">해드라인 <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div>
         <div class="col-sm-8 btn-group">
-          <div class="content-editable" ng-bind-html="vm.articleSender.title" contenteditable=true placeholder="헤드라인은 필수입니다." required></div>
-          <a ng-click="clear(vm.articleSender.title)" class="clearer glyphicon glyphicon-remove-circle form-control-feedback form-control-clear" style="pointer-events: auto; text-decoration: none;cursor: pointer;"></a>
+          <div class="content-editable" ng-model="vm.articleSender.title" contenteditable=true strip-br="true" strip-tags="true" select-non-editable="true" placeholder="헤드라인은 필수입니다." required></div>
+          <p ng-click="vm.articleSender.title='';vm.focus('title')" class="clearer glyphicon glyphicon-remove-circle form-control-feedback form-control-clear"></p>
         </div>
         <div class="ol-sm-2"></div>
       </div>
@@ -71,7 +77,8 @@
       <div class="row content-row press-sub-headline">
         <div class="col-sm-2 content-label text-right">서브해드라인 <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div>
         <div class="col-sm-8">
-          <div class="content-editable" contenteditable=true placeholder="서브헤드라인 없음" ng-bind-html="vm.articleSender.subheadline"></div>
+          <div class="content-editable" contenteditable=true strip-br="true" strip-tags="true" select-non-editable="true" placeholder="서브헤드라인 없음" ng-model="vm.articleSender.subheadline"></div>
+          <p ng-click="vm.articleSender.subheadline='';vm.focus('subheadline')" class="clearer glyphicon glyphicon-remove-circle form-control-feedback form-control-clear"></p>
         </div>
         <div class="ol-sm-2"></div>
       </div>
@@ -79,7 +86,8 @@
       <div class="row content-row press-lead">
         <div class="col-sm-2 content-label text-right">리드 <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div>
         <div class="col-sm-8">
-          <div class="content-editable" ng-bind-html="vm.articleSender.lead" contenteditable=true placeholder="리드는 필수입니다." required></div>
+          <div class="content-editable" strip-br="true" strip-tags="true" select-non-editable="true"  ng-model="vm.articleSender.lead" contenteditable="true" placeholder="리드는 필수입니다." required></div>
+          <p ng-click="vm.articleSender.lead='';vm.focus('lead')" class="clearer glyphicon glyphicon-remove-circle form-control-feedback form-control-clear"></p>
         </div>
         <div class="ol-sm-2"></div>
       </div>
@@ -87,14 +95,16 @@
       <div class="row content-row press-body">
         <div class="col-sm-2 content-label text-right">본문 <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div>
         <div class="col-sm-8">
-          <div class="content-editable" ng-bind-html="vm.articleSender.main" contenteditable=true placeholder="본문은 필수입니다." required></div>
+          <div class="content-editable" ng-model="vm.articleSender.main" contenteditable=true strip-br="true" strip-tags="true" select-non-editable="true"  placeholder="본문은 필수입니다." required></div>
+          <p ng-click="vm.articleSender.main='';vm.focus('main')" class="clearer glyphicon glyphicon-remove-circle form-control-feedback form-control-clear"></p>
         </div>
         <div class="ol-sm-2"></div>
       </div>
       <div class="row content-row press-detail">
         <div class="col-sm-2 content-label text-right">세부 사실 <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div>
         <div class="col-sm-8">
-          <div class="content-editable" ng-bind-html="vm.articleSender.detail" contenteditable=true placeholder="세부사실 없음"></div>
+          <div class="content-editable" ng-model="vm.articleSender.detail" contenteditable=true strip-br="true" strip-tags="true" select-non-editable="true" placeholder="세부사실 없음"></div>
+          <p ng-click="vm.articleSender.detail='';vm.focus('detail')" class="clearer glyphicon glyphicon-remove-circle form-control-feedback form-control-clear"></p>
         </div>
         <div class="ol-sm-2"></div>
       </div>
@@ -102,21 +112,19 @@
       <div class="row content-row press-addition">
         <div class="col-sm-2 content-label text-right">회사 요약 <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div>
         <div class="col-sm-8">
-          <div class="content-editable" ng-bind-html="vm.articleSender.corpSummary" contenteditable=true placeholder="추가사실 없음"></div>
+          <div class="content-editable" ng-model="vm.articleSender.corpSummary" contenteditable=true strip-br="true" strip-tags="true" select-non-editable="true" placeholder="추가사실 없음"></div>
+          <p ng-click="vm.articleSender.corpSummary='';vm.focus('corpSummary')" class="clearer glyphicon glyphicon-remove-circle form-control-feedback form-control-clear"></p>
         </div>
         <div class="ol-sm-2"></div>
       </div>
 
-      <div class="row content-row press-attach">
+      <div class="row content-row press-attach" ng-hide="vm.articleSender._id">
         <div class="col-sm-2 content-label text-right">첨부이미지 <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div>
         <div class="col-sm-8">
-          <input type="file" id="exampleInputFile">
+          <input type="file" id="imageFile" ngf-select="vm.onImageFilesSelected($files, $invalidFiles)" multiple>
           <div id="content-images">
-            <a href="http://image.newsis.com/2015/07/26/NISI20150726_0005716141_web.jpg" target="_blank">
-              <img src="http://image.newsis.com/2015/07/26/NISI20150726_0005716141_web.jpg" alt=""/>
-            </a>
-            <a href="http://imgnews.naver.net/image/003/2016/05/15/NISI20160510_0011674478_web_99_20160515075505.jpg?type=w540" target="_blank">
-              <img src="http://imgnews.naver.net/image/003/2016/05/15/NISI20160510_0011674478_web_99_20160515075505.jpg?type=w540" alt=""/>
+            <a ng-repeat="image in vm.imageQueue">
+              <img ng-src="{{image}}">
             </a>
           </div>
         </div>
@@ -126,10 +134,16 @@
       <br>
       <hr>
 
-      <button type="submit" class="btn btn-primary btn-lg pull-right">작성완료 및 결제진행 <span class="glyphicon glyphicon-chevron-right"></span></button>
-      <button type="submit" class="btn btn-default btn-lg">임시저장 <span class="icon-chevron-right"></span></button>
-      <button type="reset" class="btn btn-default btn-lg" ng-click="vm.cancel()">취소</button>
-
+      <div ng-hide="vm.articleSender._id">
+        <button type="submit" class="btn btn-primary btn-lg pull-right">작성완료 및 결제진행 <span class="glyphicon glyphicon-chevron-right"></span></button>
+        <button type="button" class="btn btn-default btn-lg" ng-click="vm.temporarySave()">임시저장 <span class="icon-chevron-right"></span></button>
+        <button type="reset" class="btn btn-default btn-lg" ng-click="vm.cancel()">취소</button>
+      </div>
+      <div ng-show="vm.articleSender._id">
+        <a type="button" class="btn btn-default btn-lg" ui-sref="article-senders.list"><span class="glyphicon glyphicon-chevron-left"></span> 뒤로</a>
+        <a type="button" class="btn btn-info btn-lg pull-right">재발송</a>
+        <a type="submit" class="btn btn-primary btn-lg pull-right" style="margin-right:10px;">수정</a>
+      </div>
 
       <div ng-show="vm.error" class="text-danger">
         <strong ng-bind="vm.error"></strong>

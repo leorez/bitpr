@@ -12,9 +12,20 @@ var path = require('path'),
   mail = require(path.resolve('./lib/mail')),
   _ = require('lodash');
 
+function buildContent(articleSender) {
+  var content = '';
+  content += '<h2>' + articleSender.subheadline + '</h2>';
+  content += articleSender.lead + '<br/><br/>';
+  content += articleSender.main + '<br/><br/>';
+  content += articleSender.detail + '<br/><br/>';
+  content += articleSender.corpSummary + '<br/><br/>';
+
+  return content;
+}
 
 var saveArticleSender = function (articleSender, req, res) {
   articleSender.user = req.user;
+  articleSender.content = buildContent(articleSender);
   articleSender.save(function (err) {
     if (err) {
       console.log(err);
@@ -59,44 +70,45 @@ function saveDoc(file) {
 exports.create = function (req, res) {
   console.log(req.files);
   var articleSender = new ArticleSender(req.body);
+  var files = req.files;
 
-  if (typeof req.files === 'object') {
-    var files = req.files;
+  if (files && files.imageFiles && files.imageFiles.length > 0) {
     var url;
-    url = saveImage(files.image1);
-    if (url !== undefined) {
-      articleSender.image1 = url;
+    files.imageFiles.forEach(function (file) {
+      url = saveImage(file);
+      if (url !== undefined) {
+        if (!articleSender.image1) {
+          articleSender.image1 = url;
+          articleSender.image1Orgin = file.originalFilename;
+        } else if (!articleSender.image2) {
+          articleSender.image2 = url;
+          articleSender.image2Orgin = file.originalFilename;
+        } else if (!articleSender.image3) {
+          articleSender.image3 = url;
+          articleSender.image3Orgin = file.originalFilename;
+        }
+      }
+    });
+  }
+
+  if (files && files.file) {
+    var filepath = saveDoc(files.file);
+    if (filepath) {
+      articleSender.file = filepath;
+      articleSender.fileOrigin = files.file.originalFilename;
     }
 
-    url = saveImage(files.image2);
-    if (url !== undefined) {
-      articleSender.image2 = url;
-    }
+    mammoth.convertToHtml({ path: files.file.path })
+      .then(function (result) {
+        articleSender.content = result.value;
+        saveArticleSender(articleSender, req, res);
 
-    url = saveImage(files.image3);
-    if (url !== undefined) {
-      articleSender.image3 = url;
-    }
-
-    if (files.file) {
-      var filepath = saveDoc(files.file);
-      if (filepath)
-        articleSender.file = filepath;
-
-      mammoth.convertToHtml({ path: files.file.path })
-        .then(function (result) {
-          articleSender.content = result.value;
-          saveArticleSender(articleSender, req, res);
-
-        }, function (err) {
-          console.log('err: ' + err);
-          res.status(400).send({
-            message: '\'MS Word\'가 아닙니다. 파일을 확인해주세요.'
-          });
-        }).done();
-    } else {
-      saveArticleSender(articleSender, req, res);
-    }
+      }, function (err) {
+        console.log('err: ' + err);
+        res.status(400).send({
+          message: '\'MS Word\'가 아닙니다. 파일을 확인해주세요.'
+        });
+      }).done();
   } else {
     saveArticleSender(articleSender, req, res);
   }

@@ -8,9 +8,9 @@
     .module('article-senders')
     .controller('ArticleSendersListController', ArticleSendersListController);
 
-  ArticleSendersListController.$inject = ['ArticleSendersService', '$mdDialog', '$http', 'FileSaver'];
+  ArticleSendersListController.$inject = ['$window', '$state', 'ArticleSendersService', '$mdDialog', '$http', 'FileSaver'];
 
-  function ArticleSendersListController(ArticleSendersService, $mdDialog, $http, FileSaver) {
+  function ArticleSendersListController($window, $state, ArticleSendersService, $mdDialog, $http, FileSaver) {
     var vm = this;
 
     vm.articleSenders = ArticleSendersService.query();
@@ -20,21 +20,17 @@
     
     // 보도자료현황의 발송취소
     function cancelArticleSender(articleSender, $http) {
-      console.log('clicked');
-      var confirm = $mdDialog.confirm()
-        .textContent('예약된 보도자료 발송이 취소됩니다. 정말로 취소하시겠습니까?')
-        .ok('예')
-        .cancel('아니요');
-      $mdDialog.show(confirm).then(function () {
+     if ($window.confirm('예약된 보도자료 발송이 취소됩니다. 취소하시겠습니까?')) {
         articleSender.status = 'Canceled';
         articleSender.canceled = new Date();
+
         articleSender.$update(articleSender, function (response) {
           console.log(response);
         }, function (error) {
           articleSender.status = 'Reserved';
           console.error(error);
         });
-      });
+      }
     }
 
     function downloadImage(file) {
@@ -46,5 +42,18 @@
         console.error('Request failed with status: ' + status);
       });
     }
+
+    vm.remove = function (articleSender) {
+      if (articleSender) {
+        if ($window.confirm('삭제하시겠습니까?')) {
+          articleSender.$remove();
+          for (var i in vm.articleSenders) {
+            if (vm.articleSenders[i] === articleSender) {
+              vm.articleSenders.splice(i, 1);
+            }
+          }
+        }
+      }
+    };
   }
 }());

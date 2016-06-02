@@ -5,243 +5,145 @@
 
 describe('articleSender page tests', function () {
   var page;
+  var data1 = {
+    title: 'Test Title',
+    subheadline: 'Test Subheadline',
+    lead: 'Test Lead',
+    main: 'Test Main',
+    detail: 'Test Detail',
+    corpSummary: 'Test CorpSummary'
+  };
 
   beforeEach(function () {
     browser.get('/article-senders/create');
     page = require('./article-senders.po.js');
   });
 
-  it('should contains correct reserveTimes', function () {
-    expect(element(by.cssContainingText('option', '즉시')).isPresent()).toBeTruthy();
-    expect(element(by.cssContainingText('option', '1시간후')).isPresent()).toBeTruthy();
-    expect(element(by.cssContainingText('option', '2시간후')).isPresent()).toBeTruthy();
-    expect(element(by.cssContainingText('option', '23시간후')).isPresent()).toBeTruthy();
-    expect(element(by.cssContainingText('option', '24시간후')).isPresent()).toBeFalsy();
-    expect(element(by.cssContainingText('option', '1일후')).isPresent()).toBeTruthy();
-    expect(element(by.cssContainingText('option', '3일후')).isPresent()).toBeTruthy();
-    expect(element(by.cssContainingText('option', '4일후')).isPresent()).toBeFalsy();
-    expect(element(by.cssContainingText('option', '공시확인후')).isPresent()).toBeTruthy();
+  describe('보도자료 작성 테스트', function () {
+    beforeEach(function () {
+      browser.get('/article-senders/create');
+    });
+
+    it('should contains correct reserveTimes', function () {
+      expect(element(by.cssContainingText('option', '즉시')).isPresent()).toBeTruthy();
+      expect(element(by.cssContainingText('option', '1시간후')).isPresent()).toBeTruthy();
+      expect(element(by.cssContainingText('option', '2시간후')).isPresent()).toBeTruthy();
+      expect(element(by.cssContainingText('option', '23시간후')).isPresent()).toBeTruthy();
+      expect(element(by.cssContainingText('option', '24시간후')).isPresent()).toBeFalsy();
+      expect(element(by.cssContainingText('option', '1일후')).isPresent()).toBeTruthy();
+      expect(element(by.cssContainingText('option', '3일후')).isPresent()).toBeTruthy();
+      expect(element(by.cssContainingText('option', '4일후')).isPresent()).toBeFalsy();
+      expect(element(by.cssContainingText('option', '공시확인후')).isPresent()).toBeTruthy();
+    });
+
+    // it('should go index page when click cancel button', function () {
+    //   element(by.css('button[type="reset"]')).click();
+    //   element(by.buttonText('예')).click();
+    //
+    //   browser.wait(function () {
+    //     return browser.getCurrentUrl().then(function (url) {
+    //       return /\//.test(url);
+    //     });
+    //   }, 1000);
+    // });
+
+    // it('should match with fare policy', function () {
+    //   element(by.cssContainingText('option', '2개')).click();
+    //   expect(page.fareEl.getText()).toContain('800000원');
+    //
+    //   element(by.cssContainingText('option', '4개')).click();
+    //   expect(page.fareEl.getText()).toContain('1100000원');
+    //
+    //   element(by.cssContainingText('option', '6개')).click();
+    //   expect(page.fareEl.getText()).toContain('1400000원');
+    //
+    //   element(by.cssContainingText('option', '8개')).click();
+    //   expect(page.fareEl.getText()).toContain('1700000원');
+    //
+    //   element(by.cssContainingText('option', '10개')).click();
+    //   expect(page.fareEl.getText()).toContain('2000000원');
+    //
+    //   element(by.cssContainingText('option', '1개')).click();
+    //   expect(page.fareEl.getText()).toContain('500000원');
+    // });
+
+    function clearAll() {
+      page.titleEl.clear();
+      element(by.model('vm.articleSender.subheadline')).clear();
+      element(by.model('vm.articleSender.lead')).clear();
+      element(by.model('vm.articleSender.main')).clear();
+      element(by.model('vm.articleSender.detail')).clear();
+      element(by.model('vm.articleSender.corpSummary')).clear();
+    }
+
+    it('should be able to submit with default values', function () {
+      clearAll();
+      page.titleEl.sendKeys(data1.title);
+      element(by.model('vm.articleSender.subheadline')).sendKeys(data1.subheadline);
+      element(by.model('vm.articleSender.lead')).sendKeys(data1.lead);
+      element(by.model('vm.articleSender.main')).sendKeys(data1.main);
+      element(by.model('vm.articleSender.detail')).sendKeys(data1.detail);
+      element(by.model('vm.articleSender.corpSummary')).sendKeys(data1.corpSummary);
+      element(by.cssContainingText('option', '즉시')).click();
+      element(by.cssContainingText('option', '2개')).click();
+      element(by.css('button[type="submit"]')).click();
+
+      browser.wait(function () {
+        return browser.getCurrentUrl().then(function (url) {
+          return /article-senders$/.test(url);
+        });
+      }, 1000);
+    });
+
+    it('should be able to success temporary save', function () {
+      clearAll();
+      page.titleEl.sendKeys(data1.title);
+      element(by.model('vm.articleSender.subheadline')).sendKeys(data1.subheadline);
+      element(by.model('vm.articleSender.lead')).sendKeys(data1.lead);
+      element(by.model('vm.articleSender.main')).sendKeys(data1.main);
+      element(by.model('vm.articleSender.detail')).sendKeys(data1.detail);
+      element(by.model('vm.articleSender.corpSummary')).sendKeys(data1.corpSummary);
+      element(by.cssContainingText('option', '즉시')).click();
+      element(by.cssContainingText('option', '4개')).click();
+      element(by.buttonText('임시저장')).click();
+
+      browser.wait(function () {
+        return browser.getCurrentUrl().then(function (url) {
+          return /article-senders$/.test(url);
+        });
+      }, 1000);
+    });
+
+    it('클리어 버튼을 클릭하면 해당필드내용이 삭제되어야한다.', function () {
+      element.all(by.css('.clearer')).get(0).click();
+      expect(element(by.model('vm.articleSender.title')).getText()).toBe('');
+      element.all(by.css('.clearer')).get(1).click();
+      expect(element(by.model('vm.articleSender.subheadline')).getText()).toBe('');
+      element.all(by.css('.clearer')).get(2).click();
+      expect(element(by.model('vm.articleSender.lead')).getText()).toBe('');
+      element.all(by.css('.clearer')).get(3).click();
+      expect(element(by.model('vm.articleSender.main')).getText()).toBe('');
+      element.all(by.css('.clearer')).get(4).click();
+      expect(element(by.model('vm.articleSender.detail')).getText()).toBe('');
+      element.all(by.css('.clearer')).get(5).click();
+      expect(element(by.model('vm.articleSender.corpSummary')).getText()).toBe('');
+    });
+
+    it('이미지를 첨부하면 즉시 화면에 나타나야한다.', function () {
+      element(by.id('imageFile')).sendKeys(__dirname + '/test1.jpeg');
+      expect(element.all(by.repeater('image in vm.imageQueue')).get(0).isPresent()).toBe(true);
+    });
+
   });
 
-  it('should go index page when click cancel button', function () {
-    element(by.css('button[type="reset"]')).click();
-    element(by.buttonText('예')).click();
+  describe('보도자료 목록 테스트', function () {
+    beforeEach(function () {
+      browser.get('/article-senders');
+    });
 
-    browser.wait(function () {
-      return browser.getCurrentUrl().then(function (url) {
-        return /\//.test(url);
-      });
-    }, 1000);
+    it('삭제를 누르면 보도자료 항목이 줄어야한다.', function () {
+      element.all(by.repeater('item in vm.articleSenders')).first().all(by.css('.btn-link')).get(1).click();
+      // expect(element.all(by.repeater('item in vm.articleSenders')).count()).toBe(1);
+    });
   });
-
-  it('should match with fare policy', function () {
-    element(by.cssContainingText('option', '2개')).click();
-    expect(page.fareEl.getText()).toContain('800000원');
-
-    element(by.cssContainingText('option', '4개')).click();
-    expect(page.fareEl.getText()).toContain('1100000원');
-
-    element(by.cssContainingText('option', '6개')).click();
-    expect(page.fareEl.getText()).toContain('1400000원');
-
-    element(by.cssContainingText('option', '8개')).click();
-    expect(page.fareEl.getText()).toContain('1700000원');
-
-    element(by.cssContainingText('option', '10개')).click();
-    expect(page.fareEl.getText()).toContain('2000000원');
-
-    element(by.cssContainingText('option', '1개')).click();
-    expect(page.fareEl.getText()).toContain('500000원');
-  });
-
-  // it('should be able to submit with default values', function () {
-  //   page.fileEl.sendKeys(__dirname + '/test.docx');
-  //   page.useContentEl.click();
-  //   page.titleEl.sendKeys('test');
-  //   page.contentEl.sendKeys('test content');
-  //   element(by.cssContainingText('option', '0시간후')).click();
-  //   element(by.cssContainingText('option', '2개')).click();
-  //   expect(page.fareEl.getText()).toContain('800000원');
-  //   element(by.css('button[type="submit"]')).click();
-  //
-  //   browser.wait(function () {
-  //     return browser.getCurrentUrl().then(function (url) {
-  //       return /article-senders\/([0-9a-fA-F]{24})$/.test(url);
-  //     });
-  //   }, 1000);
-  // });
-
-  // it('should be able to submit with default values', function () {
-  //   page.fileEl.sendKeys(__dirname + '/test.docx');
-  //   page.useContentEl.click();
-  //   page.titleEl.sendKeys('test');
-  //   page.contentEl.sendKeys('test content');
-  //   element(by.cssContainingText('option', '0시간후')).click();
-  //   element(by.cssContainingText('option', '2개')).click();
-  //   expect(page.fareEl.getText()).toContain('800000원');
-  //   element(by.css('button[type="submit"]')).click();
-  //
-  //   browser.wait(function () {
-  //     return browser.getCurrentUrl().then(function (url) {
-  //       return /article-senders\/([0-9a-fA-F]{24})$/.test(url);
-  //     });
-  //   }, 1000);
-  // });
-
-  it('should be able to display title with template', function () {
-    expect(element(by.model('vm.articleSender.title')).isPresent()).toBeTruthy();
-    expect(element(by.model('vm.articleSender.title')).getAttribute('value')).toEqual('거북선최고 보도자료(거북선최고에서 보도자료를 보내드립니다. 관심과 배려 부탁드립니다.)');
-  });
-
-  it('should have 3 image file selectors', function () {
-    expect(element(by.css('#image1')).isPresent()).toBeTruthy();
-    expect(element(by.css('#image2')).isPresent()).toBeTruthy();
-    expect(element(by.css('#image3')).isPresent()).toBeTruthy();
-  });
-
-  // it('should be able to submit with docx file and images', function () {
-  //   page.titleEl.sendKeys('test');
-  //   page.fileEl.sendKeys(__dirname + '/test.docx');
-  //   element(by.model('vm.articleSender.image1')).sendKeys(__dirname + '/test1.jpeg');
-  //   element(by.model('vm.articleSender.image2')).sendKeys(__dirname + '/test2.jpeg');
-  //   element(by.cssContainingText('option', '즉시')).click();
-  //   element(by.cssContainingText('option', '2개')).click();
-  //   expect(page.fareEl.getText()).toContain('800000원');
-  //   element(by.css('button[type="submit"]')).click();
-  //   browser.wait(function () {
-  //     return browser.getCurrentUrl().then(function (url) {
-  //       var isPrevewPage = /article-senders\/([0-9a-fA-F]{24})$/.test(url);
-  //       expect(isPrevewPage).toBeTruthy();
-  //       if (isPrevewPage) {
-  //         expect(element(by.css('#image1')).isPresent()).toBeTruthy();
-  //         expect(element(by.css('#image2')).isPresent()).toBeTruthy();
-  //         // expect(element(by.css('#image3')).isPresent()).toBeFalsy();
-  //         element(by.buttonText('발송')).click();
-  //         element(by.buttonText('닫기')).click();
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     });
-  //   }, 10000);
-  // });
-  //
-  // it('should be able to submit with docx file and 1시간후', function () {
-  //   page.titleEl.sendKeys('test');
-  //   page.fileEl.sendKeys(__dirname + '/test.docx');
-  //   element(by.cssContainingText('option', '1시간후')).click();
-  //   element(by.cssContainingText('option', '2개')).click();
-  //   expect(page.fareEl.getText()).toContain('800000원');
-  //   element(by.css('button[type="submit"]')).click();
-  //   browser.wait(function () {
-  //     return browser.getCurrentUrl().then(function (url) {
-  //       var isPrevewPage = /article-senders\/([0-9a-fA-F]{24})$/.test(url);
-  //       expect(isPrevewPage).toBeTruthy();
-  //       if (isPrevewPage) {
-  //         element(by.buttonText('발송')).click();
-  //         element(by.buttonText('닫기')).click();
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     });
-  //   }, 10000);
-  // });
-
-  // it('should be seen list page when click sendArticle button in previewPage', function () {
-  //   page.titleEl.sendKeys('test');
-  //   page.fileEl.sendKeys(__dirname + '/test.docx');
-  //   element(by.model('vm.articleSender.image1')).sendKeys(__dirname + '/test1.jpeg');
-  //   element(by.model('vm.articleSender.image2')).sendKeys(__dirname + '/test2.jpeg');
-  //   element(by.cssContainingText('option', '즉시')).click();
-  //   element(by.cssContainingText('option', '2개')).click();
-  //   expect(page.fareEl.getText()).toContain('800000원');
-  //   element(by.css('button[type="submit"]')).click();
-  //   browser.wait(function () {
-  //     return browser.getCurrentUrl().then(function (url) {
-  //       var isPrevewPage = /article-senders\/([0-9a-fA-F]{24})$/.test(url);
-  //       expect(isPrevewPage).toBeTruthy();
-  //       if (isPrevewPage) {
-  //         element(by.buttonText('발송')).click();
-  //         // element(by.buttonText('닫기')).click();
-  //
-  //         // browser.wait(function () {
-  //         //   return browser.getCurrentUrl().then(function (url) {
-  //         //     return /article-senders$/.test(url);
-  //         //   });
-  //         // }, 1000);
-  //       } else {
-  //         return false;
-  //       }
-  //     });
-  //   }, 10000);
-  // });
-
-  // it('should be able to submit with docx file and no images', function () {
-  //   page.titleEl.sendKeys('test');
-  //   page.fileEl.sendKeys(__dirname + '/test.docx');
-  //   element(by.cssContainingText('option', '1시간후')).click();
-  //   element(by.cssContainingText('option', '2개')).click();
-  //   expect(page.fareEl.getText()).toContain('800000원');
-  //   element(by.css('button[type="submit"]')).click();
-  //   browser.wait(function () {
-  //     return browser.getCurrentUrl().then(function (url) {
-  //       return /article-senders\/([0-9a-fA-F]{24})$/.test(url);
-  //     });
-  //   }, 1000);
-  // });
-
-
-  it('should be able to submit with 공시확인후', function () {
-    page.titleEl.sendKeys('test');
-    page.fileEl.sendKeys(__dirname + '/test.docx');
-    element(by.cssContainingText('option', '공시확인후')).click();
-    element(by.cssContainingText('option', '2개')).click();
-    element(by.cssContainingText('option', '발행공시')).click();
-    expect(page.fareEl.getText()).toContain('800000원');
-    element(by.css('button[type="submit"]')).click();
-    browser.wait(function () {
-      return browser.getCurrentUrl().then(function (url) {
-        var isPrevewPage = /article-senders\/([0-9a-fA-F]{24})$/.test(url);
-        expect(isPrevewPage).toBeTruthy();
-        if (isPrevewPage) {
-          element(by.buttonText('발송')).click();
-          element(by.buttonText('닫기')).click();
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }, 10000);
-  });
-
-  // it('should cannot be able to submit with not docx file', function () {
-  //   page.useFileUploadEl.click();
-  //   page.titleEl.sendKeys('test');
-  //   page.fileEl.sendKeys(__dirname + '/test.txt');
-  //   element(by.cssContainingText('option', '1시간후')).click();
-  //   element(by.cssContainingText('option', '2개')).click();
-  //   expect(page.fareEl.getText()).toContain('800000원');
-  //   element(by.css('button[type="submit"]')).click();
-  //
-  //   browser.sleep(500);
-  //
-  //   expect(page.errorEl.getText()).toContain("'MS Word'가 아닙니다. 파일을 확인해주세요.");
-  // });
 });
-
-// describe('Given article-senders list page', function () {
-//   beforeEach(function () {
-//     browser.get('/article-senders');
-//   });
-//
-//   describe('When click cancel button', function () {
-//     it('should be able to see canceled item', function() {
-//       element(by.buttonText('발송취소')).click();
-//       browser.driver.sleep(1000);
-//       element(by.css('.md-ink-ripple')).click();
-//       expect(true).toBeTruthy();
-//     });
-//   });
-//
-// });

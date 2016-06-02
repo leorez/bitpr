@@ -53,7 +53,7 @@
       });
     }));
 
-    it('$scope.vm.bill() with valid form data and user input content should send success', inject(function (ArticleSendersService) {
+    it('$scope.vm.send() with valid form data and user input content should send success', inject(function (ArticleSendersService) {
 
       var sampleRequest = new ArticleSendersService({
         title: '발송자료 테스트 제목',
@@ -83,7 +83,7 @@
 
       $httpBackend.expectPOST('article-senders', sampleRequest).respond(sampleResponse);
 
-      scope.vm.bill();
+      scope.vm.send();
       $httpBackend.flush();
 
       expect(scope.vm.fare).toEqual(5000000);

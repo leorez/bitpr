@@ -1,33 +1,14 @@
-<md-dialog aria-label="Mango (Fruit)"  ng-cloak>
-  <form>
-    <md-toolbar>
-      <div class="md-toolbar-tools">
-        <h2>기자주소록</h2>
-        <span flex></span>
-        <md-button class="md-icon-button" ng-click="cancel()">
-          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
-        </md-button>
-      </div>
-    </md-toolbar>
-    <md-dialog-content>
-      <div class="md-dialog-content">
-        <md-list>
-          <md-list-item ng-repeat="item in reporters">
-            <md-checkbox ng-checked="exists(item, reporterSelected)" ng-click="toggle(item, reporterSelected)" id="reporter-checkbox"></md-checkbox>
-            <p>[{{item.corpName}}] {{item.name}}</p>
-          </md-list-item>
-        </md-list>
-      </div>
-    </md-dialog-content>
-    <md-dialog-actions layout="row">
-      <span flex></span>
-      <md-button ng-click="submit()" md-autofocus id="submit">
-        보내기
-      </md-button>
-      <md-button ng-click="cancel()" style="margin-right:20px;" id="cancel">
-        취소
-      </md-button>
-    </md-dialog-actions>
-  </form>
-</md-dialog>
-
+<div class="modal-header">
+  <h3 class="modal-title">재발송</h3>
+</div>
+<div class="modal-body">
+  <div ng-repeat="item in reporters">
+    <label>
+      <input type="checkbox" ng-checked="exists(item, reporterSelected)" ng-click="toggle(item, reporterSelected)"> <span>[{{item.corpName}}] {{item.name}}</span>
+    </label>
+  </div>
+</div>
+<div class="modal-footer">
+  <button ng-show="reporterSelected.length > 0" class="btn btn-primary" type="button" ng-click="ok()">재발송</button>
+  <button class="btn btn-warning" type="button" ng-click="cancel()">취소</button>
+</div>

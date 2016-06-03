@@ -150,8 +150,6 @@
       }, function () {
         // on cancel
       });
-
-
     }
 
     $scope.exists = function(item, list) {

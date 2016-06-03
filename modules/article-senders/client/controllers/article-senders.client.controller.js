@@ -5,9 +5,9 @@
     .module('article-senders')
     .controller('ArticleSendersController', ArticleSendersController);
 
-  ArticleSendersController.$inject = ['ngProgressFactory', '$scope', '$timeout', '$window', 'FileUploader', '$mdDialog', '$http', '$state', 'articleSenderResolve', '$location', 'Authentication', 'ArticleSendersService', 'Upload'];
+  ArticleSendersController.$inject = ['$uibModal', 'ReportersService', 'ngProgressFactory', '$scope', '$timeout', '$window', 'FileUploader', '$http', '$state', 'articleSenderResolve', '$location', 'Authentication', 'ArticleSendersService', 'Upload'];
 
-  function ArticleSendersController(ngProgressFactory, $scope, $timeout, $window, FileUploader, $mdDialog, $http, $state, articleSender, $location, Authentication, ArticleSendersService, Upload) {
+  function ArticleSendersController($uibModal, ReportersService, ngProgressFactory, $scope, $timeout, $window, FileUploader, $http, $state, articleSender, $location, Authentication, ArticleSendersService, Upload) {
     var vm = this;
 
     vm.error = null;
@@ -134,7 +134,6 @@
     vm.onSendCountChanged = onSendCountChanged;
     vm.update = update;
     vm.remove = remove;
-    vm.sendArticle = sendArticle;
     vm.imageQueue = [];
     vm.articleSender.imageFiles = [];
     vm.errFiles = [];
@@ -240,28 +239,28 @@
       }
     };
 
-    function sendArticle() {
-      console.log('send call');
-      $http.post('/api/article-senders-send', { articleSenderId: vm.articleSender._id }).success(function (response) {
-        console.log(response);
-        var alert = $mdDialog.alert()
-          .title('발송')
-          .htmlContent('<md-content>발송이 시작되었습니다. 설정하신 시간후에 보도자료가 자동으로 발송됩니다.</md-content>')
-          .ok('닫기');
-
-        $mdDialog
-          .show(alert)
-          .finally(function () {
-            alert = undefined;
-            $state.go('article-senders.list', {
-              articleSenderId: response._id
-            });
-          });
-      }).error(function (response) {
-        console.log(response.message);
-        vm.error = response.message;
-      });
-    }
+    // function sendArticle() {
+    //   console.log('send call');
+    //   $http.post('/api/article-senders-send', { articleSenderId: vm.articleSender._id }).success(function (response) {
+    //     console.log(response);
+    //     var alert = $mdDialog.alert()
+    //       .title('발송')
+    //       .htmlContent('<md-content>발송이 시작되었습니다. 설정하신 시간후에 보도자료가 자동으로 발송됩니다.</md-content>')
+    //       .ok('닫기');
+    //
+    //     $mdDialog
+    //       .show(alert)
+    //       .finally(function () {
+    //         alert = undefined;
+    //         $state.go('article-senders.list', {
+    //           articleSenderId: response._id
+    //         });
+    //       });
+    //   }).error(function (response) {
+    //     console.log(response.message);
+    //     vm.error = response.message;
+    //   });
+    // }
 
     function update(isValid) {
       if (isValid) {
@@ -296,6 +295,75 @@
       console.log('clear' + model);
       var el = angular.element(document.querySelectorAll('[ng-model="vm.articleSender.' + model + '"]'));
       el.focus();
+    };
+
+    // 재전송
+    vm.reSendArticle = function (ev) {
+      vm.error = '';
+      vm.success = '';
+      console.log('reSendArticle');
+      var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'modules/article-senders/client/views/reporters-dialog.tmpl.html',
+        controller: 'ReporterSelectDlgController',
+        size: '',
+        resolve: {
+          items: function () {
+            return $scope.items;
+          }
+        }
+      });
+
+      modalInstance.result.then(function(reporters) {
+        var data = {
+          reporters: reporters,
+          articleSenders: [vm.articleSender]
+        };
+
+        $http.post('/api/re-send-article', data).then(function (resp) {
+          console.log(resp);
+          vm.success = resp.data.message;
+        }, function (err) {
+          console.error(err);
+          vm.error = '에러가 발생하였습니다.';
+        });
+      }, function () {
+        // on cancel
+      });
+    };
+  }
+
+
+  angular
+    .module('article-senders')
+    .controller('ReporterSelectDlgController', ReporterSelectDlgController);
+
+  ReporterSelectDlgController.$inject = ['$scope', '$uibModalInstance', 'ReportersService'];
+  function ReporterSelectDlgController($scope, $uibModalInstance, ReportersService) {
+    $scope.reporters = ReportersService.query();
+    $scope.reporterSelected = [];
+    $scope.exists = function(item, list) {
+      return list.indexOf(item) > -1;
+    };
+
+    $scope.toggle = function (item, list) {
+      var idx = list.indexOf(item);
+      if (idx > -1) {
+        list.splice(idx, 1);
+      } else {
+        list.push(item);
+      }
+
+      console.log(JSON.stringify(list));
+    };
+
+    console.log(JSON.stringify($scope.reporters));
+    $scope.cancel = function() {
+      $uibModalInstance.dismiss('cancel');
+    };
+    // 선택된 파일공유 : 이메일 입력후 전송하기
+    $scope.ok = function () {
+      $uibModalInstance.close($scope.reporterSelected);
     };
   }
 }());

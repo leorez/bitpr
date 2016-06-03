@@ -20,33 +20,39 @@
     <div class="col-sm-4">
       <table id="press-info" class="table table-bordered table-condensed">
         <tr>
+          <th>상태</th>
+          <td>
+            <input type="text" class="form-control bg-white" data-ng-model="vm.articleSender.status | status" readonly>
+          </td>
+        </tr>
+        <tr>
           <th>발송시점</th>
           <td>
-            <input type="text" class="form-control bg-white" value="{{vm.articleSender.reserveTime | reserveTime}}" readonly>
+            <input type="text" class="form-control bg-white" data-ng-model="vm.articleSender.reserveTime | reserveTime" readonly>
           </td>
         </tr>
         <tr ng-show="vm.articleSender.reserveTime === 999">
           <th>공시유형</th>
           <td>
-            <input type="text" class="form-control bg-white" value="{{vm.articleSender.dspType}}" readonly>
+            <input type="text" class="form-control bg-white" data-ng-model="vm.articleSender.dspType" readonly>
           </td>
         </tr>
         <tr>
           <th>연락처</th>
           <td>
-            <input type="text" class="form-control" data-ng-model="vm.articleSender.contact">
+            <input type="text" class="form-control" data-ng-model="vm.articleSender.contact" readonly>
           </td>
         </tr>
         <tr>
           <th>발송인</th>
           <td>
-            <input type="text" class="form-control" data-ng-model="vm.articleSender.sender">
+            <input type="text" class="form-control" data-ng-model="vm.articleSender.sender" readonly>
           </td>
         </tr>
         <tr>
           <th>희망보도 갯수</th>
           <td>
-            <input type="text" class="form-control" data-ng-model="vm.articleSender.sendCount">
+            <input type="text" class="form-control" data-ng-model="vm.articleSender.sendCount" readonly>
           </td>
         </tr>
         <tr ng-hide="vm.articleSender._id">
@@ -125,7 +131,8 @@
 
   <div ng-show="vm.articleSender._id">
     <a type="button" class="btn btn-default btn-lg" ui-sref="article-senders.list"><span class="glyphicon glyphicon-chevron-left"></span> 뒤로</a>
-    <a type="button" ng-click="vm.reSendArticle($event)" class="btn btn-info btn-lg pull-right">재발송</a>
+    <a type="button" ng-show="vm.articleSender.status === 'Sent'" ng-click="vm.reSendArticle($event)" class="btn btn-info btn-lg pull-right">재발송</a>
+    <a type="button" ng-show="vm.articleSender.status === 'Temporary'" ng-click="vm.sendArticle($event)" class="btn btn-info btn-lg pull-right">발송</a>
     <a type="button" ui-sref="article-senders.edit({articleSenderId: vm.articleSender._id})" class="btn btn-default btn-lg pull-right" style="margin-right:10px;">수정</a>
   </div>
 

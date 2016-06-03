@@ -239,28 +239,17 @@
       }
     };
 
-    // function sendArticle() {
-    //   console.log('send call');
-    //   $http.post('/api/article-senders-send', { articleSenderId: vm.articleSender._id }).success(function (response) {
-    //     console.log(response);
-    //     var alert = $mdDialog.alert()
-    //       .title('발송')
-    //       .htmlContent('<md-content>발송이 시작되었습니다. 설정하신 시간후에 보도자료가 자동으로 발송됩니다.</md-content>')
-    //       .ok('닫기');
-    //
-    //     $mdDialog
-    //       .show(alert)
-    //       .finally(function () {
-    //         alert = undefined;
-    //         $state.go('article-senders.list', {
-    //           articleSenderId: response._id
-    //         });
-    //       });
-    //   }).error(function (response) {
-    //     console.log(response.message);
-    //     vm.error = response.message;
-    //   });
-    // }
+    // 임시저장된 보도자료 발송하기
+    vm.sendArticle = function () {
+      console.log('send call');
+      $http.post('/api/article-senders-send', { articleSenderId: vm.articleSender._id }).success(function (response) {
+        vm.articleSender.status = 'Reserved';
+        $window.alert('발송이 시작되었습니다. 설정하신 시간후에 보도자료가 자동으로 발송됩니다.');
+      }).error(function (response) {
+        console.log(response.message);
+        vm.error = response.message;
+      });
+    };
 
     function update(isValid) {
       if (isValid) {
@@ -308,8 +297,8 @@
         controller: 'ReporterSelectDlgController',
         size: '',
         resolve: {
-          items: function () {
-            return $scope.items;
+          sendCount: function () {
+            return vm.articleSender.sendCount;
           }
         }
       });
@@ -338,9 +327,9 @@
     .module('article-senders')
     .controller('ReporterSelectDlgController', ReporterSelectDlgController);
 
-  ReporterSelectDlgController.$inject = ['$scope', '$uibModalInstance', 'ReportersService'];
-  function ReporterSelectDlgController($scope, $uibModalInstance, ReportersService) {
-    $scope.reporters = ReportersService.query();
+  ReporterSelectDlgController.$inject = ['$scope', '$uibModalInstance', 'ReportersService', 'sendCount'];
+  function ReporterSelectDlgController($scope, $uibModalInstance, ReportersService, sendCount) {
+    $scope.reporters = ReportersService.query({ sendCount: sendCount });
     $scope.reporterSelected = [];
     $scope.exists = function(item, list) {
       return list.indexOf(item) > -1;

@@ -63,7 +63,7 @@
                     <a ng-click="vm.cancelArticleSender(item)" class="btn btn-link">발송취소</a>|
                   </span>
                   <span ng-show="item.status === 'Sent'">
-                    <a href="" class="btn btn-link">재발송</a>|
+                    <a href="#" ng-click="vm.resendArticle($event)" class="btn btn-link">재발송</a>|
                   </span>
                   <a ui-sref="article-senders.edit({articleSenderId: item._id})" class="btn btn-link">수정</a>|
                   <a href="#" class="btn btn-link" ng-click="vm.remove(item)">삭제</a>

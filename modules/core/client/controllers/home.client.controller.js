@@ -5,7 +5,7 @@
     .module('core')
     .controller('HomeController', HomeController);
 
-  function HomeController($scope, $q, $location, clipboard, $mdDialog, $http, Authentication, ngProgressFactory, $stateParams) {
+  function HomeController(CrawledArticles, $scope, $q, $location, clipboard, $mdDialog, $http, Authentication, ngProgressFactory, $stateParams) {
     var vm = this;
 
     // This provides Authentication context.
@@ -29,48 +29,48 @@
       return list.indexOf(item) > -1;
     };
 
-    // $scope.displayArticleToHomepage = function () {
-    //   // 선택된 기사 홈페이지에 올리기
-    //   $scope.success = $scope.error = null;
-    //
-    //   var deferred = $q.defer();
-    //   if (Authentication.user) {
-    //     var selected = $scope.selected;
-    //     var total = selected.length;
-    //     var done = 0;
-    //
-    //     angular.forEach(selected, function (item) {
-    //       var article = new DisplayedArticles({
-    //         title: item.title,
-    //         summary: item.summary,
-    //         media: item.media,
-    //         url: item.url,
-    //         articleAt: item.article_at
-    //       });
-    //
-    //       console.log('article: ' + JSON.stringify(article));
-    //
-    //       article.$save(function (response) {
-    //         console.log('success:' + response);
-    //         if (++done === total)
-    //           deferred.resolve();
-    //       }, function (errorRespose) {
-    //         $scope.error = errorRespose.data.message;
-    //         console.log('failed: ' + $scope.error);
-    //         console.log(JSON.stringify(errorRespose));
-    //         deferred.reject();
-    //       });
-    //     });
-    //
-    //     var confirm = $mdDialog.confirm()
-    //       .textContent('홈페이지에 게시되었습니다. 홈페이지에 게시된 글을 확인시겠습니까?')
-    //       .ok('예')
-    //       .cancel('아니요');
-    //     $mdDialog.show(confirm).then(function () {
-    //       $location.path('/settings/displayed-list');
-    //     });
-    //   }
-    // };
+    $scope.displayArticleToHomepage = function () {
+      // 선택된 기사 홈페이지에 올리기
+      $scope.success = $scope.error = null;
+
+      var deferred = $q.defer();
+      if (Authentication.user) {
+        var selected = $scope.selected;
+        var total = selected.length;
+        var done = 0;
+
+        angular.forEach(selected, function (item) {
+          var article = new CrawledArticles({
+            keyword: $scope.searchKeyword,
+            title: item.title,
+            summary: item.summary,
+            media: item.media,
+            url: item.url,
+            displayed: true,
+            articleAt: item.article_at
+          });
+
+          article.$save(function (response) {
+            console.log('success:' + response);
+            if (++done === total)
+              deferred.resolve();
+          }, function (errorRespose) {
+            $scope.error = errorRespose.data.message;
+            console.log('failed: ' + $scope.error);
+            console.log(JSON.stringify(errorRespose));
+            deferred.reject();
+          });
+        });
+
+        var confirm = $mdDialog.confirm()
+          .textContent('홈페이지에 게시되었습니다. 홈페이지에 게시된 글을 확인시겠습니까?')
+          .ok('예')
+          .cancel('아니요');
+        $mdDialog.show(confirm).then(function () {
+          $location.path('/settings/displayed-list');
+        });
+      }
+    };
 
     $scope.closeDialog = function () {
       $mdDialog.hide();

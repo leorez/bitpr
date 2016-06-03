@@ -3,7 +3,6 @@
 module.exports = function (app) {
   // User Routes
   var users = require('../controllers/users.server.controller');
-  var crawledArticles = require('../controllers/crawled-article.server.controller');
 
   // Setting up the users profile api
   app.route('/api/users/me').get(users.me);
@@ -12,16 +11,6 @@ module.exports = function (app) {
   app.route('/api/users/password').post(users.changePassword);
   app.route('/api/users/picture').post(users.changeProfilePicture);
 
-  app.route('/api/crawled-articles/:limit/:page')
-    .get(crawledArticles.list);
-  app.route('/api/crawled-articles/:crawledArticleId')
-    .put(crawledArticles.update);
-
-  app.route('/api/displayed-articles/embed/:corpCode')
-    .get(crawledArticles.displays);
-
   // Finish by binding the user middleware
   app.param('userId', users.userByID);
-
-  app.param('crawledArticleId', crawledArticles.crawledArticleByID);
 };

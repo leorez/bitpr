@@ -15,7 +15,9 @@ module.exports = function (app) {
     .get(articleSenders.listForEmbed);
 
   app.route('/api/article-senders/:limit/:page')
-    .get(articleSenders.list)
+    .get(articleSenders.list);
+
+  app.route('/api/article-senders')
     .post(articleSenders.create);
 
   app.route('/api/article-senders/:articleSenderId').all(articleSendersPolicy.isAllowed)

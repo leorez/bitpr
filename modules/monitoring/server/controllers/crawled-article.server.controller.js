@@ -11,7 +11,8 @@ var mongoose = require('mongoose'),
   _ = require('lodash');
 
 exports.list = function (req, res) {
-  var skip = (req.params.page - 1) * req.params.limit;
+  var limit = Number(req.params.limit);
+  var skip = (Number(req.params.page) - 1) * limit;
   CrawledArticle.count({ user: req.user._id }, function (err, count) {
     if (err) {
       return res.status(400).send({
@@ -19,7 +20,7 @@ exports.list = function (req, res) {
       });
     }
 
-    CrawledArticle.find({ user: req.user._id }).sort('-articleAt').populate('user', 'email').limit(req.params.limit).skip(skip).exec(function (err, articles) {
+    CrawledArticle.find({ user: req.user._id }).sort('-articleAt').populate('user', 'email').limit(limit).skip(skip).exec(function (err, articles) {
       if (err) {
         console.log(err);
         return res.status(400).send({

@@ -283,7 +283,8 @@ exports.listForEmbed = function (req, res) {
  * List of Article senders
  */
 exports.list = function (req, res) {
-  var skip = (req.params.page - 1) * req.params.limit;
+  var limit = Number(req.params.limit);
+  var skip = (Number(req.params.page) - 1) * limit;
   ArticleSender.count({ user: req.user._id }, function (err, count) {
     if (err) {
       return res.status(400).send({
@@ -291,7 +292,7 @@ exports.list = function (req, res) {
       });
     }
 
-    ArticleSender.find({ user: req.user._id }).sort('-created').populate('user', 'email').limit(req.params.limit).skip(skip).exec(function (err, articleSenders) {
+    ArticleSender.find({ user: req.user._id }).sort('-created').populate('user', 'email').limit(limit).skip(skip).exec(function (err, articleSenders) {
       if (err) {
         return res.status(400).send({
           messeage: errorHandler.getErrorMessage(err)

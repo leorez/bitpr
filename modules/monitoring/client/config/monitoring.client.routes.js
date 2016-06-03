@@ -19,6 +19,7 @@
       .state('monitoring.list', {
         url: '',
         templateUrl: 'modules/monitoring/client/views/list-monitoring.client.view.html',
+        controller: 'MonitoringController',
         controllerAs: 'vm'
       });
   }

@@ -5,9 +5,9 @@
     .module('article-senders')
     .controller('ArticleSendersController', ArticleSendersController);
 
-  ArticleSendersController.$inject = ['$scope', '$timeout', '$window', 'FileUploader', '$mdDialog', '$http', '$state', 'articleSenderResolve', '$location', 'Authentication', 'ArticleSendersService', 'Upload'];
+  ArticleSendersController.$inject = ['ngProgressFactory', '$scope', '$timeout', '$window', 'FileUploader', '$mdDialog', '$http', '$state', 'articleSenderResolve', '$location', 'Authentication', 'ArticleSendersService', 'Upload'];
 
-  function ArticleSendersController($scope, $timeout, $window, FileUploader, $mdDialog, $http, $state, articleSender, $location, Authentication, ArticleSendersService, Upload) {
+  function ArticleSendersController(ngProgressFactory, $scope, $timeout, $window, FileUploader, $mdDialog, $http, $state, articleSender, $location, Authentication, ArticleSendersService, Upload) {
     var vm = this;
 
     vm.error = null;

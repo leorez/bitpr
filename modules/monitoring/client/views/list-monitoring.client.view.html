@@ -1,5 +1,5 @@
 <section>
-  <div data-ng-controller="SettingsController" class="container-fluid" data-ng-init="crawledArticles()">
+  <div data-ng-controller="MonitoringController" class="container-fluid" data-ng-init="vm.crawledArticles()">
 
     <div id="content-container" class="container news-index">
 
@@ -12,7 +12,7 @@
       <div class="row">
         <div>
           <div style="margin-bottom: 10px;">
-            <button type="button" class="btn btn-large btn-primary" ng-click="shareArticle()">공유하기</button>
+            <button type="button" class="btn btn-large btn-primary" ng-click="vm.shareArticle()">공유하기</button>
           </div>
 
           <table class="table table-bordered">
@@ -20,9 +20,9 @@
 
             </thead>
             <tbody>
-            <tr ng-repeat="item in articles">
-              <td><input type="checkbox" class="checkbox" ng-checked="exists(item, selected)" ng-click="toggle(item, selected)"></td>
-              <td><span class="label" ng-class="{'label-default': item.displayed === false, 'label-primary': item.displayed}" ng-click="toggleDisplayed(item)">{{item.displayed | displayed}}</span></td>
+            <tr ng-repeat="item in vm.articles">
+              <td><input type="checkbox" class="checkbox" ng-checked="vm.exists(item, vm.selected)" ng-click="vm.toggle(item, vm.selected)"></td>
+              <td><span class="label" ng-class="{'label-default': item.displayed === false, 'label-primary': item.displayed}" ng-click="vm.toggleDisplayed(item)">{{item.displayed | displayed}}</span></td>
               <td>
                 <a ng-href="{{item.url}}" target="_blank">
                   <h4 class="list-group-item-heading title">
@@ -38,23 +38,12 @@
             </tbody>
           </table>
 
-          <ul class="pagination pagination-centered">
-            <li>
-              <a href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            <li>
-              <a href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-          </ul>
+          <pagination
+            ng-model="currentPage"
+            total-items="todos.length"
+            max-size="maxSize"
+            boundary-links="true">
+          </pagination>
 
         </div>
       </div>

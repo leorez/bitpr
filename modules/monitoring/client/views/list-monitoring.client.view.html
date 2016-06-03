@@ -27,25 +27,22 @@
             <button type="button" class="btn btn-large btn-primary" ng-click="vm.shareArticle()">공유하기</button>
           </div>
 
-
           <table class="table table-bordered">
-            <thead>
-
-            </thead>
             <tbody>
             <tr ng-repeat="item in vm.data.articles">
               <td><input type="checkbox" class="checkbox" ng-checked="vm.exists(item, vm.selected)" ng-click="vm.toggle(item, vm.selected)"></td>
               <td><span class="label" ng-class="{'label-default': item.displayed === false, 'label-primary': item.displayed}" ng-click="vm.toggleDisplayed(item)">{{item.displayed | displayed}}</span></td>
               <td>
+                <h4 class="list-group-item-heading title">
+                  <a ng-href="{{item.url}}" target="_blank">{{item.title}}</a>
+                </h4>
                 <a ng-href="{{item.url}}" target="_blank">
-                  <h4 class="list-group-item-heading title">
-
-                    <span>{{item.title}}</span>
-                    <span class="media">{{item.media}}</span>
-                    <span class="media">{{item.articleAt | date:'yyyy-MM-dd HH:mm:ss'}}</span>
-                  </h4>
                   <p class="list-group-item-text item-summary" ng-bind-html="item.summary"></p>
                 </a>
+              </td>
+              <td style="font-size: 12px;">
+                <div>미디어 : {{item.media}}</div>
+                <div>작성일 : {{item.articleAt | date:'yyyy-MM-dd HH:mm:ss'}}</div>
               </td>
             </tr>
             </tbody>

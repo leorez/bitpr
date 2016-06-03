@@ -173,6 +173,9 @@
     }
 
     function createArticleSender() {
+      vm.articleSender.status = 'Reserved';
+      vm.articleSender.reserved = new Date();
+
       if (vm.articleSender.contentType === 'inputContent') {
         vm.articleSender.file = '';
       } else {
@@ -216,15 +219,25 @@
     }
 
     vm.temporarySave = function () {
-      articleSender.status = 'Temporary';
+      vm.articleSender.status = 'Temporary';
       createArticleSender();
     };
 
-    vm.save = function(isValid) {
-      articleSender.status = 'Reserved';
-      articleSender.reserved = new Date();
+    function updateArticleSender() {
+      vm.articleSender.$update(function (response) {
+        console.log(response);
+        $state.go('article-senders.preview', { articleSenderId: vm.articleSender._id });
+      }, function (err) {
+        vm.error = err.data.message;
+      });
+    }
 
-      createArticleSender();
+    vm.save = function(isValid) {
+      if (articleSender._id) {
+        updateArticleSender();
+      } else {
+        createArticleSender();
+      }
     };
 
     function sendArticle() {

@@ -73,7 +73,7 @@
     // OAuth provider request
     function callOauthProvider(url) {
       console.log($state.previous.href);
-      if ($state.previous && $state.previous.href === '/');
+      if ($state.previous && $state.previous.href === '/')
         $state.previous.href = '/dashboard';
 
       if ($state.previous && $state.previous.href) {

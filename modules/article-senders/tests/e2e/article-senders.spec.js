@@ -141,9 +141,31 @@ describe('articleSender page tests', function () {
       browser.get('/article-senders');
     });
 
-    it('삭제를 누르면 보도자료 항목이 줄어야한다.', function () {
-      element.all(by.repeater('item in vm.articleSenders')).first().all(by.css('.btn-link')).get(1).click();
-      // expect(element.all(by.repeater('item in vm.articleSenders')).count()).toBe(1);
+    describe('수정 테스트', function () {
+      beforeEach(function () {
+        var els = element.all(by.repeater('item in vm.data.articleSenders')).first().all(by.css('.btn-link'));
+        expect(els.count()).toBe(4);
+        els.get(2).click();
+        console.log(browser.getCurrentUrl());
+        browser.wait(function () {
+          return browser.getCurrentUrl().then(function (url) {
+            return /article-senders\/([0-9a-fA-F]{24})\/edit$/.test(url);
+          });
+        }, 1000);
+      });
+
+      it('제목을 수정하고 수정버튼을 누르면 뷰페이지에서 제목이 변경되어야 한다.', function () {
+        var title = '수정된 테스트 제목';
+        element(by.model('vm.articleSender.title')).clear();
+        element(by.model('vm.articleSender.title')).sendKeys(title);
+        element(by.buttonText('수정')).click();
+        browser.wait(function () {
+          return browser.getCurrentUrl().then(function (url) {
+            expect(element(by.model('vm.articleSender.title')).getText()).toBe(title);
+            return /article-senders\/([0-9a-fA-F]{24})$/.test(url);
+          });
+        }, 1000);
+      });
     });
   });
 });

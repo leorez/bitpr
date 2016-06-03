@@ -9,9 +9,14 @@
 
   function MonitoringController($mdDialog, $scope, Authentication, CrawledArticles, ngProgressFactory, clipboard) {
     var vm = this;
-    
+
     vm.selected = [];
     vm.progressbar = ngProgressFactory.createInstance();
+    vm.itemsPerPage = 10;
+    vm.maxSize = 5;
+    vm.currentPage = 1;
+    vm.totalItems = 0;
+    vm.data = { totalItems: 0, articles: [] };
 
     vm.toggle = function (item, list) {
       var idx = list.indexOf(item);
@@ -20,8 +25,6 @@
       } else {
         list.push(item);
       }
-
-      console.log(JSON.stringify(list));
     };
 
     vm.exists = function (item, list) {
@@ -41,11 +44,12 @@
       if (Authentication.user) {
         vm.progressbar.start();
 
-        vm.articles = CrawledArticles.query(function (res) {
+        vm.data = CrawledArticles.get({ limit: vm.itemsPerPage, page: vm.currentPage }, function (res) {
           vm.progressbar.complete();
+          vm.totalItems = res.totalItems;
         }, function (err) {
           vm.progressbar.complete(err);
-          console.log(err.message);
+          console.log(err);
         });
       }
     };
@@ -63,7 +67,6 @@
         angular.forEach(selected, function (item) {
           text += '<p>' + item.title + ' <a href="' + item.url + '">더보기</a></p>';
         });
-        console.log(text);
 
         clipboard.copyText(text);
 

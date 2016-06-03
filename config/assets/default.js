@@ -35,8 +35,7 @@ module.exports = {
         'public/lib/ng-file-upload/ng-file-upload.js',
         'public/lib/highcharts/highcharts.js',
         'public/lib/highcharts/highcharts-more.js',
-        'public/lib/angular-contenteditable/angular-contenteditable.js',
-        'public/lib/angularUtils-pagination/dirPagination.js'
+        'public/lib/angular-contenteditable/angular-contenteditable.js'
         // endbower
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']

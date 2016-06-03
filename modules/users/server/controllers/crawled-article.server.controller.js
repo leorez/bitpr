@@ -11,15 +11,25 @@ var mongoose = require('mongoose'),
   _ = require('lodash');
 
 exports.list = function (req, res) {
-  CrawledArticle.find({ user: req.user._id }).sort('-created').populate('user', 'email').exec(function (err, articles) {
+  var skip = (req.params.page - 1) * req.params.limit;
+  CrawledArticle.count({ user: req.user._id }, function (err, count) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
-      console.log(articles);
-      res.json(articles);
     }
+
+    CrawledArticle.find({ user: req.user._id }).sort('-created').populate('user', 'email').limit(req.params.limit).skip(skip).exec(function (err, articles) {
+      if (err) {
+        console.log(err);
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        var data = { totalItems: count, articles: articles };
+        res.json(data);
+      }
+    });
   });
 };
 

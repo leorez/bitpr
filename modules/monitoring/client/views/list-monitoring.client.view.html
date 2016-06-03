@@ -15,12 +15,13 @@
             <button type="button" class="btn btn-large btn-primary" ng-click="vm.shareArticle()">공유하기</button>
           </div>
 
+
           <table class="table table-bordered">
             <thead>
 
             </thead>
             <tbody>
-            <tr ng-repeat="item in vm.articles">
+            <tr ng-repeat="item in vm.data.articles">
               <td><input type="checkbox" class="checkbox" ng-checked="vm.exists(item, vm.selected)" ng-click="vm.toggle(item, vm.selected)"></td>
               <td><span class="label" ng-class="{'label-default': item.displayed === false, 'label-primary': item.displayed}" ng-click="vm.toggleDisplayed(item)">{{item.displayed | displayed}}</span></td>
               <td>
@@ -38,12 +39,17 @@
             </tbody>
           </table>
 
-          <pagination
-            ng-model="currentPage"
-            total-items="todos.length"
-            max-size="maxSize"
-            boundary-links="true">
-          </pagination>
+          <uib-pagination
+            boundary-links="true"
+            total-items="vm.totalItems"
+            ng-model="vm.currentPage"
+            max-size="vm.maxSize"
+            ng-change="vm.crawledArticles()"
+            previous-text="&lsaquo;"
+            next-text="&rsaquo;"
+            first-text="&laquo;"
+            last-text="&raquo;">
+          </uib-pagination>
 
         </div>
       </div>

@@ -6,7 +6,7 @@ module.exports = {
       css: [
         // bower:css
         'public/lib/bootstrap/dist/css/bootstrap.min.css',
-        'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
+        // 'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
         'public/lib/ngprogress/ngProgress.css',
         'public/lib/ng-tags-input/ng-tags-input.min.css',
         'public/lib/ng-tags-input/ng-tags-input.bootstrap.min.css',
@@ -35,8 +35,7 @@ module.exports = {
         'public/lib/ng-file-upload/ng-file-upload.min.js',
         'public/lib/highcharts/highcharts.js',
         'public/lib/highcharts/highcharts-more.js',
-        'public/lib/angular-contenteditable/angular-contenteditable.js',
-        'public/lib/angularUtils-pagination/dirPagination.js'
+        'public/lib/angular-contenteditable/angular-contenteditable.js'
         // endbower
       ]
     },

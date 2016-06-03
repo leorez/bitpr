@@ -3,9 +3,9 @@
  */
 'use strict';
 
-angular.module('users.services').factory('CrawledArticles', ['$resource',
+angular.module('monitoring.services').factory('CrawledArticles', ['$resource',
   function ($resource) {
-    return $resource('api/crawled-articles/:crawledArticleId', {
+    return $resource('api/crawled-articles/:crawledArticleId/limit/:limit/page/:page', {
       crawledArticleId: '@_id'
     }, {
       update: {

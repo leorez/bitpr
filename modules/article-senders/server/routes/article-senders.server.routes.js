@@ -14,7 +14,7 @@ module.exports = function (app) {
   app.route('/api/article-senders/embed/:corpCode')
     .get(articleSenders.listForEmbed);
 
-  app.route('/api/article-senders').all(articleSendersPolicy.isAllowed)
+  app.route('/api/article-senders/:limit/:page')
     .get(articleSenders.list)
     .post(articleSenders.create);
 

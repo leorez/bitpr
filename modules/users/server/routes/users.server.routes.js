@@ -12,7 +12,7 @@ module.exports = function (app) {
   app.route('/api/users/password').post(users.changePassword);
   app.route('/api/users/picture').post(users.changeProfilePicture);
 
-  app.route('/api/crawled-articles/limit/:limit/page/:page')
+  app.route('/api/crawled-articles/:limit/:page')
     .get(crawledArticles.list);
   app.route('/api/crawled-articles/:crawledArticleId')
     .put(crawledArticles.update);

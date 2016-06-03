@@ -13,13 +13,24 @@
   function ArticleSendersListController(ngProgressFactory, $window, $state, ArticleSendersService, $mdDialog, $http, FileSaver) {
     var vm = this;
     vm.progressbar = ngProgressFactory.createInstance();
+    vm.totalItems = 0;
+    vm.itemsPerPage = 10;
+    vm.data = { articleSenders: [] };
+    vm.maxSize = 5;
+    vm.currentPage = 1;
 
-    vm.progressbar.start();
-    vm.articleSenders = ArticleSendersService.query(function (res) {
-      vm.progressbar.complete();
-    }, function (err) {
-      vm.progressbar.complete(err);
-    });
+    vm.queryItems = function () {
+      vm.progressbar.start();
+      vm.data = ArticleSendersService.get({ limit: vm.itemsPerPage, page: vm.currentPage }, function (res) {
+        vm.progressbar.complete();
+        vm.totalItems = res.totalItems;
+        console.log(res);
+      }, function (err) {
+        vm.progressbar.complete(err);
+      });
+    };
+
+    vm.queryItems();
 
     vm.cancelArticleSender = cancelArticleSender;
     vm.downloadImage = downloadImage;

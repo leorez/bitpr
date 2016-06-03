@@ -283,14 +283,24 @@ exports.listForEmbed = function (req, res) {
  * List of Article senders
  */
 exports.list = function (req, res) {
-  ArticleSender.find({ user: req.user._id }).sort('-created').populate('user', 'email').exec(function (err, articleSenders) {
+  var skip = (req.params.page - 1) * req.params.limit;
+  ArticleSender.count({ user: req.user._id }, function (err, count) {
     if (err) {
       return res.status(400).send({
         messeage: errorHandler.getErrorMessage(err)
       });
-    } else {
-      res.json(articleSenders);
     }
+
+    ArticleSender.find({ user: req.user._id }).sort('-created').populate('user', 'email').limit(req.params.limit).skip(skip).exec(function (err, articleSenders) {
+      if (err) {
+        return res.status(400).send({
+          messeage: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        var data = { totalItems: count, articleSenders: articleSenders };
+        res.json(data);
+      }
+    });
   });
 };
 

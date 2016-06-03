@@ -44,7 +44,7 @@
 
         <div role="tabpanel" class="tab-pane active" id="all">
 
-          <div class="news-item" data-ng-repeat="item in vm.articleSenders">
+          <div class="news-item" data-ng-repeat="item in vm.data.articleSenders">
             <div class="row">
               <div class="divider col-sm-8">
                 <h3><a ui-sref="article-senders.preview({articleSenderId: item._id})">{{item.title}}</a></h3>
@@ -74,23 +74,17 @@
         </div>
       </div>
       <!-- Tab panes -->
-      <ul class="pagination pagination-centered">
-        <li>
-          <a href="#" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
-        <li>
-          <a href="#" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
+      <uib-pagination
+        boundary-links="true"
+        total-items="vm.totalItems"
+        ng-model="vm.currentPage"
+        max-size="vm.maxSize"
+        ng-change="vm.queryItems()"
+        previous-text="&lsaquo;"
+        next-text="&rsaquo;"
+        first-text="&laquo;"
+        last-text="&raquo;">
+      </uib-pagination>
     </div>
   </div>
 </section>

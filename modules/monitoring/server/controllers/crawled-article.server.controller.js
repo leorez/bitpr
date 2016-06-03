@@ -19,7 +19,7 @@ exports.list = function (req, res) {
       });
     }
 
-    CrawledArticle.find({ user: req.user._id }).sort('-created').populate('user', 'email').limit(req.params.limit).skip(skip).exec(function (err, articles) {
+    CrawledArticle.find({ user: req.user._id }).sort('-articleAt').populate('user', 'email').limit(req.params.limit).skip(skip).exec(function (err, articles) {
       if (err) {
         console.log(err);
         return res.status(400).send({
@@ -57,20 +57,36 @@ exports.displays = function (req, res) {
         });
       }
       options = { user: user._id, displayed: true };
-      query = CrawledArticle.find(options).sort('-created');
+      query = CrawledArticle.find(options).sort('-articleAt');
       query.exec(function (err, articles) {
         onFinish(err, articles);
       });
     });
   } else {
     options = { user: req.user._id, displayed: true };
-    query = CrawledArticle.find(options).sort('-created').populate('user', 'email');
+    query = CrawledArticle.find(options).sort('-articleAt').populate('user', 'email');
     query.exec(function (err, articles) {
       onFinish(err, articles);
     });
   }
 };
 
+exports.create = function (req, res) {
+  var crawledArticle = new CrawledArticle(req.body);
+  crawledArticle.user = req.user;
+  crawledArticle.save(function (err) {
+    if (err) {
+      if (err) {
+        console.log(err);
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(crawledArticle);
+      }
+    }
+  });
+};
 
 exports.update = function (req, res) {
   var crawledArticle = req.crawledArticle;

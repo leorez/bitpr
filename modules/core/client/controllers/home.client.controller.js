@@ -5,7 +5,7 @@
     .module('core')
     .controller('HomeController', HomeController);
 
-  function HomeController(CrawledArticles, $scope, $q, $location, clipboard, $mdDialog, $http, Authentication, ngProgressFactory, $stateParams) {
+  function HomeController($state, CrawledArticles, $scope, $q, $location, clipboard, $mdDialog, $http, Authentication, ngProgressFactory, $stateParams) {
     var vm = this;
 
     // This provides Authentication context.
@@ -67,7 +67,7 @@
           .ok('예')
           .cancel('아니요');
         $mdDialog.show(confirm).then(function () {
-          $location.path('/settings/displayed-list');
+          $state.go('monitoring.list');
         });
       }
     };

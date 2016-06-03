@@ -6,6 +6,10 @@ module.exports = function (app) {
 
   app.route('/api/crawled-articles/:limit/:page')
     .get(crawledArticles.list);
+
+  app.route('/api/crawled-articles')
+    .post(crawledArticles.create);
+
   app.route('/api/crawled-articles/:crawledArticleId')
     .put(crawledArticles.update);
 

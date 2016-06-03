@@ -8,9 +8,9 @@
     .module('article-senders')
     .controller('ArticleSendersListController', ArticleSendersListController);
 
-  ArticleSendersListController.$inject = ['ngProgressFactory', '$window', '$state', 'ArticleSendersService', '$mdDialog', '$http', 'FileSaver'];
+  ArticleSendersListController.$inject = ['ArticleSendersMethodsService', 'ngProgressFactory', '$window', '$state', 'ArticleSendersService', '$mdDialog', '$http', 'FileSaver'];
 
-  function ArticleSendersListController(ngProgressFactory, $window, $state, ArticleSendersService, $mdDialog, $http, FileSaver) {
+  function ArticleSendersListController(ArticleSendersMethodsService, ngProgressFactory, $window, $state, ArticleSendersService, $mdDialog, $http, FileSaver) {
     var vm = this;
     vm.progressbar = ngProgressFactory.createInstance();
     vm.totalItems = 0;
@@ -71,6 +71,10 @@
           }
         }
       }
+    };
+
+    vm.reSendArticle = function (articleSender) {
+      ArticleSendersMethodsService.reSendArticle(articleSender);
     };
   }
 }());

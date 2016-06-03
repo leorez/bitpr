@@ -5,9 +5,9 @@
     .module('article-senders')
     .controller('ArticleSendersController', ArticleSendersController);
 
-  ArticleSendersController.$inject = ['$uibModal', 'ReportersService', 'ngProgressFactory', '$scope', '$timeout', '$window', 'FileUploader', '$http', '$state', 'articleSenderResolve', '$location', 'Authentication', 'ArticleSendersService', 'Upload'];
+  ArticleSendersController.$inject = ['ArticleSendersMethodsService', '$uibModal', 'ReportersService', 'ngProgressFactory', '$scope', '$timeout', '$window', 'FileUploader', '$http', '$state', 'articleSenderResolve', '$location', 'Authentication', 'ArticleSendersService', 'Upload'];
 
-  function ArticleSendersController($uibModal, ReportersService, ngProgressFactory, $scope, $timeout, $window, FileUploader, $http, $state, articleSender, $location, Authentication, ArticleSendersService, Upload) {
+  function ArticleSendersController(ArticleSendersMethodsService, $uibModal, ReportersService, ngProgressFactory, $scope, $timeout, $window, FileUploader, $http, $state, articleSender, $location, Authentication, ArticleSendersService, Upload) {
     var vm = this;
 
     vm.error = null;
@@ -286,38 +286,8 @@
     };
 
     // 재전송
-    vm.reSendArticle = function (ev) {
-      vm.error = '';
-      vm.success = '';
-      console.log('reSendArticle');
-      var modalInstance = $uibModal.open({
-        animation: true,
-        templateUrl: 'modules/article-senders/client/views/reporters-dialog.tmpl.html',
-        controller: 'ReporterSelectDlgController',
-        size: '',
-        resolve: {
-          sendCount: function () {
-            return vm.articleSender.sendCount;
-          }
-        }
-      });
-
-      modalInstance.result.then(function(reporters) {
-        var data = {
-          reporters: reporters,
-          articleSenders: [vm.articleSender]
-        };
-
-        $http.post('/api/re-send-article', data).then(function (resp) {
-          console.log(resp);
-          vm.success = resp.data.message;
-        }, function (err) {
-          console.error(err);
-          vm.error = '에러가 발생하였습니다.';
-        });
-      }, function () {
-        // on cancel
-      });
+    vm.reSendArticle = function (articleSender) {
+      ArticleSendersMethodsService.reSendArticle(articleSender);
     };
   }
 

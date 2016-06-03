@@ -172,9 +172,6 @@
     }
 
     function createArticleSender() {
-      vm.articleSender.status = 'Reserved';
-      vm.articleSender.reserved = new Date();
-
       if (vm.articleSender.contentType === 'inputContent') {
         vm.articleSender.file = '';
       } else {
@@ -235,6 +232,8 @@
       if (articleSender._id) {
         updateArticleSender();
       } else {
+        vm.articleSender.status = 'Reserved';
+        vm.articleSender.reserved = new Date();
         createArticleSender();
       }
     };

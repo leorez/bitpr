@@ -5,6 +5,7 @@ describe('Users E2E Tests:', function () {
     corpCode: '005930',
     displayName: '홍길동',
     email: 'noruya@gmail.com',
+    emailConfirmed: true,
     password: 'testtest!09AA'
   };
 
@@ -247,7 +248,13 @@ describe('Users E2E Tests:', function () {
       element(by.model('vm.credentials.password')).sendKeys(user1.password);
       // Click Submit button
       element(by.css('button[type="submit"]')).click();
-      expect(browser.getCurrentUrl()).toEqual('http://localhost:3001/');
+
+      browser.wait(function () {
+        return browser.getCurrentUrl().then(function (url) {
+          expect(/\/dashboard/.test(url)).toEqual(true);
+          return /\/dashboard/.test(url);
+        });
+      }, 10000);
     });
 
   });

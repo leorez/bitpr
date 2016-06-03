@@ -1,6 +1,6 @@
 'use strict';
 
-var userTest = false;
+var userTest = true;
 
 // Protractor configuration
 var config = {
@@ -9,9 +9,9 @@ var config = {
 
   specs: [
     // 'e2e/**/*.spec.js'
-    'modules/article-senders/tests/e2e/article-senders.spec.js'
+    // 'modules/article-senders/tests/e2e/article-senders.spec.js'
     // 'modules/article-senders/tests/e2e/files-article-sender.spec.js'
-    // 'modules/users/tests/e2e/*.js'
+    'modules/users/tests/e2e/*.js'
     // 'modules/reporters/tests/e2e/*.js'
   ],
 

@@ -9,9 +9,21 @@
       </div>
 
 
-      <div class="row">
+      <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active">
+            <a href="#all" aria-controls="all" role="tab" data-toggle="tab">전체(283)</a>
+          </li>
+          <li role="presentation">
+            <a href="#waiting" aria-controls="tab" role="tab" data-toggle="tab">게시중(10)</a>
+          </li>
+          <li role="presentation">
+            <a href="#waiting" aria-controls="tab" role="tab" data-toggle="tab">게시되지 않음(100)</a>
+          </li>
+        </ul>
+
         <div>
-          <div style="margin-bottom: 10px;">
+          <div style="margin-bottom: 10px;margin-top: 10px;">
             <button type="button" class="btn btn-large btn-primary" ng-click="vm.shareArticle()">공유하기</button>
           </div>
 

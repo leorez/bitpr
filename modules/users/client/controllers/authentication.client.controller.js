@@ -60,7 +60,11 @@
         // If successful we assign the response to the global user model
         vm.authentication.user = response;
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'home', $state.previous.params);
+        if ($state.previous.state.name === 'home') {
+          $state.go('dashboard');
+        } else {
+          $state.go($state.previous.state.name || 'dashboard', $state.previous.params);
+        }
       }).error(function (response) {
         vm.error = response.message;
       });
@@ -68,10 +72,15 @@
 
     // OAuth provider request
     function callOauthProvider(url) {
+      console.log($state.previous.href);
+      if ($state.previous && $state.previous.href === '/');
+        $state.previous.href = '/dashboard';
+
       if ($state.previous && $state.previous.href) {
         url += '?redirect_to=' + encodeURIComponent($state.previous.href);
       }
 
+      console.log(url);
       // Effectively call OAuth authentication route:
       $window.location.href = url;
     }

@@ -285,20 +285,25 @@ exports.listForEmbed = function (req, res) {
 exports.list = function (req, res) {
   var limit = Number(req.params.limit);
   var skip = (Number(req.params.page) - 1) * limit;
-  ArticleSender.count({ user: req.user._id }, function (err, count) {
+
+  var options = { user: req.user._id };
+  console.log('status=' + req.params.status);
+  if (req.params.status !== 'All') {
+    options = {
+      user: req.user._id,
+      status: req.params.status
+    };
+
+    if (req.params.status === 'Else') {
+      options.status = ['Canceled', 'Error'];
+    }
+  }
+
+  ArticleSender.count(options, function (err, count) {
     if (err) {
       return res.status(400).send({
         messeage: errorHandler.getErrorMessage(err)
       });
-    }
-
-    var options = { user: req.user._id };
-    console.log('status=' + req.params.status);
-    if (req.params.status) {
-      options = {
-        user: req.user._id,
-        status: req.params.status
-      };
     }
 
     ArticleSender.find(options).sort('-created').populate('user', 'email').limit(limit).skip(skip).exec(function (err, articleSenders) {

@@ -18,8 +18,10 @@
     vm.data = { articleSenders: [] };
     vm.maxSize = 5;
     vm.currentPage = 1;
+    vm.status = 'All';
 
     vm.queryItems = function (status) {
+      vm.status = status;
       vm.progressbar.start();
       vm.data = ArticleSendersService.get({ limit: vm.itemsPerPage, page: vm.currentPage, status: status }, function (res) {
         vm.progressbar.complete();
@@ -30,7 +32,7 @@
       });
     };
 
-    vm.queryItems();
+    vm.queryItems(vm.status);
 
     vm.cancelArticleSender = cancelArticleSender;
     vm.downloadImage = downloadImage;

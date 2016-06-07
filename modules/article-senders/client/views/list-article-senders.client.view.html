@@ -25,17 +25,20 @@
             <input class="form-control" type="text" placeholder="검색어">
           </form>
         </li>
-        <li role="presentation" class="active">
-          <a href="#" ng-click="vm.queryItems()" aria-controls="all" role="tab" data-toggle="tab">전체(283)</a>
+        <li role="presentation" ng-class="{ 'active': vm.status === 'All' }">
+          <a href="#" ng-click="vm.queryItems('All')" aria-controls="all" role="tab" data-toggle="tab">전체(283)</a>
         </li>
-        <li role="presentation">
+        <li role="presentation" ng-class="{ 'active': vm.status === 'Reserved' }">
           <a href="#" ng-click="vm.queryItems('Reserved')" aria-controls="tab" role="tab" data-toggle="tab">발송대기(1)</a>
         </li>
-        <li role="presentation">
+        <li role="presentation" ng-class="{ 'active': vm.status === 'Sent' }">
           <a href="#" ng-click="vm.queryItems('Sent')" aria-controls="tab" role="tab" data-toggle="tab">발송완료(218)</a>
         </li>
-        <li role="presentation">
-          <a href="#" ng-click="vm.queryItems('Canceled')" aria-controls="tab" role="tab" data-toggle="tab">취소 및 실패(10)</a>
+        <li role="presentation" ng-class="{ 'active': vm.status === 'Temporary' }">
+          <a href="#" ng-click="vm.queryItems('Temporary')" aria-controls="tab" role="tab" data-toggle="tab">임시저장(218)</a>
+        </li>
+        <li role="presentation" ng-class="{ 'active': vm.status === 'Else' }">
+          <a href="#" ng-click="vm.queryItems('Else')" aria-controls="tab" role="tab" data-toggle="tab">취소 및 실패(10)</a>
         </li>
       </ul>
 

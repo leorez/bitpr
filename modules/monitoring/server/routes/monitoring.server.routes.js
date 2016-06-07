@@ -4,7 +4,7 @@ module.exports = function (app) {
   // User Routes
   var crawledArticles = require('../controllers/crawled-article.server.controller');
 
-  app.route('/api/crawled-articles/:limit/:page')
+  app.route('/api/crawled-articles/:limit/:page/:filter')
     .get(crawledArticles.list);
 
   app.route('/api/crawled-articles')

@@ -17,6 +17,8 @@
     vm.currentPage = 1;
     vm.totalItems = 0;
     vm.data = { totalItems: 0, articles: [] };
+    vm.filter = 'All';
+    vm.counts = {};
 
     vm.toggle = function (item, list) {
       var idx = list.indexOf(item);
@@ -40,13 +42,15 @@
       });
     };
 
-    vm.crawledArticles = function () {
+    vm.crawledArticles = function (filter) {
       if (Authentication.user) {
         vm.progressbar.start();
+        vm.filter = filter;
 
-        vm.data = CrawledArticles.get({ limit: vm.itemsPerPage, page: vm.currentPage }, function (res) {
+        vm.data = CrawledArticles.get({ limit: vm.itemsPerPage, page: vm.currentPage, filter: filter }, function (res) {
           vm.progressbar.complete();
-          vm.totalItems = res.totalItems;
+          vm.totalItems = res.counts.totalItems;
+          vm.counts = res.counts;
         }, function (err) {
           vm.progressbar.complete(err);
           console.log(err);

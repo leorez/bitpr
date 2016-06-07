@@ -330,10 +330,7 @@ exports.list = function (req, res) {
 
   var options = { user: req.user._id };
   if (req.params.filter !== 'All') {
-    options = {
-      user: req.user._id,
-      status: req.params.filter
-    };
+    options.status = req.params.filter;
 
     if (req.params.filter === 'Else') {
       options.status = { $in: ['Canceled', 'Error'] };
@@ -346,8 +343,6 @@ exports.list = function (req, res) {
         messeage: errorHandler.getErrorMessage(err)
       });
     }
-
-    console.log(options);
 
     ArticleSender.find(options).sort('-created').populate('user', 'email').limit(limit).skip(skip).exec(function (err, articleSenders) {
       if (err) {

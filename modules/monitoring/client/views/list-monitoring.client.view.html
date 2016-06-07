@@ -1,5 +1,5 @@
 <section>
-  <div data-ng-controller="MonitoringController" class="container-fluid" data-ng-init="vm.crawledArticles()">
+  <div data-ng-controller="MonitoringController" class="container-fluid" data-ng-init="vm.crawledArticles('All')">
 
     <div id="content-container" class="container news-index">
 
@@ -11,14 +11,14 @@
 
       <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active">
-            <a href="#all" aria-controls="all" role="tab" data-toggle="tab">전체(283)</a>
+          <li role="presentation" ng-class="{ 'active': vm.filter === 'All' }">
+            <a href="#" ng-click="vm.crawledArticles('All')" aria-controls="all" role="tab" data-toggle="tab">전체({{vm.counts.totalCount}})</a>
           </li>
-          <li role="presentation">
-            <a href="#waiting" aria-controls="tab" role="tab" data-toggle="tab">게시중(10)</a>
+          <li role="presentation" ng-class="{ 'active': vm.filter === 'Displayed' }">
+            <a href="#" ng-click="vm.crawledArticles('Displayed')" aria-controls="tab" role="tab" data-toggle="tab">게시중({{vm.counts.displayedCount}})</a>
           </li>
-          <li role="presentation">
-            <a href="#waiting" aria-controls="tab" role="tab" data-toggle="tab">게시되지 않음(100)</a>
+          <li role="presentation" ng-class="{ 'active': vm.filter === 'NotDisplayed' }">
+            <a href="#" ng-click="vm.crawledArticles('NotDisplayed')" aria-controls="tab" role="tab" data-toggle="tab">게시되지 않음({{vm.counts.notDisplayedCount}})</a>
           </li>
         </ul>
 
@@ -53,7 +53,7 @@
             total-items="vm.totalItems"
             ng-model="vm.currentPage"
             max-size="vm.maxSize"
-            ng-change="vm.crawledArticles()"
+            ng-change="vm.crawledArticles(vm.filter)"
             previous-text="&lsaquo;"
             next-text="&rsaquo;"
             first-text="&laquo;"

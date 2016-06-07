@@ -5,7 +5,7 @@
 
 angular.module('monitoring.services').factory('CrawledArticles', ['$resource',
   function ($resource) {
-    return $resource('api/crawled-articles/:crawledArticleId/:limit/:page', {
+    return $resource('api/crawled-articles/:crawledArticleId/:limit/:page/:filter', {
       crawledArticleId: '@_id'
     }, {
       update: {

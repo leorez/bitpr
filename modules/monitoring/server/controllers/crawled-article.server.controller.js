@@ -10,24 +10,57 @@ var mongoose = require('mongoose'),
   User = mongoose.model('User'),
   _ = require('lodash');
 
+var count = function (opt, req, callback) {
+  var options = _.clone(opt);
+  var counts = {};
+  CrawledArticle.count(options, function (err, count) {
+    if (err) return callback(err);
+    counts.totalItems = count;
+
+    delete options.displayed;
+    CrawledArticle.count(options, function (err, count) {
+      if (err) return callback(err);
+      counts.totalCount = count;
+
+      options.displayed = true;
+      CrawledArticle.count(options, function (err, count) {
+        if (err) return callback(err);
+        counts.displayedCount = count;
+        counts.notDisplayedCount = counts.totalCount - count;
+        callback(err, counts);
+      });
+    });
+  });
+};
+
 exports.list = function (req, res) {
   var limit = Number(req.params.limit);
   var skip = (Number(req.params.page) - 1) * limit;
-  CrawledArticle.count({ user: req.user._id }, function (err, count) {
+  var options = { user: req.user._id };
+  if (req.params.filter !== 'All') {
+    if (req.params.filter === 'Displayed') {
+      options.displayed = true;
+    } else {
+      options.displayed = { $in: [false, null] };
+    }
+  }
+
+  count(options, req, function (err, counts) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     }
 
-    CrawledArticle.find({ user: req.user._id }).sort('-articleAt').populate('user', 'email').limit(limit).skip(skip).exec(function (err, articles) {
+    console.log('options : ' + JSON.stringify(options));
+    CrawledArticle.find(options).sort('-articleAt').populate('user', 'email').limit(limit).skip(skip).exec(function (err, articles) {
       if (err) {
         console.log(err);
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        var data = { totalItems: count, articles: articles };
+        var data = { counts: counts, articles: articles };
         res.json(data);
       }
     });

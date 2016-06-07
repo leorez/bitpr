@@ -247,7 +247,7 @@ function sendAfterDarted(article) {
 
   console.log('send parameters : ' + JSON.stringify(options));
 
-  dart.searchMockTest(options, function (error, data) {
+  dart.search(options, function (error, data) {
     if (!error) {
       console.log(chalk.green(JSON.stringify(data)));
       data.list.forEach(function (item) {

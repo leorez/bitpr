@@ -19,11 +19,12 @@
     vm.maxSize = 5;
     vm.currentPage = 1;
     vm.filter = 'All';
+    vm.keyword = '';
 
     vm.queryItems = function (filter) {
       vm.filter = filter;
       vm.progressbar.start();
-      vm.data = ArticleSendersService.get({ limit: vm.itemsPerPage, page: vm.currentPage, filter: filter }, function (res) {
+      vm.data = ArticleSendersService.get({ limit: vm.itemsPerPage, page: vm.currentPage, filter: filter, keyword: vm.keyword }, function (res) {
         vm.progressbar.complete();
         vm.totalItems = res.counts.totalItems;
         vm.counts = res.counts;

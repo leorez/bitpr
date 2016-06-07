@@ -19,6 +19,7 @@
     vm.data = { totalItems: 0, articles: [] };
     vm.filter = 'All';
     vm.counts = {};
+    vm.keyword = null;
 
     vm.toggle = function (item, list) {
       var idx = list.indexOf(item);
@@ -47,7 +48,7 @@
         vm.progressbar.start();
         vm.filter = filter;
 
-        vm.data = CrawledArticles.get({ limit: vm.itemsPerPage, page: vm.currentPage, filter: filter }, function (res) {
+        vm.data = CrawledArticles.get({ limit: vm.itemsPerPage, page: vm.currentPage, filter: filter, keyword: vm.keyword }, function (res) {
           vm.progressbar.complete();
           vm.totalItems = res.counts.totalItems;
           vm.counts = res.counts;

@@ -22,7 +22,7 @@
               <option value="">대상미디어순</option>
               <option value="">발송수순</option>
             </select>
-            <input class="form-control" type="text" placeholder="검색어">
+            <input class="form-control" type="text" placeholder="검색어" ng-model="vm.keyword" ng-keyup="$event.keyCode === 13 && vm.queryItems(vm.filter)">
           </form>
         </li>
         <li role="presentation" ng-class="{ 'active': vm.filter === 'All' }">

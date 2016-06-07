@@ -17,6 +17,9 @@ module.exports = function (app) {
   app.route('/api/article-senders/:limit/:page/:filter')
     .get(articleSenders.list);
 
+  app.route('/api/article-senders/:limit/:page/:filter/:keyword')
+    .get(articleSenders.list);
+
   app.route('/api/article-senders')
     .post(articleSenders.create);
 

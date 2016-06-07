@@ -337,6 +337,14 @@ exports.list = function (req, res) {
     }
   }
 
+  console.log('keyword: ' + req.params.keyword);
+
+  if (req.params.keyword !== '') {
+    options.title = new RegExp(req.params.keyword);
+    options.content = new RegExp(req.params.keyword);
+  }
+
+  console.log('options: ' + JSON.stringify(options));
   count(options, req, function (err, counts) {
     if (err) {
       return res.status(400).send({

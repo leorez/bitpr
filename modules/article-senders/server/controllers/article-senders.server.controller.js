@@ -279,6 +279,46 @@ exports.listForEmbed = function (req, res) {
   });
 };
 
+var count = function (opt, req, callback) {
+  var options = _.clone(opt);
+  var counts = {};
+  ArticleSender.count(options, function (err, count) {
+    if (err) return callback(err);
+    counts.totalItems = count;
+
+    delete options.status;
+    ArticleSender.count(options, function (err, count) {
+      if (err) return callback(err);
+      counts.totalCount = count;
+
+      options.status = 'Reserved';
+      ArticleSender.count(options, function (err, count) {
+        if (err) return callback(err);
+        counts.reservedCount = count;
+
+        options.status = 'Sent';
+        ArticleSender.count(options, function (err, count) {
+          if (err) return callback(err);
+          counts.sentCount = count;
+
+          options.status = 'Temporary';
+          ArticleSender.count(options, function (err, count) {
+            if (err) return callback(err);
+            counts.temporaryCount = count;
+
+            options.status = { $in: ['Canceled', 'Error'] };
+            ArticleSender.count(options, function (err, count) {
+              if (err) return callback(err);
+              counts.elseCount = count;
+              callback(err, counts);
+            });
+          });
+        });
+      });
+    });
+  });
+};
+
 /**
  * List of Article senders
  */
@@ -298,12 +338,14 @@ exports.list = function (req, res) {
     }
   }
 
-  ArticleSender.count(options, function (err, count) {
+  count(options, req, function (err, counts) {
     if (err) {
       return res.status(400).send({
         messeage: errorHandler.getErrorMessage(err)
       });
     }
+
+    console.log(options);
 
     ArticleSender.find(options).sort('-created').populate('user', 'email').limit(limit).skip(skip).exec(function (err, articleSenders) {
       if (err) {
@@ -311,7 +353,7 @@ exports.list = function (req, res) {
           messeage: errorHandler.getErrorMessage(err)
         });
       } else {
-        var data = { totalItems: count, articleSenders: articleSenders };
+        var data = { counts: counts, articleSenders: articleSenders };
         res.json(data);
       }
     });

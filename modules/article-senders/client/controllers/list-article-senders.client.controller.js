@@ -26,7 +26,7 @@
       vm.data = ArticleSendersService.get({ limit: vm.itemsPerPage, page: vm.currentPage, filter: filter }, function (res) {
         vm.progressbar.complete();
         vm.totalItems = res.counts.totalItems;
-        vm.counts= res.counts;
+        vm.counts = res.counts;
         console.log(res);
       }, function (err) {
         vm.progressbar.complete(err);

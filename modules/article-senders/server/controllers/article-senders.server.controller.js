@@ -10,6 +10,7 @@ var path = require('path'),
   fs = require('fs-extra'),
   appRoot = require('app-root-path'),
   mail = require(path.resolve('./lib/mail')),
+  Q = require('q'),
   _ = require('lodash');
 
 function buildContent(articleSender) {
@@ -282,6 +283,7 @@ exports.listForEmbed = function (req, res) {
 var count = function (opt, req, callback) {
   var options = _.clone(opt);
   var counts = {};
+
   ArticleSender.count(options, function (err, count) {
     if (err) return callback(err);
     counts.totalItems = count;

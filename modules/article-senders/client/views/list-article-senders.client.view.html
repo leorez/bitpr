@@ -25,19 +25,19 @@
             <input class="form-control" type="text" placeholder="검색어">
           </form>
         </li>
-        <li role="presentation" ng-class="{ 'active': vm.status === 'All' }">
+        <li role="presentation" ng-class="{ 'active': vm.filter === 'All' }">
           <a href="#" ng-click="vm.queryItems('All')" aria-controls="all" role="tab" data-toggle="tab">전체({{vm.counts.totalCount}})</a>
         </li>
-        <li role="presentation" ng-class="{ 'active': vm.status === 'Reserved' }">
+        <li role="presentation" ng-class="{ 'active': vm.filter === 'Reserved' }">
           <a href="#" ng-click="vm.queryItems('Reserved')" aria-controls="tab" role="tab" data-toggle="tab">발송대기({{vm.counts.reservedCount}})</a>
         </li>
-        <li role="presentation" ng-class="{ 'active': vm.status === 'Sent' }">
+        <li role="presentation" ng-class="{ 'active': vm.filter === 'Sent' }">
           <a href="#" ng-click="vm.queryItems('Sent')" aria-controls="tab" role="tab" data-toggle="tab">발송완료({{vm.counts.sentCount}})</a>
         </li>
-        <li role="presentation" ng-class="{ 'active': vm.status === 'Temporary' }">
+        <li role="presentation" ng-class="{ 'active': vm.filter === 'Temporary' }">
           <a href="#" ng-click="vm.queryItems('Temporary')" aria-controls="tab" role="tab" data-toggle="tab">임시저장({{vm.counts.temporaryCount}})</a>
         </li>
-        <li role="presentation" ng-class="{ 'active': vm.status === 'Else' }">
+        <li role="presentation" ng-class="{ 'active': vm.filter === 'Else' }">
           <a href="#" ng-click="vm.queryItems('Else')" aria-controls="tab" role="tab" data-toggle="tab">취소 및 실패({{vm.counts.elseCount}})</a>
         </li>
       </ul>

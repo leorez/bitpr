@@ -26,16 +26,16 @@
           </form>
         </li>
         <li role="presentation" class="active">
-          <a href="#all" aria-controls="all" role="tab" data-toggle="tab">전체(283)</a>
+          <a href="#" ng-click="vm.queryItems()" aria-controls="all" role="tab" data-toggle="tab">전체(283)</a>
         </li>
         <li role="presentation">
-          <a href="#waiting" aria-controls="tab" role="tab" data-toggle="tab">발송대기(1)</a>
+          <a href="#" ng-click="vm.queryItems('Reserved')" aria-controls="tab" role="tab" data-toggle="tab">발송대기(1)</a>
         </li>
         <li role="presentation">
-          <a href="#sent" aria-controls="tab" role="tab" data-toggle="tab">발송완료(218)</a>
+          <a href="#" ng-click="vm.queryItems('Sent')" aria-controls="tab" role="tab" data-toggle="tab">발송완료(218)</a>
         </li>
         <li role="presentation">
-          <a href="#cancelled" aria-controls="tab" role="tab" data-toggle="tab">취소 및 실패(10)</a>
+          <a href="#" ng-click="vm.queryItems('Canceled')" aria-controls="tab" role="tab" data-toggle="tab">취소 및 실패(10)</a>
         </li>
       </ul>
 

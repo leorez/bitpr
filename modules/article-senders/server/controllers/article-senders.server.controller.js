@@ -292,7 +292,16 @@ exports.list = function (req, res) {
       });
     }
 
-    ArticleSender.find({ user: req.user._id }).sort('-created').populate('user', 'email').limit(limit).skip(skip).exec(function (err, articleSenders) {
+    var options = { user: req.user._id };
+    console.log('status=' + req.params.status);
+    if (req.params.status) {
+      options = {
+        user: req.user._id,
+        status: req.params.status
+      };
+    }
+
+    ArticleSender.find(options).sort('-created').populate('user', 'email').limit(limit).skip(skip).exec(function (err, articleSenders) {
       if (err) {
         return res.status(400).send({
           messeage: errorHandler.getErrorMessage(err)

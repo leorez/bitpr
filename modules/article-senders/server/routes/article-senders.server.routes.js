@@ -14,7 +14,7 @@ module.exports = function (app) {
   app.route('/api/article-senders/embed/:corpCode')
     .get(articleSenders.listForEmbed);
 
-  app.route('/api/article-senders/:limit/:page')
+  app.route('/api/article-senders/:limit/:page/:status')
     .get(articleSenders.list);
 
   app.route('/api/article-senders')

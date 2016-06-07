@@ -17,7 +17,7 @@
       })
       .state('article-senders.list', {
         url: '',
-        templateUrl: 'modules/article-senders/client/views/article-senders.client.view.html',
+        templateUrl: 'modules/article-senders/client/views/list-article-senders.client.view.html',
         controller: 'ArticleSendersListController',
         controllerAs: 'vm',
         data: {

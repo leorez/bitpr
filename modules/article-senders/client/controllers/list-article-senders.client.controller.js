@@ -19,9 +19,9 @@
     vm.maxSize = 5;
     vm.currentPage = 1;
 
-    vm.queryItems = function () {
+    vm.queryItems = function (status) {
       vm.progressbar.start();
-      vm.data = ArticleSendersService.get({ limit: vm.itemsPerPage, page: vm.currentPage }, function (res) {
+      vm.data = ArticleSendersService.get({ limit: vm.itemsPerPage, page: vm.currentPage, status: status }, function (res) {
         vm.progressbar.complete();
         vm.totalItems = res.totalItems;
         console.log(res);

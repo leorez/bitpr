@@ -287,15 +287,14 @@ exports.list = function (req, res) {
   var skip = (Number(req.params.page) - 1) * limit;
 
   var options = { user: req.user._id };
-  console.log('status=' + req.params.status);
-  if (req.params.status !== 'All') {
+  if (req.params.filter !== 'All') {
     options = {
       user: req.user._id,
-      status: req.params.status
+      status: req.params.filter
     };
 
-    if (req.params.status === 'Else') {
-      options.status = ['Canceled', 'Error'];
+    if (req.params.filter === 'Else') {
+      options.status = { $in: ['Canceled', 'Error'] };
     }
   }
 

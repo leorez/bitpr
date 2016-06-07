@@ -18,12 +18,12 @@
     vm.data = { articleSenders: [] };
     vm.maxSize = 5;
     vm.currentPage = 1;
-    vm.status = 'All';
+    vm.filter = 'All';
 
-    vm.queryItems = function (status) {
-      vm.status = status;
+    vm.queryItems = function (filter) {
+      vm.filter = filter;
       vm.progressbar.start();
-      vm.data = ArticleSendersService.get({ limit: vm.itemsPerPage, page: vm.currentPage, status: status }, function (res) {
+      vm.data = ArticleSendersService.get({ limit: vm.itemsPerPage, page: vm.currentPage, filter: filter }, function (res) {
         vm.progressbar.complete();
         vm.totalItems = res.totalItems;
         console.log(res);
@@ -32,7 +32,7 @@
       });
     };
 
-    vm.queryItems(vm.status);
+    vm.queryItems(vm.filter);
 
     vm.cancelArticleSender = cancelArticleSender;
     vm.downloadImage = downloadImage;
@@ -40,9 +40,11 @@
     // 보도자료현황의 발송취소
     function cancelArticleSender(articleSender, $http) {
       if ($window.confirm('예약된 보도자료 발송이 취소됩니다. 취소하시겠습니까?')) {
+
         articleSender.status = 'Canceled';
         articleSender.canceled = new Date();
 
+        articleSender = new ArticleSendersService(articleSender);
         articleSender.$update(articleSender, function (response) {
           console.log(response);
         }, function (error) {

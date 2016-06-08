@@ -12,6 +12,7 @@
 
     vm.mailinglistGroup = mailinglistGroup;
     vm.authentication = Authentication;
+    vm.user = Authentication.user;
     vm.error = null;
     vm.form = {};
     vm.remove = remove;

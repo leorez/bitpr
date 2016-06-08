@@ -5,10 +5,11 @@
     .module('articles')
     .controller('MailinglistGroupListController', MailinglistGroupListController);
 
-  MailinglistGroupListController.$inject = ['$window', 'MailinglistGroupService', '$http'];
+  MailinglistGroupListController.$inject = ['Authentication', '$window', 'MailinglistGroupService', '$http'];
 
-  function MailinglistGroupListController($window, MailinglistGroupService, $http) {
+  function MailinglistGroupListController(Authentication, $window, MailinglistGroupService, $http) {
     var vm = this;
+    vm.user = Authentication.user;
     vm.selected = [];
 
     vm.toggle = function (item, list) {

@@ -23,9 +23,8 @@ var MailinglistSchema = new Schema({
     default: Date.now
   },
   group: {
-    type: String,
-    default: '',
-    trim: true
+    type: Schema.ObjectId,
+    ref: 'MailinglistGroup'
   },
   name: {
     type: String,

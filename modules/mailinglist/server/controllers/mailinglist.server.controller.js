@@ -6,24 +6,36 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Mailinglist = mongoose.model('Mailinglist'),
+  mailinglistGroupController = require(path.resolve('./modules/mailinglist/server/controllers/mailinglist-group.server.controller')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
  * Create an mailinglist
  */
 exports.create = function (req, res) {
-  var mailinglist = new Mailinglist(req.body);
-  mailinglist.user = req.user;
-
-  mailinglist.save(function (err) {
+  var next = function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
-      res.json(mailinglist);
     }
-  });
+
+    var mailinglist = new Mailinglist(req.body);
+    mailinglist.group = req.mailinglistGroup._id;
+
+    mailinglist.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(mailinglist);
+      }
+    });
+  };
+
+  console.log('body: ' + JSON.stringify(req.body));
+  mailinglistGroupController.mailinglistGroupByName(req, res, next, req.body.group);
 };
 
 /**
@@ -76,7 +88,7 @@ exports.delete = function (req, res) {
  * List of Mailinglists
  */
 exports.list = function (req, res) {
-  Mailinglist.find().sort('-created').exec(function (err, mailinglists) {
+  Mailinglist.find({ group: req.mailinglistGroup._id }).sort('-created').exec(function (err, mailinglists) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

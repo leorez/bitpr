@@ -16,7 +16,7 @@
         template: '<ui-view/>'
       })
       .state('mailinglist.list', {
-        url: '',
+        url: '/list/:mailinglistGroupId',
         templateUrl: 'modules/mailinglist/client/views/list-mailinglist.client.view.html',
         controller: 'MailinglistListController',
         controllerAs: 'vm'
@@ -38,6 +38,21 @@
         resolve: {
           mailinglistResolve: newMailinglist
         }
+      })
+      .state('mailinglist.group-list', {
+        url: '/group-list',
+        templateUrl: 'modules/mailinglist/client/views/group-list-mailinglist.client.view.html',
+        controller: 'MailinglistGroupListController',
+        controllerAs: 'vm'
+      })
+      .state('mailinglist.create-group', {
+        url: '/create-group',
+        templateUrl: 'modules/mailinglist/client/views/form-mailinglist-group.client.view.html',
+        controller: 'MailinglistGroupController',
+        controllerAs: 'vm',
+        resolve: {
+          mailinglistGroupResolve: newMailinglistGroup
+        }
       });
 
     getMailinglist.$inject = ['$stateParams', 'MailinglistService'];
@@ -52,6 +67,21 @@
 
     function newMailinglist(MailinglistService) {
       return new MailinglistService();
+    }
+
+
+    getMailinglistGroup.$inject = ['$stateParams', 'MailinglistGroupService'];
+
+    function getMailinglistGroup($stateParams, MailinglistGroupService) {
+      return MailinglistGroupService.get({
+        mailinglistGroupId: $stateParams.mailinglistGroupId
+      }).$promise;
+    }
+
+    newMailinglistGroup.$inject = ['MailinglistGroupService'];
+
+    function newMailinglistGroup(MailinglistGroupService) {
+      return new MailinglistGroupService();
     }
   }
 }());

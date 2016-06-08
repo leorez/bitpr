@@ -4,11 +4,13 @@
  * Module dependencies
  */
 var mailinglist = require('../controllers/mailinglist.server.controller');
+var mailinglistGroup = require('../controllers/mailinglist-group.server.controller');
 
 module.exports = function (app) {
-  // Articles collection routes
+  app.route('/api/mailinglist/list/:mailinglistGroupId')
+    .get(mailinglist.list);
+
   app.route('/api/mailinglist')
-    .get(mailinglist.list)
     .post(mailinglist.create);
 
   // Single article routes
@@ -19,4 +21,5 @@ module.exports = function (app) {
 
   // Finish by binding the article middleware
   app.param('mailinglistId', mailinglist.mailinglistByID);
+  app.param('mailinglistGroupId', mailinglistGroup.mailinglistGroupByID);
 };

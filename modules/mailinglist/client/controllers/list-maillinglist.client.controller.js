@@ -5,11 +5,11 @@
     .module('articles')
     .controller('MailinglistListController', MailinglistListController);
 
-  MailinglistListController.$inject = ['MailinglistService'];
+  MailinglistListController.$inject = ['MailinglistListService', '$stateParams'];
 
-  function MailinglistListController(MailinglistService) {
+  function MailinglistListController(MailinglistListService, $stateParams) {
     var vm = this;
 
-    vm.items = MailinglistService.query();
+    vm.items = MailinglistListService.query({ mailinglistGroupId: $stateParams.mailinglistGroupId });
   }
 }());

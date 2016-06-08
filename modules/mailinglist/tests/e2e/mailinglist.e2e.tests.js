@@ -133,6 +133,15 @@
         browser.get('/mailinglist/group-list');
       });
 
+      it('추가버튼을 누르면 그룹생성 화면이 나타나야한다.', function () {
+        element(by.buttonText('추가')).click();
+        browser.wait(function () {
+          return browser.getCurrentUrl().then(function (url) {
+            return /\/mailinglist\/create-group/.test(url);
+          });
+        }, 1000);
+      });
+
       it('그룹을 클릭하면 소속된 메일링리스트가 나타난다.', function () {
         expect(element.all(by.binding('item.count')).get(0).getText()).toBe('0');
         expect(element.all(by.binding('item.count')).get(1).getText()).toBe('1');

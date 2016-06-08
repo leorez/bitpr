@@ -5,9 +5,9 @@
     .module('articles')
     .controller('MailinglistGroupListController', MailinglistGroupListController);
 
-  MailinglistGroupListController.$inject = ['MailinglistGroupService', '$http'];
+  MailinglistGroupListController.$inject = ['$window', 'MailinglistGroupService', '$http'];
 
-  function MailinglistGroupListController(MailinglistGroupService, $http) {
+  function MailinglistGroupListController($window, MailinglistGroupService, $http) {
     var vm = this;
     vm.selected = [];
 
@@ -27,18 +27,20 @@
     vm.items = MailinglistGroupService.query();
 
     vm.removeSelected = function () {
-      $http.post('/api/mailinglist/remove-groups', { items: vm.selected })
-        .success(function (res) {
-          var i = -1;
-          vm.selected.forEach(function (item) {
-            i = vm.items.indexOf(item);
-            if (i !== -1)
-              vm.items.splice(i, 1);
+      if ($window.confirm('삭제하시겠습니까?')) {
+        $http.post('/api/mailinglist/remove-groups', { items: vm.selected })
+          .success(function (res) {
+            var i = -1;
+            vm.selected.forEach(function (item) {
+              i = vm.items.indexOf(item);
+              if (i !== -1)
+                vm.items.splice(i, 1);
+            });
+          })
+          .error(function (err) {
+            vm.error = err.message;
           });
-        })
-        .error(function (err) {
-          vm.error = err.message;
-        });
+      }
     };
   }
 }());

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  describe('Mailinglist E2E tests', function() {
+  describe('Mailinglist E2E tests', function () {
     var list1 = {
       name: 'Test Name',
       email: 'noruya@gmail.com'
@@ -20,7 +20,7 @@
         browser.get('/mailinglist/create-group');
       });
 
-      it('그룹이름을 입력하고 생성버튼을 누르면 그룹이 추가되고 리스트에 나타나야한다.', function() {
+      it('그룹이름을 입력하고 생성버튼을 누르면 그룹이 추가되고 리스트에 나타나야한다.', function () {
         element(by.model('vm.mailinglistGroup.name')).sendKeys(group);
         element(by.buttonText('추가')).click();
         browser.wait(function () {
@@ -30,7 +30,7 @@
         }, 1000);
       });
 
-      it('그룹이름을 입력하고 생성버튼을 누르면 group2가 추가되고 리스트에 나타나야한다.', function() {
+      it('그룹이름을 입력하고 생성버튼을 누르면 group2가 추가되고 리스트에 나타나야한다.', function () {
         element(by.model('vm.mailinglistGroup.name')).sendKeys(group2);
         element(by.buttonText('추가')).click();
         browser.wait(function () {
@@ -120,7 +120,11 @@
       it('첫번째 아이템을 선택하고 삭제버튼을 누르면 아이템이 줄어들어야한다.', function () {
         element.all(by.css('.checkbox')).get(0).click();
         element(by.css('.glyphicon-trash')).click();
-        expect(element.all(by.repeater('item in vm.items')).count()).toBe(1);
+        browser.switchTo().alert().then(function () {
+          browser.switchTo().alert().accept();
+          browser.switchTo().defaultContent();
+          expect(element.all(by.repeater('item in vm.items')).count()).toBe(1);
+        });
       });
     });
 
@@ -133,7 +137,7 @@
         expect(element.all(by.binding('item.count')).get(0).getText()).toBe('0');
         expect(element.all(by.binding('item.count')).get(1).getText()).toBe('1');
       });
-      
+
       it('그룹을 클릭하면 소속된 메일링리스트가 나타난다.', function () {
         element.all(by.css('.list-group-item-heading')).get(1).click();
 
@@ -151,7 +155,11 @@
         element.all(by.css('.checkbox')).get(1).click();
         element(by.css('.glyphicon-trash')).click();
 
-        expect(element.all(by.repeater('item in vm.items')).count()).toBe(0);
+        browser.switchTo().alert().then(function () {
+          browser.switchTo().alert().accept();
+          browser.switchTo().defaultContent();
+          expect(element.all(by.repeater('item in vm.items')).count()).toBe(0);
+        });
       });
     });
 

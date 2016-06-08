@@ -31,7 +31,7 @@ exports.removeGroups = function (req, res) {
     items.push(item._id);
   });
 
-  MailinglistGroup.remove({ id: { $in: items } }, function (err) {
+  MailinglistGroup.remove({ _id: { $in: items } }, function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

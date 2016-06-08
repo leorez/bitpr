@@ -148,7 +148,11 @@ exports.list = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(mailinglists);
+      var data = {
+        mailinglistGroup: req.mailinglistGroup,
+        items: mailinglists
+      };
+      res.json(data);
     }
   });
 };

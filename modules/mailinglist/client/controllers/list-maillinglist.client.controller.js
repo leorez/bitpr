@@ -5,9 +5,9 @@
     .module('articles')
     .controller('MailinglistListController', MailinglistListController);
 
-  MailinglistListController.$inject = ['MailinglistListService', '$stateParams', '$http'];
+  MailinglistListController.$inject = ['$window', 'MailinglistListService', '$stateParams', '$http'];
 
-  function MailinglistListController(MailinglistListService, $stateParams, $http) {
+  function MailinglistListController($window, MailinglistListService, $stateParams, $http) {
     var vm = this;
     vm.selected = [];
 
@@ -24,21 +24,27 @@
       return list.indexOf(item) > -1;
     };
 
-    vm.items = MailinglistListService.query({ mailinglistGroupId: $stateParams.mailinglistGroupId });
+    MailinglistListService.get({ mailinglistGroupId: $stateParams.mailinglistGroupId }, function (data) {
+      console.log(JSON.stringify(data));
+      vm.mailinglistGroup = data.mailinglistGroup;
+      vm.items = data.items;
+    });
 
     vm.removeSelected = function () {
-      $http.post('/api/mailinglist/remove-lists', { items: vm.selected })
-        .success(function (res) {
-          var i = -1;
-          vm.selected.forEach(function (item) {
-            i = vm.items.indexOf(item);
-            if (i !== -1)
-              vm.items.splice(i, 1);
+      if ($window.confirm('삭제하시겠습니까?')) {
+        $http.post('/api/mailinglist/remove-lists', { items: vm.selected })
+          .success(function (res) {
+            var i = -1;
+            vm.selected.forEach(function (item) {
+              i = vm.items.indexOf(item);
+              if (i !== -1)
+                vm.items.splice(i, 1);
+            });
+          })
+          .error(function (err) {
+            vm.error = err.message;
           });
-        })
-        .error(function (err) {
-          vm.error = err.message;
-        });
+      }
     };
   }
 }());

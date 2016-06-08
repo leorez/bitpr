@@ -30,6 +30,9 @@
         <label>가입자수 : </label>
         <span ng-bind="item.count"></span>
       </div>
+      <div class="col-sm-1">
+        <a href="/mailinglist/create?group={{item.name}}" class="btn btn-default">+</a>
+      </div>
     </div>
   </div>
   <div ng-show="vm.error" class="text-danger">

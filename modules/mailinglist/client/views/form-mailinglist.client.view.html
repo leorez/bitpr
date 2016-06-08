@@ -1,0 +1,47 @@
+<section id="content-container">
+  <form name="vm.form.mailinglistForm" ng-submit="vm.save(vm.form.mailinglistForm.$valid)" novalidate>
+    <fieldset>
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="well">
+            <h1>메일링리스트 가입</h1>
+            <hr>
+
+            <div class="form-group has-feedback has-clear">
+              <label class="control-label" for="name">이름</label>
+              <input class="form-control" id="name" ng-model="vm.mailinglist.name" placeholder="이름은 필수입니다." required>
+              <span class="glyphicon glyphicon-remove-sign form-control-feedback form-control-clear" aria-hidden="true"></span>
+            </div>
+            <div ng-messages="vm.form.mailinglistForm.name.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">이름은 필수입니다.</p>
+            </div>
+
+            <div class="form-group has-feedback has-clear">
+              <label class="control-label" for="email">이메일 주소</label>
+              <input type="email" class="form-control" id="email" placeholder="이메일은 필수입니다." ng-model="vm.mailinglist.email" required>
+              <span class="glyphicon glyphicon-remove-sign form-control-feedback form-control-clear" aria-hidden="true"></span>
+            </div>
+            <div ng-messages="vm.form.mailinglistForm.email.$error" role="alert">
+              <p class="help-block error-text" ng-message="required">이메일은 필수입니다.</p>
+              <p class="help-block error-text" ng-message="email">형식이 잘못되었습니다.</p>
+            </div>
+
+            <hr>
+
+            <div>
+              <button type="submit" class="btn btn-primary btn-lg">가입</button>
+            </div>
+
+            <div ng-show="vm.success" class="text-success">
+              <strong ng-bind="vm.success"></strong>
+            </div>
+            <div ng-show="vm.error" class="text-danger">
+              <strong ng-bind="vm.error"></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+  <br><br>
+</section>

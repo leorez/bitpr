@@ -1,6 +1,6 @@
 'use strict';
 
-var userTest = false;
+var needSignin = false;
 
 // Protractor configuration
 var config = {
@@ -8,10 +8,11 @@ var config = {
 
   specs: [
     // 'e2e/**/*.spec.js'
-    'modules/article-senders/tests/e2e/article-senders.spec.js'
+    // 'modules/article-senders/tests/e2e/article-senders.spec.js'
     // 'modules/article-senders/tests/e2e/files-article-sender.spec.js'
     // 'modules/users/tests/e2e/*.js'
     // 'modules/reporters/tests/e2e/*.js'
+    'modules/mailinglist/tests/e2e/*.js'
   ],
 
   baseUrl: 'http://localhost:3001',
@@ -23,7 +24,7 @@ var config = {
   },
 
   onPrepare: function() {
-    if (!userTest) {
+    if (needSignin) {
       var user1 = {
         email: 'test.user@test.com',
         password: 'P@$$w0rd!!'

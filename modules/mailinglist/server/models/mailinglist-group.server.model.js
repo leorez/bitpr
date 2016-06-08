@@ -19,6 +19,10 @@ var MailinglistGroupSchema = new Schema({
     default: '',
     trim: true,
     required: '리스트 이름은 필수입니다.'
+  },
+  count: {
+    type: Number,
+    default: 0
   }
 });
 

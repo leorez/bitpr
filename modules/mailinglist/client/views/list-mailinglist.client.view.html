@@ -1,15 +1,30 @@
 <section data-ng-init="vm.list()">
   <div class="page-header">
     <h1>메일링리스트</h1>
+    <div ng-show="vm.selected.length > 0">
+      <a class="btn btn-primary" ng-click="vm.removeSelected()">
+        <i class="glyphicon glyphicon-trash"></i>
+      </a>
+    </div>
   </div>
   <div class="list-group">
-    <a ng-repeat="item in vm.items" class="list-group-item">
-      <small class="list-group-item-text">
-        <span ng-bind="item.created | date:'yyyy-mm-dd HH:MM:ss'"></span>
-      </small>
-      <h4 class="list-group-item-heading" ng-bind="item.name"></h4>
-      <p class="list-group-item-text" ng-bind="item.email"></p>
-      <p class="list-group-item-text" ng-bind="item.emailConfirmed"></p>
-    </a>
+    <div ng-show="vm.error" class="text-danger">
+      <strong ng-bind="vm.error"></strong>
+    </div>
+    <div class="row" ng-repeat="item in vm.items">
+      <div class="col-sm-1">
+        <input type="checkbox" class="checkbox" ng-checked="vm.exists(item, vm.selected)" ng-click="vm.toggle(item, vm.selected)">
+      </div>
+      <div class="col-sm-5">
+        <h4 class="list-group-item-heading" ng-bind="item.name"></h4>
+        <small class="list-group-item-text">
+          <label>생성일 : </label>
+          <span ng-bind="item.created | date:'yyyy-mm-dd HH:MM:ss'"></span>
+        </small>
+      </div>
+      <div class="col-sm-4">
+        <p class="list-group-item-text" ng-bind="item.email"></p>
+      </div>
+    </div>
   </div>
 </section>

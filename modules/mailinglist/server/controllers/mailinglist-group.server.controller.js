@@ -25,6 +25,23 @@ exports.create = function (req, res) {
   });
 };
 
+exports.removeGroups = function (req, res) {
+  var items = [];
+  req.body.items.forEach(function (item) {
+    items.push(item._id);
+  });
+
+  MailinglistGroup.remove({ id: { $in: items } }, function (err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json({ message: 'success' });
+    }
+  });
+};
+
 /**
  * Show the current mailinglistGroup
  */
@@ -103,7 +120,7 @@ exports.mailinglistGroupByID = function (req, res, next, id) {
       });
     }
     req.mailinglistGroup = mailinglistGroup;
-    next();
+    next(null, mailinglistGroup);
   });
 };
 
@@ -118,6 +135,6 @@ exports.mailinglistGroupByName = function (req, res, next, name) {
       });
     }
     req.mailinglistGroup = mailinglistGroup;
-    next();
+    next(null, mailinglistGroup);
   });
 };

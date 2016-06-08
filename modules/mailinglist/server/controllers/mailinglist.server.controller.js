@@ -9,6 +9,54 @@ var path = require('path'),
   mailinglistGroupController = require(path.resolve('./modules/mailinglist/server/controllers/mailinglist-group.server.controller')),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
+var updateCount = function (mailinglistGroup, callback) {
+  Mailinglist.count({ group: mailinglistGroup._id }, function (err, count) {
+    if (err) {
+      return callback(err);
+    }
+
+    mailinglistGroup.count = count;
+    mailinglistGroup.save(function (err) {
+      if (err) {
+        return callback(err);
+      }
+      callback();
+    });
+  });
+};
+
+exports.removeLists = function (req, res) {
+  if (!req.body.items || req.body.items.length === 0) {
+    return res.status(400).send({
+      message: '삭제할 리스트가 없습니다.'
+    });
+  }
+
+  var ids = [];
+  req.body.items.forEach(function (item) {
+    ids.push(item._id);
+  });
+
+  mailinglistGroupController.mailinglistGroupByID(req, res, next, req.body.items[0].group);
+
+  function next(err, mailinglistGroup) {
+    Mailinglist.remove({ _id: { $in: ids } }, function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        updateCount(mailinglistGroup, function (err) {
+          if (err) {
+            console.error(errorHandler.getErrorMessage(err));
+          }
+          res.json({ message: 'success' });
+        });
+      }
+    });
+  }
+};
+
 /**
  * Create an mailinglist
  */
@@ -20,8 +68,9 @@ exports.create = function (req, res) {
       });
     }
 
+    var mailinglistGroup = req.mailinglistGroup;
     var mailinglist = new Mailinglist(req.body);
-    mailinglist.group = req.mailinglistGroup._id;
+    mailinglist.group = mailinglistGroup._id;
 
     mailinglist.save(function (err) {
       if (err) {
@@ -29,7 +78,15 @@ exports.create = function (req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        res.json(mailinglist);
+        updateCount(mailinglistGroup, function () {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          }
+
+          res.json(mailinglist);
+        });
       }
     });
   };
@@ -52,9 +109,6 @@ exports.read = function (req, res) {
  */
 exports.update = function (req, res) {
   var mailinglist = req.mailinglist;
-
-  mailinglist.title = req.body.title;
-  mailinglist.content = req.body.content;
 
   mailinglist.save(function (err) {
     if (err) {
@@ -119,6 +173,6 @@ exports.mailinglistByID = function (req, res, next, id) {
       });
     }
     req.mailinglist = mailinglist;
-    next();
+    next(null, mailinglist);
   });
 };

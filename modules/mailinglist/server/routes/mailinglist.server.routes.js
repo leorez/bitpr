@@ -19,6 +19,9 @@ module.exports = function (app) {
     .put(mailinglist.update)
     .delete(mailinglist.delete);
 
+  app.route('/api/mailinglist/remove-lists')
+    .post(mailinglist.removeLists);
+
   // Finish by binding the article middleware
   app.param('mailinglistId', mailinglist.mailinglistByID);
   app.param('mailinglistGroupId', mailinglistGroup.mailinglistGroupByID);

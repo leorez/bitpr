@@ -14,5 +14,10 @@
       type: 'dropdown',
       roles: ['admin']
     });
+
+    menuService.addSubMenuItem('topbar', 'admin', {
+      title: '메일링리스트',
+      state: 'mailinglist.group-list'
+    });
   }
 }());

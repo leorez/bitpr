@@ -1,6 +1,7 @@
 <section data-ng-init="vm.list()">
   <div class="page-header">
     <a href="/mailinglist/create?group={{vm.mailinglistGroup.name}}" class="btn btn-default pull-right">추가</a>
+    <button class="btn btn-default pull-right" ui-sref="mailinglist.group-list" style="margin-right: 10px;">메일링리스트</button>
     <div class="pull-right" ng-show="vm.selected.length > 0" style="margin-right: 10px;">
       <a class="btn btn-primary" ng-click="vm.removeSelected()">
         <i class="glyphicon glyphicon-trash"></i>

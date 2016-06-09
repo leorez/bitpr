@@ -25,7 +25,7 @@
       }
 
       function getTitle(currentState) {
-        var applicationCoreTitle = '상장기업을 위한 "hts 기사전송 플랫폼';
+        var applicationCoreTitle = '상장기업을 위한 "hts 기사전송 플랫폼"';
         var workingState = currentState;
         if (currentState.data && currentState.data.pageTitle) {
           workingState = (typeof workingState.locals !== 'undefined') ? workingState.locals.globals : workingState;

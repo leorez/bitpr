@@ -5,6 +5,7 @@
 
       <div class="page-header">
         <a ui-sref="settings.config" class="btn btn-default pull-right">키워드 편집</a>
+        <button ng-show="vm.selected.length" type="button" style="margin-right: 10px;" class="btn btn-large btn-default pull-right" ng-click="vm.shareArticle()">공유하기</button>
         <h1>기사 모니터링</h1>
       </div>
 
@@ -23,10 +24,6 @@
         </ul>
 
         <div>
-          <div style="margin-bottom: 10px;margin-top: 10px;">
-            <button type="button" class="btn btn-large btn-primary" ng-click="vm.shareArticle()">공유하기</button>
-          </div>
-
           <table class="table table-bordered">
             <tbody>
             <tr ng-repeat="item in vm.data.articles">

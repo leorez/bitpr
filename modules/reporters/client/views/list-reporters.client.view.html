@@ -1,9 +1,7 @@
 <section>
   <div class="page-header">
+    <button ui-sref="admin.reporters-create" class="btn btn-default pull-right">추가</button>
     <h1>기자리스트</h1>
-  </div>
-  <div>
-    <button ui-sref="admin.reporters-create" class="btn btn-default">추가</button>
   </div>
   <div class="list-group">
     <div ng-repeat="reporter in vm.reporters" class="list-group-item">

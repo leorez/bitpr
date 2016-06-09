@@ -5,6 +5,7 @@
 
 require('./../modules/users/server/models/user.server.model.js');
 require('./../modules/article-senders/server/models/article-sender.server.model.js');
+require('./../modules/article-senders/server/models/reporter.server.model.js');
 
 var config = require('./../config/config'),
   chalk = require('chalk'),
@@ -12,6 +13,7 @@ var config = require('./../config/config'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
   ArticleSender = mongoose.model('ArticleSender'),
+  Reporter = mongoose.model('Reporter'),
   DateDiff = require('date-diff'),
   fs = require('fs-extra'),
   mammoth = require('mammoth'),
@@ -41,9 +43,9 @@ function closeDB() {
   });
 }
 
-var e2etestRoot = __dirname + '/modules/article-senders/tests/e2e';
+var e2etestRoot = __dirname + '/../modules/article-senders/tests/e2e';
 console.log(e2etestRoot);
-var uploadsRoot = __dirname+'/uploads';
+var uploadsRoot = __dirname + '/../uploads';
 console.log(uploadsRoot);
 
 try {
@@ -74,15 +76,19 @@ var user1 = {
 var articleSender_imediate = {
   status: 'Reserved',
   title: '거북선 보도자료',
-  content: 'Test Content',
   file: 'test.docx',
   image1: 'test1.jpeg',
   image2: 'test2.jpeg',
   image3: 'test3.jpg',
+  subheadline: 'Test Subheadline',
+  main: 'Test Main',
+  lead: 'Test Lead',
+  corpSummary: 'Test CorpSummary',
+  detail: 'Test Detail',
   reserveTime: 0,
   reserved: new Date(),
-  sendCount: 1,
-  fare: 500000
+  sendCount: 2,
+  fare: 800000
 };
 
 // 1시간후 예약발송 테스트용
@@ -95,6 +101,11 @@ var articleSender_1hour = {
   image1: 'test1.jpeg',
   image2: 'test2.jpeg',
   image3: 'test3.jpg',
+  subheadline: 'Test Subheadline',
+  main: 'Test Main',
+  lead: 'Test Lead',
+  corpSummary: 'Test CorpSummary',
+  detail: 'Test Detail',
   reserveTime: 1,
   reserved: dateAdder.subtract(new Date(), 54, "minute"),
   sendCount: 1,
@@ -110,11 +121,34 @@ var articleSender_dart = {
   image1: 'test1.jpeg',
   image2: 'test2.jpeg',
   image3: 'test3.jpg',
+  subheadline: 'Test Subheadline',
+  main: 'Test Main',
+  lead: 'Test Lead',
+  corpSummary: 'Test CorpSummary',
+  detail: 'Test Detail',
   reserveTime: 999,
   reserved: new Date(),
   sendCount: 1,
   fare: 500000,
   dspType: 'A'
+};
+
+var reporter1 = {
+  name: 'Reporter1',
+  corpName: 'CorpName1',
+  telephone: '02-1234-5678',
+  cellphone: '010-2187-3886',
+  email: 'noruya@gmail.com',
+  priority: 0
+};
+
+var reporter2 = {
+  name: 'Reporter2',
+  corpName: 'CorpName2',
+  telephone: '02-1234-5678',
+  cellphone: '010-2187-3886',
+  email: 'yhyoo74@naver.com',
+  priority: 1
 };
 
 mammoth.convertToHtml({ path: uploadsRoot + '/docs/test.docx' })
@@ -128,10 +162,15 @@ mammoth.convertToHtml({ path: uploadsRoot + '/docs/test.docx' })
 // "RECEIVERS" : ["01021873886", "01027439905", "01029731203"]
 
 var onReadyDatabase = function () {
+  var r1 = new Reporter(reporter1);
+  var r2 = new Reporter(reporter2);
+  r1.save();
+  r2.save();
+
   var user = new User(user1);
   var finish = 0;
   var list = [];
-  
+
   function doneProc() {
     if (++finish === list.length) {
       closeDB();
@@ -143,11 +182,11 @@ var onReadyDatabase = function () {
       console.log(err);
     } else {
       console.log('success save user1');
-      
-      // list.push(articleSender_imediate);
+
+      list.push(articleSender_imediate);
       // list.push(articleSender_1hour);
-      list.push(articleSender_dart);
-      
+      // list.push(articleSender_dart);
+
       list.forEach(function (item) {
         item.user = user;
         var article = new ArticleSender(item);
@@ -166,7 +205,7 @@ var onReadyDatabase = function () {
   });
 };
 
-mongoose.connection.on('open', function(){
+mongoose.connection.on('open', function () {
   db.connection.db.dropDatabase(function (err) {
     if (err) {
       console.log(err);

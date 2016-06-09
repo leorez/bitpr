@@ -6,6 +6,8 @@
 require('./modules/users/server/models/crawled-article.server.model');
 require('./modules/users/server/models/user.server.model');
 require('./modules/article-senders/server/models/article-sender.server.model');
+require('./modules/article-senders/server/models/reporter.server.model');
+
 var searchController = require('./modules/core/server/controllers/search.server.controller.js'),
   coreController = require('./modules/core/server/controllers/core.server.controller');
 
@@ -15,6 +17,7 @@ var config = require('./config/config'),
   User = mongoose.model('User'),
   CrawledArticle = mongoose.model('CrawledArticle'),
   ArticleSender = mongoose.model('ArticleSender'),
+  Reporter = mongoose.model('Reporter'),
   schedule = require('node-schedule'),
   nodemailer = require('nodemailer'),
   Deferred = require('deferred-js'),
@@ -43,7 +46,7 @@ switch (process.env.NODE_ENV) {
     break;
 }
 
-console.log(config.db.url);
+console.info(config.db.url);
 
 var db = mongoose.connect(config.db.url, function (err) {
   if (err) {
@@ -59,7 +62,6 @@ var search = function (usersCnt, user, since) {
 
   keywords.forEach(function (keyword) {
     keyword = keyword.trim();
-    console.log(keyword);
 
     Deferred.when(searchController.searchFromMedog(keyword, since)).then(function (result) {
       var datas = JSON.parse(result).data;
@@ -98,7 +100,7 @@ var search = function (usersCnt, user, since) {
 };
 
 function phonesString(article) {
-  if((typeof article.user.telephone === 'undefined' || article.user.telephone === '') &&
+  if ((typeof article.user.telephone === 'undefined' || article.user.telephone === '') &&
     (typeof article.user.cellphone === 'undefined' || article.user.cellphone === ''))
     return '';
 
@@ -144,16 +146,19 @@ function contentBuild(article, callback) {
   });
 }
 
-var dstRoot = __dirname+'/uploads';
+var dstRoot = __dirname + '/uploads';
 
 function sendArticle(article) {
-  console.log('sending... ');
+  console.info('sending... ');
+
+  var emails = [];
+  var cellphones = [];
+  var reporters = [];
 
   var onContentReady = function (content) {
-    console.log(content);
     var sendMailOptions = {
       from: '"비트피알" <news@bitpr.kr>',
-      to: article.emails || 'noruya@gmail.com',
+      to: emails.join(',') || 'noruya@gmail.com',
       subject: article.title,
       html: content,
       attachments: []
@@ -165,38 +170,60 @@ function sendArticle(article) {
     mail.attachFile(sendMailOptions, article.image3, dstRoot + '/images/');
 
     mail.sendEmail(sendMailOptions, function (err, info) {
-      if(!err) {
+      if (!err) {
         article.status = 'Sent';
         article.sent = new Date();
         article.save(function (err) {
           if (err) {
             console.error('Error: ' + err);
           } else {
-            console.log(chalk.blue('발송완료: ' + article.title));
+            console.info(chalk.blue('발송완료: ' + article.title));
           }
         });
 
         if (typeof  article.user.cellphone !== 'undefined' && article.user.cellphone.length > 0) {
           var cellphone = article.user.cellphone.replace(/[^0-9]+/g, '');
 
-          // send sms
+          // send sms 보도자료 작성 회원에게 sms 발송
           var smsOptions = {
-            msg: "[비트피알] 보도자료가 발송완료되었습니다.",
+            msg: '[비트피알] 보도자료가 발송완료되었습니다.',
             mobile: [cellphone]
           };
 
           sms.send(smsOptions).then(function (result) {
-            console.log(result);
-            console.log(chalk.green('sms가 발송되었습니다. : ' + smsOptions.msg));
+            console.info(chalk.green('sms가 발송되었습니다. : ' + smsOptions.msg));
           }).catch(function (err) {
             console.error(chalk.red(err));
           }).done();
+
+          // 방송매체의 기자들에게 sms 발송
+          reporters.forEach(function (reporter) {
+            smsOptions = {
+              msg: '[비트피알] ' + reporter.email + ' 메일주소로 보도자료가 발송되었습니다.',
+              mobile: [reporter.cellphone.replace(/[^0-9]+/g, '')]
+            };
+
+            sms.send(smsOptions).done();
+          });
+
         }
       }
     });
   };
 
-  contentBuild(article, onContentReady);
+  function onReportersLoaded(datas) {
+    reporters = datas;
+    datas.forEach(function (reporter) {
+      emails.push(reporter.email);
+      cellphones.push(reporter.cellphone.replace(/[^0-9]+/g, ''));
+    });
+    contentBuild(article, onContentReady);
+  }
+
+  Reporter.find().sort('priority').limit(article.sendCount)
+    .exec(function (err, datas) {
+      onReportersLoaded(datas);
+    });
 }
 
 function sendAlertSms(article) {
@@ -205,7 +232,7 @@ function sendAlertSms(article) {
   var cancelShortUrl = 'http://goo.gl/9SLq8K';
   // send sms
   var smsOptions = {
-    msg: '[비트피알] 보도자료가 5분후 발송됩니다. 발송취소 : ' +  cancelShortUrl,
+    msg: '[비트피알] 보도자료가 5분후 발송됩니다. 발송취소 : ' + cancelShortUrl,
     mobile: [cellphone]
   };
 
@@ -228,7 +255,7 @@ function sendAlertSms(article) {
 // 20160516 형식의 날짜 문자열을 Date형으로 변환
 function strDateToDate(strDate, strTime) {
   if (/[0-9]{8}/.test(strDate) === false) return null;
-  var dt = strDate.substring(0,4) + '-' + strDate.substring(4,6) + '-' + strDate.substring(6,8);
+  var dt = strDate.substring(0, 4) + '-' + strDate.substring(4, 6) + '-' + strDate.substring(6, 8);
   if (strTime) dt += ' ' + strTime;
   return new Date(dt);
 }
@@ -309,8 +336,8 @@ function sendArticleEmails() {
     if (err) {
       console.error(err);
     } else {
-      articleSenders.forEach(function(article) {
-        if(article.status === 'Reserved') {
+      articleSenders.forEach(function (article) {
+        if (article.status === 'Reserved') {
 
           if (article.reserveTime === 0) {
             // 즉시발송
@@ -324,7 +351,7 @@ function sendArticleEmails() {
             // 예약발송
             sendReserved(article);
           }
-        } else if(article.status === 'ReSend') {
+        } else if (article.status === 'ReSend') {
           // 재전송
           console.log(chalk.blue('재전송'));
           sendArticle(article);
@@ -353,7 +380,7 @@ function crawlArticlesEachUser() {
 
       users.forEach(function (user) {
         var since = '';
-        CrawledArticle.findOne({_id: user._id}).sort('-created').exec(function (err, article) {
+        CrawledArticle.findOne({ _id: user._id }).sort('-created').exec(function (err, article) {
           if (err) {
             search(users.length, user, '');
           } else {

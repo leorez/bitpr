@@ -257,7 +257,7 @@ module.exports = function (grunt) {
     },
     exec: {
       schedulerTest: {
-        cmd: 'node scheduler-test.js'
+        cmd: 'node tests/scheduler-test.js'
       },
       dartTest: {
         cmd: 'mocha lib/dart.spec.js'

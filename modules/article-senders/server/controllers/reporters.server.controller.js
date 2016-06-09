@@ -73,7 +73,8 @@
    * List of Reporters
    */
   exports.list = function (req, res) {
-    Reporter.find().sort('priority').exec(function (err, reporters) {
+    console.log(req.query);
+    Reporter.find().sort('priority').limit(Number(req.query.sendCount)).exec(function (err, reporters) {
       if (err) {
         return res.status(400).send({
           messeage: errorHandler.getErrorMessage(err)

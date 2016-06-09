@@ -14,7 +14,7 @@
           animation: true,
           templateUrl: 'modules/article-senders/client/views/reporters-dialog.tmpl.html',
           controller: 'ReporterSelectDlgController',
-          size: '',
+          size: 'sm',
           resolve: {
             sendCount: function () {
               return articleSender.sendCount;

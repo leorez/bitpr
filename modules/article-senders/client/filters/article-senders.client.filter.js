@@ -5,7 +5,7 @@
   module.filter('displayed', function () {
     return function (displayed) {
       if (displayed) return '게시중';
-      else return '게시';
+      else return '게시하기';
     };
   });
 

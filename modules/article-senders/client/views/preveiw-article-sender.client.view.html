@@ -25,6 +25,7 @@
             <input type="text" class="form-control bg-white" data-ng-model="vm.articleSender.status | status" readonly>
           </td>
         </tr>
+
         <tr>
           <th>발송시점</th>
           <td>
@@ -55,10 +56,10 @@
             <input type="text" class="form-control" data-ng-model="vm.articleSender.sendCount" readonly>
           </td>
         </tr>
-        <tr ng-hide="vm.articleSender._id">
-          <th>결제금액</th>
+        <tr>
+          <th>홈페이지</th>
           <td>
-            <input type="text" class="form-control" value="{{vm.articleSender.fare | number}}원" readonly>
+            <span style="margin-left: 5px; vertical-align: text-bottom;" ng-click="vm.toggleDisplayed(vm.articleSender)" class="label" ng-class="{'label-default': vm.articleSender.displayed === false, 'label-primary': vm.articleSender.displayed}">{{vm.articleSender.displayed | displayed}}</span>
           </td>
         </tr>
       </table>

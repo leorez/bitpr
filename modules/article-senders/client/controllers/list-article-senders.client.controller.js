@@ -78,6 +78,16 @@
       });
     }
 
+    // 홈페이지 올리기/내리기
+    vm.toggleDisplayed = function(articleSender) {
+      articleSender.displayed = !articleSender.displayed;
+      articleSender = new ArticleSendersService(articleSender);
+      articleSender.$update(function (response) {
+      }, function (err) {
+        vm.error = err.data.message;
+      });
+    };
+
     vm.remove = function (articleSender) {
       if (articleSender) {
         if ($window.confirm('삭제하시겠습니까?')) {

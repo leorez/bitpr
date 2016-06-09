@@ -279,6 +279,16 @@
       }
     }
 
+    // 홈페이지 올리기/내리기
+    vm.toggleDisplayed = function(articleSender) {
+      articleSender.displayed = !articleSender.displayed;
+      articleSender = new ArticleSendersService(articleSender);
+      articleSender.$update(function (response) {
+      }, function (err) {
+        vm.error = err.data.message;
+      });
+    };
+
     vm.focus = function (model) {
       console.log('clear' + model);
       var el = angular.element(document.querySelectorAll('[ng-model="vm.articleSender.' + model + '"]'));

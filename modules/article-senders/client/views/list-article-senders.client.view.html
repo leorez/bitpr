@@ -56,8 +56,12 @@
                 <a ng-show="item.image3" href="" ng-click="vm.downloadImage(item.image3)"><img src="{{'/images/' + item.image3}}"></a>
               </div>
               <div class="col-sm-4">
-                <div>상태 : <span for="" class="label label-default" ng-class="{ 'label-success': item.status === 'Sent', 'label-default': item.status === 'Temporary', 'label-primary': item.status === 'ReSend' , 'label-info': item.status === 'Reserved', 'label-danger': item.status === 'Error', 'label-warning': item.status === 'Canceled' }">{{item.status | status}}</span></div>
+                <div>
+                  상태 : <span for="" class="label label-default" ng-class="{ 'label-success': item.status === 'Sent', 'label-default': item.status === 'Temporary', 'label-primary': item.status === 'ReSend' , 'label-info': item.status === 'Reserved', 'label-danger': item.status === 'Error', 'label-warning': item.status === 'Canceled' }">{{item.status | status}}</span>
+                  <span ng-click="vm.toggleDisplayed(item)" class="label" ng-class="{'label-default': item.displayed === false, 'label-primary': item.displayed}">{{item.displayed | displayed}}</span>
+                </div>
                 <div>작성일 : {{item.created | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+                <div ng-show="item.sent">발송일 : {{item.sent | date:'yyyy-MM-dd HH:mm:ss'}}</div>
                 <div>발송시점 : {{item.reserveTime | reserveTime}}</div>
                 <div>희망보도 갯수 : {{item.sendCount}}</div>
                 <div>

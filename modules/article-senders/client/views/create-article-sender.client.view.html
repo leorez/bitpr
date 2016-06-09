@@ -54,9 +54,9 @@
               </td>
             </tr>
             <tr ng-hide="vm.articleSender._id">
-              <th>결제금액</th>
+              <th>결제금액(원)</th>
               <td>
-                <input type="text" class="form-control" value="{{vm.articleSender.fare | number}}원" readonly>
+                <input type="text" class="form-control" ng-model="vm.articleSender.fare | number" readonly>
               </td>
             </tr>
           </table>

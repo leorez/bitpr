@@ -28,7 +28,6 @@ describe('articleSender page tests', function () {
       expect(element(by.cssContainingText('option', '즉시')).isPresent()).toBeTruthy();
       expect(element(by.cssContainingText('option', '1시간후')).isPresent()).toBeTruthy();
       expect(element(by.cssContainingText('option', '2시간후')).isPresent()).toBeTruthy();
-      expect(element(by.cssContainingText('option', '23시간후')).isPresent()).toBeTruthy();
       expect(element(by.cssContainingText('option', '24시간후')).isPresent()).toBeFalsy();
       expect(element(by.cssContainingText('option', '1일후')).isPresent()).toBeTruthy();
       expect(element(by.cssContainingText('option', '3일후')).isPresent()).toBeTruthy();
@@ -36,36 +35,39 @@ describe('articleSender page tests', function () {
       expect(element(by.cssContainingText('option', '공시확인후')).isPresent()).toBeTruthy();
     });
 
-    // it('should go index page when click cancel button', function () {
-    //   element(by.css('button[type="reset"]')).click();
-    //   element(by.buttonText('예')).click();
-    //
-    //   browser.wait(function () {
-    //     return browser.getCurrentUrl().then(function (url) {
-    //       return /\//.test(url);
-    //     });
-    //   }, 1000);
-    // });
+    it('should go index page when click cancel button', function () {
+      element(by.css('button[type="reset"]')).click();
+      browser.switchTo().alert().then(function () {
+        browser.switchTo().alert().accept();
+        browser.switchTo().defaultContent();
 
-    // it('should match with fare policy', function () {
-    //   element(by.cssContainingText('option', '2개')).click();
-    //   expect(page.fareEl.getText()).toContain('800000원');
-    //
-    //   element(by.cssContainingText('option', '4개')).click();
-    //   expect(page.fareEl.getText()).toContain('1100000원');
-    //
-    //   element(by.cssContainingText('option', '6개')).click();
-    //   expect(page.fareEl.getText()).toContain('1400000원');
-    //
-    //   element(by.cssContainingText('option', '8개')).click();
-    //   expect(page.fareEl.getText()).toContain('1700000원');
-    //
-    //   element(by.cssContainingText('option', '10개')).click();
-    //   expect(page.fareEl.getText()).toContain('2000000원');
-    //
-    //   element(by.cssContainingText('option', '1개')).click();
-    //   expect(page.fareEl.getText()).toContain('500000원');
-    // });
+        browser.wait(function () {
+          return browser.getCurrentUrl().then(function (url) {
+            return /\//.test(url);
+          });
+        }, 1000);
+      });
+    });
+
+    it('should match with fare policy', function () {
+      element(by.cssContainingText('option', '2개')).click();
+      expect(page.fareEl.getAttribute('value')).toContain('800,000');
+
+      element(by.cssContainingText('option', '4개')).click();
+      expect(page.fareEl.getAttribute('value')).toContain('1,100,000');
+
+      element(by.cssContainingText('option', '6개')).click();
+      expect(page.fareEl.getAttribute('value')).toContain('1,400,000');
+
+      element(by.cssContainingText('option', '8개')).click();
+      expect(page.fareEl.getAttribute('value')).toContain('1,700,000');
+
+      element(by.cssContainingText('option', '10개')).click();
+      expect(page.fareEl.getAttribute('value')).toContain('2,000,000');
+
+      element(by.cssContainingText('option', '1개')).click();
+      expect(page.fareEl.getAttribute('value')).toContain('500,000');
+    });
 
     function clearAll() {
       page.titleEl.clear();
@@ -137,6 +139,7 @@ describe('articleSender page tests', function () {
   });
 
   describe('보도자료 목록 테스트', function () {
+
     beforeEach(function () {
       browser.get('/article-senders');
     });

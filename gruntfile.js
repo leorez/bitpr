@@ -62,7 +62,6 @@ module.exports = function (grunt) {
       },
       clientE2eTests: {
         files: testAssets.tests.e2e,
-        tasks: ['test:e2e'],
         options: {
           livereload: true
         }
@@ -477,7 +476,7 @@ module.exports = function (grunt) {
   grunt.registerTask('test', ['env:test', 'lint', 'mkdir:upload', 'copy:localConfig', 'server', 'mochaTest', 'karma:unit', 'protractor']);
   grunt.registerTask('test:server', ['env:test', 'lint', 'server', 'mochaTest']);
   grunt.registerTask('test:client', ['env:test', 'lint', 'karma:unit']);
-  grunt.registerTask('test:e2e', ['env:test', 'lint', 'dropdb', 'signup', 'server', 'protractor']);
+  grunt.registerTask('test:e2e', ['env:test', 'dropdb', 'signup', 'server', 'protractor']);
   grunt.registerTask('test:scheduler', ['env:test', 'schedulerTest']);
   grunt.registerTask('test:runScheduler', ['env:test', 'nodemon:schedulerTest']);
   grunt.registerTask('test:dart', ['env:test', 'lint', 'dartTest']);

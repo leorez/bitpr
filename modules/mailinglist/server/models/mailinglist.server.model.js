@@ -39,10 +39,6 @@ var MailinglistSchema = new Schema({
     required: '이메일은 필수입니다.',
     lowercase: true,
     validate: [validateLocalStrategyEmail, '형식에 맞지않는 이메일 주소입니다.']
-  },
-  emailConfirmed: {
-    type: Boolean,
-    default: false
   }
 });
 

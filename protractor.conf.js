@@ -1,19 +1,10 @@
 'use strict';
 
-var needSignin = false;
+var needSignin = true;
 
 // Protractor configuration
 var config = {
   allScriptsTimeout: 11000,
-
-  specs: [
-    // 'e2e/**/*.spec.js'
-    // 'modules/article-senders/tests/e2e/article-senders.spec.js'
-    // 'modules/article-senders/tests/e2e/files-article-sender.spec.js'
-    // 'modules/users/tests/e2e/*.js'
-    // 'modules/reporters/tests/e2e/*.js'
-    'modules/mailinglist/tests/e2e/*.js'
-  ],
 
   baseUrl: 'http://localhost:3001',
 
@@ -21,6 +12,27 @@ var config = {
 
   jasmineNodeOpts: {
     defaultTimeoutInterval: 30000
+  },
+
+  suites: {
+    senders: [
+      'modules/article-senders/tests/e2e/article-senders.spec.js'
+    ],
+    senderSearch: [
+      'modules/article-senders/tests/e2e/article-senders-search.spec.js'
+    ],
+    sendersFile: [
+      'modules/article-senders/tests/e2e/files-article-sender.spec.js'
+    ],
+    mailinglist: [
+      'modules/mailinglist/tests/e2e/*.js'
+    ],
+    reporters: [
+      'modules/reporters/tests/e2e/*.js'
+    ],
+    users: [
+      'modules/users/tests/e2e/*.js'
+    ]
   },
 
   onPrepare: function() {

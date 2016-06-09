@@ -157,7 +157,9 @@
 
     // 보도자료발송 작성중 취소버튼 클릭시 실행
     vm.cancel = function() {
-      $state.go('article-senders.list');
+      if ($window.confirm('취소하시면 입력하신 자료가 사라집니다. 취소하시겠습니까?')) {
+        $state.go('article-senders.list');
+      }
     };
 
     function onSendCountChanged() {

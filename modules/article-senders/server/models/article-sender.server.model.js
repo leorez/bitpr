@@ -155,4 +155,6 @@ var ArticleSenderSchema = new Schema({
   }
 });
 
+ArticleSenderSchema.index({ title: 'text', content: 'text'});
+
 mongoose.model('ArticleSender', ArticleSenderSchema);

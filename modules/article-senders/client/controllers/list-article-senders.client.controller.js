@@ -34,6 +34,13 @@
       });
     };
 
+    vm.search = function ($event) {
+      var keyCode = $event.which || $event.keyCode;
+      if (keyCode === 13) {
+        vm.queryItems(vm.filter);
+      }
+    };
+
     vm.queryItems(vm.filter);
 
     vm.cancelArticleSender = cancelArticleSender;

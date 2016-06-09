@@ -9,7 +9,7 @@ var ArticleSendersPage = function () {
   this.reserveTimeEl = element.all(by.options('t as t+\'시간후\' for t in vm.articleSender.reserveTimes'));
   this.beToDartEl = element(by.model('vm.articleSender.beToDart'));
   this.sendCountEl = element.all(by.options('c as c+\'개\' for c in vm.articleSender.sendCounts'));
-  this.fareEl = element(by.css('[value="{{vm.articleSender.fare | number}}원"]'));
+  this.fareEl = element(by.model('vm.articleSender.fare | number'));
   this.errorEl = element(by.binding('error'));
   this.useContentEl = element(by.css('[value="inputContent"]'));
   this.useFileUploadEl = element(by.css('[value="uploadFile"]'));

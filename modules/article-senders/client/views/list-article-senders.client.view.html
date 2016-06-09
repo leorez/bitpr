@@ -14,7 +14,7 @@
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
         <li class="pull-right">
-          <form action="" class="form-inline">
+          <div class="form-inline">
             <select name="" id="" class="form-control">
               <option value="">최신순</option>
               <option value="">성공순**</option>
@@ -22,8 +22,8 @@
               <option value="">대상미디어순</option>
               <option value="">발송수순</option>
             </select>
-            <input class="form-control" type="text" placeholder="검색어" ng-model="vm.keyword" ng-keyup="$event.keyCode === 13 && vm.queryItems(vm.filter)">
-          </form>
+            <input class="form-control" type="text" placeholder="검색어" ng-model="vm.keyword" ng-keyup="vm.search($event)">
+          </div>
         </li>
         <li role="presentation" ng-class="{ 'active': vm.filter === 'All' }">
           <a href="#" ng-click="vm.queryItems('All')" aria-controls="all" role="tab" data-toggle="tab">전체({{vm.counts.totalCount}})</a>

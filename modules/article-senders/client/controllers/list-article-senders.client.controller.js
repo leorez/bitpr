@@ -20,11 +20,12 @@
     vm.currentPage = 1;
     vm.filter = 'All';
     vm.keyword = '';
+    vm.order = '최신순';
 
     vm.queryItems = function (filter) {
       vm.filter = filter;
       vm.progressbar.start();
-      vm.data = ArticleSendersService.get({ limit: vm.itemsPerPage, page: vm.currentPage, filter: filter, keyword: vm.keyword }, function (res) {
+      vm.data = ArticleSendersService.get({ limit: vm.itemsPerPage, page: vm.currentPage, filter: filter, order: vm.order, keyword: vm.keyword }, function (res) {
         vm.progressbar.complete();
         vm.totalItems = res.counts.totalItems;
         vm.counts = res.counts;
@@ -39,6 +40,10 @@
       if (keyCode === 13) {
         vm.queryItems(vm.filter);
       }
+    };
+    
+    vm.onOrder = function ($event) {
+      vm.queryItems(vm.filter);
     };
 
     vm.queryItems(vm.filter);

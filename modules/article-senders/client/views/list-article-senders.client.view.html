@@ -15,12 +15,11 @@
       <ul class="nav nav-tabs" role="tablist">
         <li class="pull-right">
           <div class="form-inline">
-            <select name="" id="" class="form-control">
-              <option value="">최신순</option>
-              <option value="">성공순**</option>
-              <option value="">오래된순</option>
-              <option value="">대상미디어순</option>
-              <option value="">발송수순</option>
+            <select name="order" id="order" ng-model="vm.order" class="form-control" ng-change="vm.onOrder($event)">
+              <option value="최신순">최신순</option>
+              <option value="최신발송">최신발송</option>
+              <option value="오래된순">오래된순</option>
+              <option value="희망보도 갯수">희망보도 갯수</option>
             </select>
             <input class="form-control" type="text" placeholder="검색어" ng-model="vm.keyword" ng-keyup="vm.search($event)">
           </div>

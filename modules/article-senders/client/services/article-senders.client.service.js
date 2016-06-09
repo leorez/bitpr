@@ -8,7 +8,7 @@
   ArticleSendersService.$inject = ['$resource'];
 
   function ArticleSendersService($resource) {
-    return $resource('api/article-senders/:articleSenderId/:limit/:page/:filter/:keyword', {
+    return $resource('api/article-senders/:articleSenderId/:limit/:page/:filter/:order/:keyword', {
       articleSenderId: '@_id'
     }, {
       update: {

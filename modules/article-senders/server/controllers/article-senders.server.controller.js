@@ -337,13 +337,28 @@ exports.list = function (req, res) {
     }
   }
 
-  console.log('keyword: ' + req.params.keyword);
+  var sort = '-created';
+  switch (req.params.order) {
+    case '최신순':
+      sort = '-created';
+      break;
+    case '최신발송':
+      sort = '-sent';
+      break;
+    case '오래된순':
+      sort = 'created';
+      break;
+    case '희망보도 갯수':
+      sort = '-sendCount';
+      break;
+    default:
+      sort = '-created';
+  }
 
   if (req.params.keyword) {
     options.$text = { $search: req.params.keyword };
   }
 
-  console.log('options: ' + JSON.stringify(options));
   count(options, req, function (err, counts) {
     if (err) {
       return res.status(400).send({
@@ -351,7 +366,7 @@ exports.list = function (req, res) {
       });
     }
 
-    ArticleSender.find(options).sort('-created').populate('user', 'email').limit(limit).skip(skip).exec(function (err, articleSenders) {
+    ArticleSender.find(options).sort(sort).populate('user', 'email').limit(limit).skip(skip).exec(function (err, articleSenders) {
       if (err) {
         return res.status(400).send({
           messeage: errorHandler.getErrorMessage(err)

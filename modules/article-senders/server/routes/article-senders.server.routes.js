@@ -14,10 +14,10 @@ module.exports = function (app) {
   app.route('/api/article-senders/embed/:corpCode')
     .get(articleSenders.listForEmbed);
 
-  app.route('/api/article-senders/:limit/:page/:filter')
+  app.route('/api/article-senders/:limit/:page/:filter/:order')
     .get(articleSenders.list);
 
-  app.route('/api/article-senders/:limit/:page/:filter/:keyword')
+  app.route('/api/article-senders/:limit/:page/:filter/:order/:keyword')
     .get(articleSenders.list);
 
   app.route('/api/article-senders')

@@ -13,6 +13,7 @@
       .state('dashboard', {
         url: '/dashboard',
         templateUrl: 'modules/dashboard/client/views/dashboard.client.view.html',
+        controller: 'DashboardController',
         controllerAs: 'vm',
         data: {
           roles: ['user', 'admin']

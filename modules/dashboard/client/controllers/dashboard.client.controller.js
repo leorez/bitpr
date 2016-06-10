@@ -72,7 +72,6 @@
       series: []
     };
 
-
     vm.chart = function (filter) {
       vm.filter = filter;
 
@@ -117,7 +116,6 @@
           }];
           break;
       }
-
 
       percentOptions.series = [{
         name: 'Brands',

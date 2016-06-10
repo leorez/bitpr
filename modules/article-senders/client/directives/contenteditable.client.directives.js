@@ -10,7 +10,7 @@
         link: function (scope, element, attrs, ngModel) {
           // don't do anything unless this is actually bound to a model
           if (!ngModel) {
-            return
+            return;
           }
 
           // options
@@ -29,14 +29,17 @@
           // view -> model
           element.bind('blur keyup change', function (e) {
             scope.$apply(function () {
-              var html, html2, rerender;
+              var html,
+                html2,
+                rerender;
+
               html = element.html();
               rerender = false;
               if (opts.stripBr) {
                 html = html.replace(/<br>$/, '');
               }
               if (opts.noLineBreaks) {
-                html2 = html.replace(/<div>/g, '').replace(/<br>/g, '').replace(/<\/div>/g, '')
+                html2 = html.replace(/<div>/g, '').replace(/<br>/g, '').replace(/<\/div>/g, '');
                 if (html2 !== html) {
                   rerender = true;
                   html = html2;
@@ -51,19 +54,23 @@
                 ngModel.$render();
               }
               
-            })
+            });
           });
 
           // model -> view
           var oldRender = ngModel.$render;
           ngModel.$render = function () {
-            var el, el2, range, sel;
+            var el,
+              el2,
+              range,
+              sel;
+            
             if (!!oldRender) {
-              oldRender()
+              oldRender();
             }
             var html = ngModel.$viewValue || '';
             if (opts.stripTags) {
-              html = html.replace(/<\S[^><]*>/g, '')
+              html = html.replace(/<\S[^><]*>/g, '');
             }
 
             element.html(html);
@@ -73,18 +80,21 @@
               sel = window.getSelection();
               if (el.childNodes.length > 0) {
                 el2 = el.childNodes[el.childNodes.length - 1];
-                range.setStartAfter(el2)
+                range.setStartAfter(el2);
               } else {
-                range.setStartAfter(el)
+                range.setStartAfter(el);
               }
               range.collapse(true);
               sel.removeAllRanges();
-              sel.addRange(range)
+              sel.addRange(range);
             }
           };
           if (opts.selectNonEditable) {
             element.bind('click', function (e) {
-              var range, sel, target;
+              var range,
+                sel,
+                target;
+              
               target = e.toElement;
               if (target !== this && angular.element(target).attr('contenteditable') === 'false') {
                 range = document.createRange();
@@ -94,10 +104,10 @@
                 sel.removeAllRanges();
                 sel.addRange(range);
               }
-            })
+            });
           }
         }
-      }
+      };
     }]);
 
 }());

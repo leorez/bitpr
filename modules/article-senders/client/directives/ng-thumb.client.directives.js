@@ -4,11 +4,9 @@
 
 
     .module('article-senders')
-
-
-    // Angular File Upload module does not include this directive
-    // Only for example
-
+      
+  // Angular File Upload module does not include this directive
+  // Only for example
 
     /**
      * The ng-thumb directive

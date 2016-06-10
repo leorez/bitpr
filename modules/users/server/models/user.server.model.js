@@ -113,7 +113,7 @@ var UserSchema = new Schema({
   },
   crawlTimeMinutes: {
     type: Number,
-    max: 50
+    max: 59
   },
   enabledCrawler: {
     type: Boolean,

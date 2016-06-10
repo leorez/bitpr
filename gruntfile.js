@@ -101,16 +101,20 @@ module.exports = function (grunt) {
         tasks: ['test:scheduler']
       },
       dartTest: {
-        files: ['./lib/dart.js', './lib/dart.spec.js'],
+        files: ['./lib/dart.js', './tests/dart.spec.js'],
         tasks: ['test:dart']
       },
       mailTest: {
-        files: ['./lib/mail.js', './lib/mail.spec.js'],
+        files: ['./lib/mail.js', './tests/mail.spec.js'],
         tasks: ['test:mail']
       },
       smsTest: {
-        files: ['./lib/cafe24.*.js'],
+        files: ['./lib/cafe24.sms.js', './tests/cafe24.sms.spec.js'],
         tasks: ['test:sms']
+      },
+      articleCounterTest: {
+        files: ['./lib/article.counter.js', './tests/article.counter.spec.js'],
+        tasks: ['test:articleCounter']
       }
     },
     nodemon: {
@@ -260,13 +264,16 @@ module.exports = function (grunt) {
         cmd: 'node tests/scheduler-test.js'
       },
       dartTest: {
-        cmd: 'mocha lib/dart.spec.js'
+        cmd: 'mocha tests/dart.spec.js'
       },
       mailTest: {
-        cmd: 'mocha lib/mail.spec.js'
+        cmd: 'mocha tests/mail.spec.js'
       },
       smsTest: {
-        cmd: 'mocha lib/cafe24.sms.spec.js'
+        cmd: 'mocha tests/cafe24.sms.spec.js'
+      },
+      articleCounterTest: {
+        cmd: 'mocha tests/article.counter.spec.js'
       }
     }
   });
@@ -462,6 +469,7 @@ module.exports = function (grunt) {
   grunt.task.registerTask('dartTest', 'Sarting dart test', ['exec:dartTest']);
   grunt.task.registerTask('mailTest', 'Sarting mail test', ['exec:mailTest']);
   grunt.task.registerTask('smsTest', 'Sarting sms test', ['exec:smsTest']);
+  grunt.task.registerTask('articleCounterTest', 'Sarting articleCounter test', ['exec:articleCounterTest']);
 
   grunt.registerTask('dev:reporter', ['env:dev', 'insertRepoter']);
   grunt.registerTask('prod:reporter', ['env:prod', 'insertRepoter']);
@@ -482,6 +490,7 @@ module.exports = function (grunt) {
   grunt.registerTask('test:dart', ['env:test', 'lint', 'dartTest']);
   grunt.registerTask('test:mail', ['env:test', 'lint', 'mailTest']);
   grunt.registerTask('test:sms', ['env:test', 'lint', 'smsTest']);
+  grunt.registerTask('test:articleCounter', ['env:test', 'articleCounterTest']);
 
   grunt.registerTask('dev:runScheduler', ['env:dev', 'nodemon:schedulerTest']);
 

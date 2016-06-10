@@ -2,7 +2,7 @@
   'use strict';
   var should = require('should'),
     chalk = require('chalk'),
-    dart = require('./dart');
+    dart = require('./../lib/dart');
 
   describe('Dart api tests', function () {
     it('Should success in 검색 API ', function (done) {

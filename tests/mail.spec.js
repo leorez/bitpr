@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   var should = require('should');
-  var mail = require('./mail.js');
+  var mail = require('./../lib/mail.js');
   var dstRoot = __dirname+'/../modules/article-senders/tests/e2e/';
 
   describe('mail tests', function () {

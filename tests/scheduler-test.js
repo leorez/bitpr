@@ -21,15 +21,15 @@ var config = require('./../config/config'),
 
 require('date-format-lite');
 
-console.log(process.env.NODE_ENV);
+console.info(process.env.NODE_ENV);
 config.db.url = 'mongodb://localhost/bitpr-test';
 
-console.log(config.db.url);
+console.info(config.db.url);
 
 var db = mongoose.connect(config.db.url, function (err) {
   if (err) {
     console.error(chalk.red('Could not connect to MongoDB!'));
-    console.log(chalk.red(err));
+    console.error(chalk.red(err));
   }
 });
 
@@ -38,7 +38,7 @@ function closeDB() {
     if (err) {
       console.log(err);
     } else {
-      console.log('closed db');
+      console.info('closed db');
     }
   });
 }
@@ -60,7 +60,7 @@ try {
 
 var user1 = {
   corpCode: '005930',
-  corpName: '거북선',
+  corpName: '삼성전자',
   firstName: 'test',
   lastName: 'user',
   email: 'noruya@gmail.com',
@@ -70,6 +70,22 @@ var user1 = {
   provider: 'local',
   telephone: '02-0987-6543',
   cellphone: '010-2187-3886'
+};
+
+var user2 = {
+  corpCode: '053110',
+  corpName: '소리바다',
+  firstName: 'test2',
+  lastName: 'user2',
+  email: 'yhyoo74@naver.com',
+  username: 'testUser2',
+  displayName: '홍길동2',
+  password: 'P@$$w0rd!!',
+  provider: 'local',
+  telephone: '02-0987-6543',
+  cellphone: '010-2187-3886',
+  crawlTimeHour: 10,
+  crawlTimeMinutes: 0
 };
 
 // 즉시발송 테스트용
@@ -159,8 +175,6 @@ mammoth.convertToHtml({ path: uploadsRoot + '/docs/test.docx' })
     console.error('err: ' + err);
   }).done();
 
-// "RECEIVERS" : ["01021873886", "01027439905", "01029731203"]
-
 var onReadyDatabase = function () {
   var r1 = new Reporter(reporter1);
   var r2 = new Reporter(reporter2);
@@ -177,33 +191,58 @@ var onReadyDatabase = function () {
     }
   }
 
-  user.save(function (err) {
-    if (err) {
-      console.log(err);
+  /***************************
+   * For 기사수집 테스트
+   ***************************/
+  var date = new Date();
+  console.log(date.getMinutes());
+
+  user2.keywords = '인공지능,로봇';
+  user2.crawlTimeHour = date.getHours();
+  user2.crawlTimeMinutes = date.getMinutes();
+  (new User(user2)).save(function (err) {
+    if(err) {
+      console.error(err);
+      closeDB();
     } else {
-      console.log('success save user1');
-
-      list.push(articleSender_imediate);
-      // list.push(articleSender_1hour);
-      // list.push(articleSender_dart);
-
-      list.forEach(function (item) {
-        item.user = user;
-        var article = new ArticleSender(item);
-        article.save(function (err) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('success save articleSender');
-          }
-
-          doneProc();
-
-        });
-      });
+      console.log('success save user2');
+      closeDB();
     }
   });
+
+  /***************************
+   * For 보도자료 발송 테스트
+   ***************************/
+  // user.save(function (err) {
+  //   if (err) {
+  //     console.log(err);
+  //   } else {
+  //     console.log('success save user1');
+  //
+  //     // list.push(articleSender_imediate);
+  //     // list.push(articleSender_1hour);
+  //     // list.push(articleSender_dart);
+  //
+  //     list.forEach(function (item) {
+  //       item.user = user;
+  //       var article = new ArticleSender(item);
+  //       article.save(function (err) {
+  //         if (err) {
+  //           console.log(err);
+  //         } else {
+  //           console.log('success save articleSender');
+  //         }
+  //
+  //         doneProc();
+  //
+  //       });
+  //     });
+  //
+  //     if (list.length === 0) doneProc();
+  //   }
+  // });
 };
+
 
 mongoose.connection.on('open', function () {
   db.connection.db.dropDatabase(function (err) {
@@ -215,6 +254,7 @@ mongoose.connection.on('open', function () {
     }
   });
 });
+
 
 
 

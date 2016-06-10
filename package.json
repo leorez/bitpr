@@ -23,7 +23,7 @@
     "acl": "~0.4.9",
     "add-subtract-date": "^1.0.1",
     "app-root-path": "^1.0.0",
-    "async": "~1.5.2",
+    "async": "^1.5.2",
     "body-parser": "~1.15.0",
     "bower": "~1.7.7",
     "cfenv": "~1.0.3",

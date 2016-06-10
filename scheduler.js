@@ -63,12 +63,22 @@ var search = function (usersCnt, user, since) {
   keywords.forEach(function (keyword) {
     keyword = keyword.trim();
 
+    if (!keyword || keyword === '') {
+      console.error(chalk.yellow('keyword invalid'));
+      return;
+    }
+
     Deferred.when(searchController.searchFromMedog(keyword, since)).then(function (result) {
       var datas = JSON.parse(result).data;
-      //console.log(datas);
+      if (!datas) {
+        console.error(chalk.red('No data'));
+        return;
+      }
+
+      console.log(chalk.gray(JSON.stringify(datas)));
+
       var rows = 0;
       datas.forEach(function (item) {
-        //console.log(item);
         var article = new CrawledArticle({
           keyword: keyword,
           title: item.title,
@@ -117,7 +127,7 @@ function phonesString(article) {
 function contentBuild(article, callback) {
   console.log(article);
   coreController.corpInfo(article.user.corpCode, function (info, error) {
-    var corpName
+    var corpName;
     if (error) {
       console.error(error);
       corpName = article.user.corpName;
@@ -401,8 +411,8 @@ function crawlArticlesEachUser() {
   });
 }
 
-var job = schedule.scheduleJob('*/20 * * * * *', function () {
-  console.log('start');
+exports.run = function () {
+  console.info('start');
   /***************************
    * 보도자료 발송
    **************************/
@@ -412,4 +422,20 @@ var job = schedule.scheduleJob('*/20 * * * * *', function () {
    *  기사수집
    ******************************/
   crawlArticlesEachUser();
+};
+
+/************************
+ * For Real Service
+ * : run every 5 min
+ ***********************/
+var job = schedule.scheduleJob('*/5 * * * *', function () {
+  exports.run();
 });
+
+/************************
+ * For Test
+ * : run every 20 sec
+ ***********************/
+// var job = schedule.scheduleJob('*/20 * * * * *', function () {
+//   exports.run();
+// });

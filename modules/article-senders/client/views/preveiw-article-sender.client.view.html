@@ -22,14 +22,14 @@
         <tr>
           <th>상태</th>
           <td>
-            <input type="text" class="form-control bg-white" data-ng-model="vm.articleSender.status | status" readonly>
+            <input type="text" class="form-control bg-white" ng-value="vm.articleSender.status | status" readonly>
           </td>
         </tr>
 
         <tr>
           <th>발송시점</th>
           <td>
-            <input type="text" class="form-control bg-white" data-ng-model="vm.articleSender.reserveTime | reserveTime" readonly>
+            <input type="text" class="form-control bg-white" ng-value="vm.articleSender.reserveTime | reserveTime" readonly>
           </td>
         </tr>
         <tr ng-show="vm.articleSender.reserveTime === 999">
@@ -71,7 +71,7 @@
   <div class="row content-row press-headline">
     <div class="col-sm-2"></div>
     <div class="col-sm-8 btn-group">
-      <div class="content-editable" contenteditable=false ng-model="vm.articleSender.title"></div>
+      <div class="content-editable" contenteditable="false" ng-model="vm.articleSender.title" strip-br="true"></div>
     </div>
     <div class="ol-sm-2"></div>
   </div>

@@ -35,7 +35,6 @@ module.exports = {
         'public/lib/ng-file-upload/ng-file-upload.js',
         'public/lib/highcharts/highcharts.js',
         'public/lib/highcharts/highcharts-more.js',
-        'public/lib/angular-contenteditable/angular-contenteditable.js',
         'public/js/clear.js'
         // endbower
       ],

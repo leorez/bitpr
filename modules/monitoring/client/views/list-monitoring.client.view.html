@@ -9,6 +9,32 @@
         <h1>기사 모니터링</h1>
       </div>
 
+      <div role="tabpanel">
+        <ul class="nav nav-tabs">
+          <li role="presentation" ng-class="{ 'active': vm.dashboardFilter === '일' }">
+            <a href="#" role="tab" ng-click="vm.chart('일')" data-toggle="tab">일</a>
+          </li>
+          <li role="presentation" ng-class="{ 'active': vm.dashboardFilter === '월' }">
+            <a href="#" role="tab" ng-click="vm.chart('월')" data-toggle="tab">월</a>
+          </li>
+          <li role="presentation" ng-class="{ 'active': vm.dashboardFilter === '연도' }">
+            <a href="#" role="tab" ng-click="vm.chart('연도')" data-toggle="tab">연도</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active">
+            <div class="row">
+              <div class="col-sm-8">
+                <div id="news-count" style="height: 300px;"></div>
+              </div>
+              <div class="col-sm-4">
+                <div id="news-percent" style="height: 300px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">

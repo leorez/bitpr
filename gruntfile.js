@@ -273,7 +273,7 @@ module.exports = function (grunt) {
         cmd: 'mocha tests/cafe24.sms.spec.js'
       },
       articleCounterTest: {
-        cmd: 'mocha tests/article.counter.spec.js'
+        cmd: 'node tests/article.counter.spec.js'
       }
     }
   });

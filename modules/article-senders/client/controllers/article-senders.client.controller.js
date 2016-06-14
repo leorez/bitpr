@@ -54,12 +54,69 @@
       { data: 'I', text: '거래소공시' },
       { data: 'J', text: '공정위공시' }
     ];
-    vm.types = ['신제품', '신사업', '실적', '기타'];
 
+    vm.types = ['신제품', '신사업', '실적', '기타'];
+    vm.typeTemplates = [
+      {
+        type: '신제품',
+        data: {
+          subheadline: '신제품 헤드라인',
+          lead: '신제품 리드',
+          main: '신제품 본문',
+          detail: '신제품 세부사실',
+          corpSummary: '신제품 회사요약'
+        }
+      },
+      {
+        type: '신사업',
+        data: {
+          subheadline: '신사업 헤드라인',
+          lead: '신사업 리드',
+          main: '신사업 본문',
+          detail: '신사업 세부사실',
+          corpSummary: '신사업 회사요약'
+        }
+      },
+      {
+        type: '실적',
+        data: {
+          subheadline: '실적 헤드라인',
+          lead: '실적 리드',
+          main: '실적 본문',
+          detail: '실적 세부사실',
+          corpSummary: '실적 회사요약'
+        }
+      },
+      {
+        type: '기타',
+        data: {
+          subheadline: '기타 헤드라인',
+          lead: '기타 리드',
+          main: '기타 본문',
+          detail: '기타 세부사실',
+          corpSummary: '기타 회사요약'
+        }
+      }
+    ];
+
+    vm.setTemplate = function(type) {
+      for (var i=0; i < vm.typeTemplates.length; ++i) {
+        var t = vm.typeTemplates[i];
+        if (t.type === type) {
+          vm.articleSender.subheadline = t.data.subheadline;
+          vm.articleSender.lead = t.data.lead;
+          vm.articleSender.main = t.data.main;
+          vm.articleSender.detail = t.data.detail;
+          vm.articleSender.corpSummary = t.data.corpSummary;
+          break;
+        }
+      }
+    };
 
     // 새로운 보도자료 작성시 default values
     if (!vm.articleSender._id) {
-      vm.articleSender.type = '신제품';
+      vm.articleSender.type = $state.params.type || '신제품';
+      vm.setTemplate(vm.articleSender.type);
       vm.articleSender.reserveTime = 0;
       vm.articleSender.sendCount = 1;
       vm.articleSender.beToDart = true;

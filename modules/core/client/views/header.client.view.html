@@ -30,7 +30,7 @@
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right" ng-show="vm.authentication.user">
-      <a ui-sref="article-senders.create" class="btn btn-primary pull-left" style="margin-top: 7px;">새 보도자료 작성</a>
+      <a ng-click="vm.goCreateArticleSender()" class="btn btn-primary pull-left" style="margin-top: 7px;">새 보도자료 작성</a>
       <li class="dropdown" uib-dropdown>
         <a class="dropdown-toggle user-header-dropdown-toggle" uib-dropdown-toggle role="button">
           <img ng-src="{{vm.authentication.user.profileImageURL}}" alt="{{vm.authentication.user.displayName}}" class="header-profile-image" />

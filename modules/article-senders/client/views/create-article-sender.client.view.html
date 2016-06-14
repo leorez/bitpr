@@ -24,7 +24,7 @@
             <tr ng-hide="vm.articleSender._id">
               <th>유형</th>
               <td>
-                <select class="form-control" data-ng-model="vm.articleSender.type" ng-options="t for t in vm.types"></select>
+                <select class="form-control" data-ng-model="vm.articleSender.type" ng-options="t for t in vm.types" ng-change="vm.setTemplate(vm.articleSender.type)"></select>
               </td>
             </tr>
             <tr ng-hide="vm.articleSender._id">

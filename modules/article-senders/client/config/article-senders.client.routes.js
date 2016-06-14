@@ -44,6 +44,9 @@
         },
         data: {
           roles: ['user']
+        },
+        params: {
+          type: null
         }
       })
       .state('article-senders.edit', {

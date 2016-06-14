@@ -95,3 +95,15 @@ a:hover .header-profile-image {
   cursor: pointer;
   margin-left: 100px;
 }
+
+div[contentEditable] {
+  cursor: pointer;
+  background-color: white;
+  padding: .2em;
+}
+div[contentEditable]:focus {
+  cursor: pointer;
+  background-color: #D0D0D0;
+  border: 1px solid red;
+  padding: .2em;
+}

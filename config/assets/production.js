@@ -10,7 +10,9 @@ module.exports = {
         'public/lib/ngprogress/ngProgress.css',
         'public/lib/ng-tags-input/ng-tags-input.min.css',
         'public/lib/ng-tags-input/ng-tags-input.bootstrap.min.css',
-        'public/lib/angular-material/angular-material.min.css'
+        'public/lib/angular-material/angular-material.min.css',
+        'public/lib/textAngular/dist/textAngular.css',
+        'public/lib/angular-inline-text-editor/ite.css'
         // endbower
       ],
       js: [
@@ -35,6 +37,13 @@ module.exports = {
         'public/lib/ng-file-upload/ng-file-upload.min.js',
         'public/lib/highcharts/highcharts.js',
         'public/lib/highcharts/highcharts-more.js',
+        'public/lib/angular-inline-text-editor/ite.js',
+        'public/lib/rangy/rangy-core.min.js',
+        'public/lib/rangy/rangy-classapplier.min.js',
+        'public/lib/rangy/rangy-highlighter.min.js',
+        'public/lib/rangy/rangy-selectionsaverestore.min.js',
+        'public/lib/rangy/rangy-serializer.min.js',
+        'public/lib/rangy/rangy-textrange.min.js',
         'public/js/clear.js'
         // endbower
       ]

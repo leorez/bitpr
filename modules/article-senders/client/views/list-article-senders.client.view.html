@@ -48,7 +48,7 @@
           <div class="news-item" data-ng-repeat="item in vm.data.articleSenders">
             <div class="row">
               <div class="divider col-sm-8">
-                <h3><a ui-sref="article-senders.preview({articleSenderId: item._id})">{{item.title}}</a></h3>
+                <h3><a ui-sref="article-senders.preview({articleSenderId: item._id})" ng-bind-html="item.title"></a></h3>
                 <p><a ui-sref="article-senders.preview({articleSenderId: item._id})">{{item.content | summary}}</a></p>
                 <a ng-show="item.image1" href="" ng-click="vm.downloadImage(item.image1)"><img src="{{'/images/' + item.image1}}"></a>
                 <a ng-show="item.image2" href="" ng-click="vm.downloadImage(item.image2)"><img src="{{'/images/' + item.image2}}"></a>

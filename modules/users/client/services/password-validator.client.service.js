@@ -24,7 +24,7 @@
     }
 
     function getPopoverMsg() {
-      var popoverMsg = '10이상 특수문자와 대소문자 숫자를 포함한 암호를 입력하세요.';
+      var popoverMsg = '8이상의 숫자를 포함한 암호를 입력하세요.';
 
       return popoverMsg;
     }

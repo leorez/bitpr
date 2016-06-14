@@ -25,7 +25,7 @@ module.exports = {
         'public/lib/angular-ui-router/release/angular-ui-router.min.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
         'public/lib/angular-file-upload/dist/angular-file-upload.min.js',
-        'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
+        'public/js/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/ngprogress/build/ngprogress.min.js',
         'public/lib/ng-tags-input/ng-tags-input.min.js',
         'public/lib/angular-aria/angular-aria.min.js',

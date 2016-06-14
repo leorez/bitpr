@@ -5,10 +5,11 @@
  */
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
+  path = require('path'),
   crypto = require('crypto'),
   validator = require('validator'),
   generatePassword = require('generate-password'),
-  owasp = require('owasp-password-strength-test');
+  owasp = require(path.resolve('./public/js/owasp-password-strength-test'));
 
 /**
  * A Validation function for local strategy properties

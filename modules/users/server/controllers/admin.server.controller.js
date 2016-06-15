@@ -31,8 +31,6 @@ exports.update = function (req, res) {
   user.telephoneConfirmed = req.body.telephoneConfirmed;
   user.corpCode = req.body.corpCode;
 
-  console.log(user);
-
   user.save(function (err) {
     if (err) {
       return res.status(400).send({

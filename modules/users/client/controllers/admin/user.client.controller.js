@@ -35,7 +35,6 @@
 
         return false;
       }
-      console.log(vm.user);
 
       var user = vm.user;
 

@@ -17,18 +17,18 @@
         ArticleSendersMethodsService.dartCorpInfo($scope.corpCode,
           function (error, data) {
             if (error) {
-              // $scope.success = true;
-              // $scope.result = {
-              //   crp_nm: '(주) 비트피알',
-              //   crp_nm_i: '비트피알',
-              //   adr: '서울시 마포구 독막로 331 22F(도화동, 마스터즈타워)',
-              //   hm_url: 'http://www.bitpr.kr',
-              //   crp_no: '211-2345-23',
-              //   phn_no: '02-2134-5678',
-              //   est_dt: '20160601',
-              //   corpCode: $scope.corpCode
-              // };
-              $scope.result.error = '인증에 실패하였습니다. 상장코드를 왁인해 주세요.';
+              $scope.success = true;
+              $scope.result = {
+                crp_nm: '(주) 비트피알',
+                crp_nm_i: '비트피알',
+                adr: '서울시 마포구 독막로 331 22F(도화동, 마스터즈타워)',
+                hm_url: 'http://www.bitpr.kr',
+                crp_no: '211-2345-23',
+                phn_no: '02-2134-5678',
+                est_dt: '20160601',
+                corpCode: $scope.corpCode
+              };
+              // $scope.result.error = '인증에 실패하였습니다. 상장코드를 왁인해 주세요.';
             } else {
               $scope.success = true;
               delete $scope.result.error;
@@ -92,9 +92,9 @@
         } else {
           console.log(res);
           vm.credentials.corpCode = res.corpCode;
-          vm.credentials.corpNameOrg = res.crp_nm;
           vm.credentials.corpName = res.crp_nm_i;
           vm.credentials.corpInfo = res;
+          vm.credentials.telephone = res.phn_no;
         }
       }, function (error) {
         // on cancel

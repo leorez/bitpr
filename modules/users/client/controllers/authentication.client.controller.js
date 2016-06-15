@@ -14,21 +14,26 @@
       ArticleSendersMethodsService.dartCorpInfo($scope.corpCode,
         function (error, data) {
           if (error) {
-            // local test 용 (dart에 실서버에서만 api허용)
-            // $scope.success = true;
-            // $scope.result = {
-            //   crp_nm: '(주) 비트피알',
-            //   crp_nm_i: '비트피알',
-            //   adr: '서울시 마포구 독막로 331 22F(도화동, 마스터즈타워)',
-            //   hm_url: 'http://www.bitpr.kr',
-            //   crp_no: '211-2345-23',
-            //   phn_no: '02-2134-5678',
-            //   est_dt: '20160601',
-            //   corpCode: $scope.corpCode
-            // };
+            /* ---------------------------------
+              local test 용 (dart에 실서버에서만 api허용)
+            ----------------------------------- */
+            $scope.success = true;
+            $scope.result = {
+              crp_nm: '(주) 비트피알',
+              crp_nm_i: '비트피알',
+              adr: '서울시 마포구 독막로 331 22F(도화동, 마스터즈타워)',
+              hm_url: 'http://www.bitpr.kr',
+              crp_no: '211-2345-23',
+              phn_no: '02-2134-5678',
+              est_dt: '20160601',
+              corpCode: $scope.corpCode
+            };
+            /* ---------------------------------
+             local test 용 (dart에 실서버에서만 api허용)
+             ----------------------------------- */
 
-            $scope.success = false;
-            $scope.result.error = '인증에 실패하였습니다. 상장코드를 확인해 주세요.';
+            // $scope.success = false;
+            // $scope.result.error = '인증에 실패하였습니다. 상장코드를 확인해 주세요.';
           } else {
             $scope.success = true;
             delete $scope.result.error;
@@ -71,8 +76,7 @@
     vm.signin = signin;
     vm.callOauthProvider = callOauthProvider;
     vm.email = $state.params.email;
-    vm.credentials = {};
-    vm.corpCodeConfirmed = false;
+    vm.credentials = { corpCodeConfirmed: false };
     vm.telephone = $location.search().telephone;
 
     if ($location.search().result === 'success-signup') {
@@ -87,6 +91,9 @@
       $location.path('/');
     }
 
+    /*
+      상장코드인증
+     */
     vm.authCorpCode = function () {
       var modalInstance = $uibModal.open({
         animation: true,
@@ -96,27 +103,26 @@
 
       modalInstance.result.then(function (res) {
         if (res && res.error) {
-          vm.corpCodeConfirmed = false;
+          vm.credentials.corpCodeConfirmed = false;
           vm.authCorpError = res.error;
         } else {
-          console.log(res);
-          vm.corpCodeConfirmed = true;
+          vm.credentials.corpInfo = res;
+          vm.credentials.corpCodeConfirmed = true;
           vm.credentials.corpCode = res.corpCode;
           vm.credentials.corpName = res.crp_nm_i;
-          vm.credentials.corpInfo = res;
           vm.credentials.telephone = res.phn_no;
         }
       }, function (error) {
         // on cancel
         vm.authCorpError = error;
-        if (error) vm.corpCodeConfirmed = false;
+        if (error) vm.credentials.corpCodeConfirmed = false;
       });
     };
 
     function signup(isValid) {
       vm.error = null;
 
-      if (!vm.corpCodeConfirmed) {
+      if (!vm.credentials.corpCodeConfirmed) {
         vm.error = '상장코드 인증이 필요합니다.';
         return false;
       }

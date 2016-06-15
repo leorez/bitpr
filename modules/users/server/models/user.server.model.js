@@ -59,6 +59,10 @@ var UserSchema = new Schema({
     required: '이메일주소는 필수입니다.',
     validate: [validateLocalStrategyEmail, '형식에 맞지않는 이메일 주소입니다.']
   },
+  corpCodeConfirmed: {
+    type: Boolean,
+    default: false
+  },
   emailConfirmed: {
     type: Boolean,
     default: false
@@ -137,6 +141,7 @@ var UserSchema = new Schema({
     default: '',
     trim: true
   },
+  corpInfo: {},
   telephone: {
     type: String,
     default: '',

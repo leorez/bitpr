@@ -2,7 +2,8 @@
   <h3 class="modal-title">상장코드 인증</h3>
 </div>
 <div class="modal-body">
-  <input ng-keyup="search($event)" type="text" class="form-control" ng-model="corpCode" placeholder="상장코드">
+  <input ng-keyup="onEnter($event)" type="text" class="form-control" ng-model="corpCode" placeholder="상장코드">
+  <button ng-click="auth()">인증</button>
   <div ng-show="success" class="alert alert-success" style="margin-top: 10px;">
     <div>인증되었습니다.</div>
     <hr>

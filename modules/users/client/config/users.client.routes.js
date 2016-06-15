@@ -91,6 +91,12 @@
         controller: 'AuthenticationController',
         controllerAs: 'vm'
       })
+      .state('authentication.telephoneauthinfo', {
+        url: '/telephoneauth-info?telephone',
+        templateUrl: 'modules/users/client/views/authentication/telephoneauth-info.client.view.html',
+        controller: 'AuthenticationController',
+        controllerAs: 'vm'
+      })
       .state('authentication.signin', {
         url: '/signin?err',
         templateUrl: 'modules/users/client/views/authentication/signin.client.view.html',

@@ -139,7 +139,7 @@ exports.emailauth = function (req, res) {
           res.status(400).send(err);
           return;
         }
-        res.redirect(req.session.redirect_to || '/authentication/signin?result=success-signup');
+        res.redirect('/authentication/telephoneauth-info?telephone=' + user.telephone);
       });
     }
   });
@@ -157,13 +157,19 @@ exports.signin = function (req, res, next) {
       user.password = undefined;
       user.salt = undefined;
 
-      req.login(user, function (err) {
-        if (err) {
-          res.status(400).send(err);
-        } else {
-          res.json(user);
-        }
-      });
+      if (!user.emailConfirmed) {
+        res.status(400).send({ message: '이메일 인증이 필요합니다.' });
+      } else if (!user.telephoneConfirmed) {
+        res.status(400).send({ message: '전화인증이 필요합니다.' });
+      } else {
+        req.login(user, function (err) {
+          if (err) {
+            res.status(400).send(err);
+          } else {
+            res.json(user);
+          }
+        });
+      }
     }
   })(req, res, next);
 };

@@ -151,7 +151,7 @@
     /*
       dart 기업개황을 가져와서 자동제목달기
      */
-    ArticleSendersMethodsService.dartCorpInfo(vm.user.corpCode, function (error, res) {
+    ArticleSendersMethodsService.dartCorpInfo(vm.user.corpCode, function (error, response) {
       if (error) {
         console.error('error: ' + JSON.stringify(error));
         vm.user.corpInfo = {

@@ -34,8 +34,7 @@ describe('Users E2E Tests:', function () {
       element(by.model('corpCode')).clear();
       element(by.model('corpCode')).sendKeys('000000', protractor.Key.ENTER);
       expect(element(by.binding('result.corpCode')).getText()).toBe('000000');
-      // element(by.buttonText('확인')).click();
-      browser.driver.sleep(3000);
+      element(by.buttonText('확인')).click();
     });
     /*eslint-disable*/
 

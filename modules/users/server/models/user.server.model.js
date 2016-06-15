@@ -63,6 +63,10 @@ var UserSchema = new Schema({
     type: Boolean,
     default: false
   },
+  telephoneConfirmed: {
+    type: Boolean,
+    default: false
+  },
   password: {
     type: String,
     default: ''

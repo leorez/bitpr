@@ -2,42 +2,48 @@
   'use strict';
   angular
     .module('users')
-    .controller('SearchCorpCodeDlgController', SearchCorpCodeDlgController);
-  SearchCorpCodeDlgController.$inject = ['ArticleSendersMethodsService', '$scope', '$uibModalInstance'];
-/*
- 상장코드 검색용 대화창 콘트롤러
- */
-  function SearchCorpCodeDlgController(ArticleSendersMethodsService, $scope, $uibModalInstance) {
+    .controller('AuthCorpCodeDlgController', AuthCorpCodeDlgController);
+  AuthCorpCodeDlgController.$inject = ['ArticleSendersMethodsService', '$scope', '$uibModalInstance'];
+  /*
+   상장코드 인증용 대화창 콘트롤러
+   */
+  function AuthCorpCodeDlgController(ArticleSendersMethodsService, $scope, $uibModalInstance) {
     $scope.corpCode = '';
     $scope.result = { error: null };
-    $scope.search = function ($event) {
+    $scope.auth = function () {
+      ArticleSendersMethodsService.dartCorpInfo($scope.corpCode,
+        function (error, data) {
+          if (error) {
+            // local test 용 (dart에 실서버에서만 api허용)
+            $scope.success = true;
+            $scope.result = {
+              crp_nm: '(주) 비트피알',
+              crp_nm_i: '비트피알',
+              adr: '서울시 마포구 독막로 331 22F(도화동, 마스터즈타워)',
+              hm_url: 'http://www.bitpr.kr',
+              crp_no: '211-2345-23',
+              phn_no: '02-2134-5678',
+              est_dt: '20160601',
+              corpCode: $scope.corpCode
+            };
+
+            // $scope.success = false;
+            // $scope.result.error = '인증에 실패하였습니다. 상장코드를 확인해 주세요.';
+          } else {
+            $scope.success = true;
+            delete $scope.result.error;
+            $scope.result = data;
+            $scope.result.corpCode = $scope.corpCode;
+          }
+        }
+      );
+    };
+
+    $scope.onEnters = function ($event) {
       var keyCode = $event.which || $event.keyCode;
       if (keyCode === 13) {
         // on enter key
-        ArticleSendersMethodsService.dartCorpInfo($scope.corpCode,
-          function (error, data) {
-            if (error) {
-              // local test 용 (dart에 실서버에서만 api허용)
-              // $scope.success = true;
-              // $scope.result = {
-              //   crp_nm: '(주) 비트피알',
-              //   crp_nm_i: '비트피알',
-              //   adr: '서울시 마포구 독막로 331 22F(도화동, 마스터즈타워)',
-              //   hm_url: 'http://www.bitpr.kr',
-              //   crp_no: '211-2345-23',
-              //   phn_no: '02-2134-5678',
-              //   est_dt: '20160601',
-              //   corpCode: $scope.corpCode
-              // };
-              $scope.result.error = '인증에 실패하였습니다. 상장코드를 왁인해 주세요.';
-            } else {
-              $scope.success = true;
-              delete $scope.result.error;
-              $scope.result = data;
-              $scope.result.corpCode = $scope.corpCode;
-            }
-          }
-        );
+        $scope.auth();
       }
     };
 
@@ -66,6 +72,8 @@
     vm.callOauthProvider = callOauthProvider;
     vm.email = $state.params.email;
     vm.credentials = {};
+    vm.corpCodeConfirmed = false;
+    vm.telephone = $location.search().telephone;
 
     if ($location.search().result === 'success-signup') {
       vm.success = '회원등록이 완료되었습니다.';
@@ -82,15 +90,17 @@
     vm.authCorpCode = function () {
       var modalInstance = $uibModal.open({
         animation: true,
-        templateUrl: 'modules/users/client/views/authentication/search-corpcode-dialog.tmpl.html',
-        controller: 'SearchCorpCodeDlgController'
+        templateUrl: 'modules/users/client/views/authentication/auth-corpcode-dialog.tmpl.html',
+        controller: 'AuthCorpCodeDlgController'
       });
 
       modalInstance.result.then(function (res) {
         if (res && res.error) {
+          vm.corpCodeConfirmed = false;
           vm.authCorpError = res.error;
         } else {
           console.log(res);
+          vm.corpCodeConfirmed = true;
           vm.credentials.corpCode = res.corpCode;
           vm.credentials.corpName = res.crp_nm_i;
           vm.credentials.corpInfo = res;
@@ -99,11 +109,17 @@
       }, function (error) {
         // on cancel
         vm.authCorpError = error;
+        if (error) vm.corpCodeConfirmed = false;
       });
     };
 
     function signup(isValid) {
       vm.error = null;
+
+      if (!vm.corpCodeConfirmed) {
+        vm.error = '상장코드 인증이 필요합니다.';
+        return false;
+      }
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.userForm');
@@ -138,6 +154,7 @@
           $state.go($state.previous.state.name || 'dashboard', $state.previous.params);
         }
       }).error(function (response) {
+        console.log(response);
         vm.error = response.message;
       });
     }

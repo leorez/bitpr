@@ -100,7 +100,7 @@
     ];
 
     vm.setTemplate = function(type) {
-      for (var i=0; i < vm.typeTemplates.length; ++i) {
+      for (var i = 0; i < vm.typeTemplates.length; ++i) {
         var t = vm.typeTemplates[i];
         if (t.type === type) {
           vm.articleSender.subheadline = t.data.subheadline;
@@ -148,14 +148,11 @@
       }
     }
 
-    $http
-      .post('/api/crp-info', { corpCode: vm.user.corpCode })
-      .then(function (response) {
-        console.log('success: ' + JSON.stringify(response));
-        vm.user.corpInfo = response.data;
-        if (!vm.articleSender._id)
-          vm.articleSender.title = autoTitle(response.data.crp_nm_i);
-      }, function (error) {
+    /*
+      dart 기업개황을 가져와서 자동제목달기
+     */
+    ArticleSendersMethodsService.dartCorpInfo(vm.user.corpCode, function (error, res) {
+      if (error) {
         console.error('error: ' + JSON.stringify(error));
         vm.user.corpInfo = {
           crp_nm: '(주) 비트피알',
@@ -167,14 +164,19 @@
         if (vm.user.corpInfo.crp_nm_i && !vm.articleSender._id) {
           vm.articleSender.title = autoTitle(vm.user.corpInfo.crp_nm_i);
         }
-      });
+      } else {
+        console.log('success: ' + JSON.stringify(response));
+        vm.user.corpInfo = response.data;
+        if (!vm.articleSender._id)
+          vm.articleSender.title = autoTitle(response.data.crp_nm_i);
+      }
+    });
 
     function autoTitle(corpName) {
       var title = corpName + ' 보도자료';
       title += '(' + corpName + '에서 보도자료를 보내드립니다. 관심과 배려 부탁드립니다.)';
       return title;
     }
-
 
     /*
      ** imageRoot (/uploads/images) 를 기준으로 /images/{image-name}으로 이미지소스를 가져올수 있도록

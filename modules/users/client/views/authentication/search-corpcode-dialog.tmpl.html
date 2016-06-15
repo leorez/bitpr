@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <h3 class="modal-title">상장코드 인증</h3>
+</div>
+<div class="modal-body">
+  <input ng-keyup="search($event)" type="text" class="form-control" ng-model="corpCode" placeholder="상장코드">
+  <div ng-show="success" class="alert alert-success" style="margin-top: 10px;">
+    <div>인증되었습니다.</div>
+    <hr>
+    <div>기업명 : {{result.crp_nm}}</div>
+    <div>상장코드 : {{result.corpCode}}</div>
+    <div>주소 : {{result.adr}}</div>
+    <div>홈페이지 : {{result.hm_url}}</div>
+    <div>전화번호 : {{result.phn_no}}</div>
+    <div>법인등록번호 : {{result.crp_no}}</div>
+    <div>설립일 : {{result.est_dt}}</div>
+  </div>
+  <div ng-show="result.error" class="alert alert-danger" ng-bind="result.error" style="margin-top: 10px;"></div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="ok()">확인</button>
+  <button class="btn btn-warning" type="button" ng-click="cancel()">취소</button>
+</div>

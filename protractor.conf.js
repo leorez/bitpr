@@ -1,6 +1,6 @@
 'use strict';
 
-var needSignin = true;
+var needSignin = false;
 
 // Protractor configuration
 var config = {

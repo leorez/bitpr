@@ -8,7 +8,7 @@
  상장코드 검색용 대화창 콘트롤러
  */
   function SearchCorpCodeDlgController(ArticleSendersMethodsService, $scope, $uibModalInstance) {
-    $scope.corpCode = '000000';
+    $scope.corpCode = '';
     $scope.result = { error: null };
     $scope.search = function ($event) {
       var keyCode = $event.which || $event.keyCode;
@@ -17,18 +17,19 @@
         ArticleSendersMethodsService.dartCorpInfo($scope.corpCode,
           function (error, data) {
             if (error) {
-              $scope.success = true;
-              $scope.result = {
-                crp_nm: '(주) 비트피알',
-                crp_nm_i: '비트피알',
-                adr: '서울시 마포구 독막로 331 22F(도화동, 마스터즈타워)',
-                hm_url: 'http://www.bitpr.kr',
-                crp_no: '211-2345-23',
-                phn_no: '02-2134-5678',
-                est_dt: '20160601',
-                corpCode: $scope.corpCode
-              };
-              // $scope.result.error = '인증에 실패하였습니다. 상장코드를 왁인해 주세요.';
+              // local test 용 (dart에 실서버에서만 api허용)
+              // $scope.success = true;
+              // $scope.result = {
+              //   crp_nm: '(주) 비트피알',
+              //   crp_nm_i: '비트피알',
+              //   adr: '서울시 마포구 독막로 331 22F(도화동, 마스터즈타워)',
+              //   hm_url: 'http://www.bitpr.kr',
+              //   crp_no: '211-2345-23',
+              //   phn_no: '02-2134-5678',
+              //   est_dt: '20160601',
+              //   corpCode: $scope.corpCode
+              // };
+              $scope.result.error = '인증에 실패하였습니다. 상장코드를 왁인해 주세요.';
             } else {
               $scope.success = true;
               delete $scope.result.error;
@@ -65,7 +66,6 @@
     vm.callOauthProvider = callOauthProvider;
     vm.email = $state.params.email;
     vm.credentials = {};
-    vm.authCorpError;
 
     if ($location.search().result === 'success-signup') {
       vm.success = '회원등록이 완료되었습니다.';

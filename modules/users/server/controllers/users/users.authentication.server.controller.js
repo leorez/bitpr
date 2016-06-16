@@ -179,10 +179,6 @@ exports.signin = function (req, res, next) {
     if (err || !user) {
       res.status(400).send(info);
     } else {
-      // Remove sensitive data before login
-      user.password = undefined;
-      user.salt = undefined;
-
       // 상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.
       if (user.corpCodeConfirmed && user.corpCode) {
         coreServerController.corpInfo(user.corpCode, function (corpInfo, error) {
@@ -197,17 +193,18 @@ exports.signin = function (req, res, next) {
             });
 
           } else {
-            console.error('Error : 상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.');
-            saveUser(user, function (error) {
-              if (error) {
-                console.error(error);
-              }
-              console.log('상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.');
-              loginUserResponse(user);
-            });
+            // Remove sensitive data before login
+            user.password = undefined;
+            user.salt = undefined;
+
+            loginUserResponse(user);
           }
         });
       } else {
+        // Remove sensitive data before login
+        user.password = undefined;
+        user.salt = undefined;
+
         loginUserResponse(user);
       }
     }

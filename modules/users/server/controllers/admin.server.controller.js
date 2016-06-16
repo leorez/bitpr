@@ -28,7 +28,7 @@ exports.update = function (req, res) {
   user.telephone = req.body.telephone;
   user.cellphone = req.body.cellphone;
   user.emailConfirmed = req.body.emailConfirmed;
-  user.corpConfirmed = req.body.corpConfirmed;
+  user.corpCodeConfirmed = req.body.corpCodeConfirmed;
   user.telephoneConfirmed = req.body.telephoneConfirmed;
   user.corpCode = req.body.corpCode;
 

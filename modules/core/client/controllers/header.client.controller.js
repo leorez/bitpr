@@ -7,7 +7,7 @@
   TypeSelectDlgController.$inject = ['$scope', '$uibModalInstance'];
   function TypeSelectDlgController($scope, $uibModalInstance) {
     $scope.types = ['신제품', '신사업', '실적', '기타'];
-    $scope.selected = '';
+    $scope.selected = '신제품';
     $scope.select = function (type) {
       $scope.selected = type;
     };

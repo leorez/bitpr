@@ -183,35 +183,26 @@ exports.signin = function (req, res, next) {
       user.password = undefined;
       user.salt = undefined;
 
-      if (!user.emailConfirmed) {
-        res.status(400).send({ message: '이메일 인증이 필요합니다.' });
-      } else if (!user.telephoneConfirmed) {
-        res.status(400).send({ message: '전화인증이 필요합니다.' });
-      } else if (!user.corpCodeConfirmed) {
-        res.status(400).send({ message: '상장코드인증이 필요합니다.' });
-      } else {
-
-        // 상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.
-        if (user.corpCodeConfirmed && user.corpCode) {
-          coreServerController.corpInfo(user.corpCode, function (corpInfo, error) {
-            if (!error) {
-              user.corpInfo = corpInfo;
-              saveUser(user, function (error) {
-                if (error) {
-                  console.error(error);
-                }
-                console.log('상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.');
-                loginUser(user);
-              });
-
-            } else {
-              console.error('Error : 상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.');
+      // 상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.
+      if (user.corpCodeConfirmed && user.corpCode) {
+        coreServerController.corpInfo(user.corpCode, function (corpInfo, error) {
+          if (!error) {
+            user.corpInfo = corpInfo;
+            saveUser(user, function (error) {
+              if (error) {
+                console.error(error);
+              }
+              console.log('상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.');
               loginUser(user);
-            }
-          });
-        } else {
-          loginUser(user);
-        }
+            });
+
+          } else {
+            console.error('Error : 상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.');
+            loginUser(user);
+          }
+        });
+      } else {
+        loginUser(user);
       }
     }
   })(req, res, next);

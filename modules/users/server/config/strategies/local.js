@@ -14,8 +14,6 @@ module.exports = function () {
     passwordField: 'password'
   },
   function (username, password, done) {
-    console.log('username: ' + username);
-    console.log('password: ' + password);
     User.findOne({
       $or: [
         { email: username.toLowerCase() },
@@ -25,14 +23,9 @@ module.exports = function () {
       if (err) {
         return done(err);
       }
-      console.log('user: ' + user);
-      if (user && !user.emailConfirmed) {
+      if (!user || !user.authenticate(password)) {
         return done(null, false, {
-          message: '이메일 인증이 필요합니다.'
-        });
-      } else if (!user || !user.authenticate(password)) {
-        return done(null, false, {
-          message: '이메일 또는 암호가 잘못입력되었습니다.'
+          message: '이메일이나 상장코드 또는 암호가 잘못입력되었습니다.'
         });
       }
 

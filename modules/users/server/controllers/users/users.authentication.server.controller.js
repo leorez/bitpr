@@ -150,8 +150,6 @@ function saveUser(srcUser, next) {
     if (err) {
       next(err);
     } else {
-      user.password = undefined;
-      user.salt = undefined;
       user = _.extend(user, srcUser);
       user.save(function (err) {
         if (err) {
@@ -167,7 +165,7 @@ function saveUser(srcUser, next) {
  * Signin after passport authentication
  */
 exports.signin = function (req, res, next) {
-  function loginUser(user) {
+  function loginUserResponse(user) {
     req.login(user, function (err) {
       if (err) {
         res.status(400).send(err);
@@ -195,16 +193,22 @@ exports.signin = function (req, res, next) {
                 console.error(error);
               }
               console.log('상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.');
-              loginUser(user);
+              loginUserResponse(user);
             });
 
           } else {
             console.error('Error : 상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.');
-            loginUser(user);
+            saveUser(user, function (error) {
+              if (error) {
+                console.error(error);
+              }
+              console.log('상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.');
+              loginUserResponse(user);
+            });
           }
         });
       } else {
-        loginUser(user);
+        loginUserResponse(user);
       }
     }
   })(req, res, next);

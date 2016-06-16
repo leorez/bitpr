@@ -150,6 +150,8 @@ function saveUser(srcUser, next) {
     if (err) {
       next(err);
     } else {
+      user.password = undefined;
+      user.salt = undefined;
       user = _.extend(user, srcUser);
       user.save(function (err) {
         if (err) {

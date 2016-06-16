@@ -72,14 +72,16 @@
         console.log('function3');
         console.log(user);
 
-        var days = 365;
+        var days = 10;
         var keywords = user.keywords.split(',');
 
         var doneCnt = 0;
         var list = [];
         var terms = [];
-        terms.push(Math.floor((Math.random() * 100) + 1));
-        terms.push(Math.floor((Math.random() * 300) + 1));
+        // terms.push(Math.floor((Math.random() * 100) + 1));
+        // terms.push(Math.floor((Math.random() * 300) + 1));
+        terms.push(Math.floor((Math.random() * days) + 1));
+        terms.push(Math.floor((Math.random() * days) + 1));
 
         function doneProc() {
           if (++doneCnt === list.length) {
@@ -89,7 +91,7 @@
         }
 
         for (var i=0; i < days; ++i) {
-          date = _.clone(dateAdder.add(date, 1, "day"));
+          var date = dateAdder.add(new Date(), i, "days");
           console.log(date);
 
           keywords.forEach(function (keyword, index) {

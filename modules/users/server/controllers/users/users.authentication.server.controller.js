@@ -11,6 +11,7 @@ var _ = require('lodash'),
   mail = require(path.resolve('./lib/mail')),
   keygen = require('keygenerator'),
   uniquid = require('uniquid'),
+  coreServerController = require(path.resolve('./modules/core/server/controllers/core.server.controller')),
   User = mongoose.model('User');
 
 // URLs for which user can't be redirected on signin
@@ -80,10 +81,12 @@ exports.userInfo = function (req, res) {
     });
   }
 
-  User.findOne({ email: req.body.email }, function (err, user) {
+  User.findOne({ _id: req.user._id }, function (err, user) {
     if (err) {
       res.status(400).send(err);
     } else {
+      user.password = undefined;
+      user.salt = undefined;
       res.json(user);
     }
   });
@@ -142,10 +145,36 @@ exports.emailauth = function (req, res) {
   });
 };
 
+function saveUser(srcUser, next) {
+  User.findOne({ _id: srcUser._id }, function (err, user) {
+    if (err) {
+      next(err);
+    } else {
+      user = _.extend(user, srcUser);
+      user.save(function (err) {
+        if (err) {
+          return next(err);
+        }
+        next();
+      });
+    }
+  });
+}
+
 /**
  * Signin after passport authentication
  */
 exports.signin = function (req, res, next) {
+  function loginUser(user) {
+    req.login(user, function (err) {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.json(user);
+      }
+    });
+  }
+
   passport.authenticate('local', function (err, user, info) {
     if (err || !user) {
       res.status(400).send(info);
@@ -158,14 +187,31 @@ exports.signin = function (req, res, next) {
         res.status(400).send({ message: '이메일 인증이 필요합니다.' });
       } else if (!user.telephoneConfirmed) {
         res.status(400).send({ message: '전화인증이 필요합니다.' });
+      } else if (!user.corpCodeConfirmed) {
+        res.status(400).send({ message: '상장코드인증이 필요합니다.' });
       } else {
-        req.login(user, function (err) {
-          if (err) {
-            res.status(400).send(err);
-          } else {
-            res.json(user);
-          }
-        });
+
+        // 상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.
+        if (user.corpCodeConfirmed && user.corpCode) {
+          coreServerController.corpInfo(user.corpCode, function (corpInfo, error) {
+            if (!error) {
+              user.corpInfo = corpInfo;
+              saveUser(user, function (error) {
+                if (error) {
+                  console.error(error);
+                }
+                console.log('상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.');
+                loginUser(user);
+              });
+
+            } else {
+              console.error('Error : 상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.');
+              loginUser(user);
+            }
+          });
+        } else {
+          loginUser(user);
+        }
       }
     }
   })(req, res, next);

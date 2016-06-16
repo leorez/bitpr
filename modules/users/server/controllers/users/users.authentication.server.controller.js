@@ -71,9 +71,9 @@ exports.signup = function (req, res) {
 };
 
 /**
- * 이메일 인증여부
+ * 사용자정보
  */
-exports.emailConfirmed = function (req, res) {
+exports.userInfo = function (req, res) {
   if (!req.user) {
     return res.status(400).send({
       message: '로그인이 필요합니다.'
@@ -102,7 +102,6 @@ exports.emailauthReq = function (req, res) {
 
   var user = req.user;
   user = _.extend(user, req.body);
-  console.log(req.user);
 
   var key = keygen._();
   user.key = key;
@@ -127,12 +126,10 @@ exports.emailauthReq = function (req, res) {
  */
 exports.emailauth = function (req, res) {
   var key = req.params.key;
-  console.log(key);
   User.findOne({ key: key }, function (err, user) {
     if (err) {
       res.status(400).send(err);
     } else {
-      console.log(JSON.stringify(user));
       user.emailConfirmed = true;
       user.save(function (err) {
         if (err) {
@@ -208,7 +205,6 @@ exports.oauthCallback = function (strategy) {
     delete req.session.redirect_to;
 
     passport.authenticate(strategy, function (err, user, redirectURL) {
-      console.log('*** user = ' + user);
       if (err) {
         return res.redirect('/authentication/signin?err=' + encodeURIComponent(errorHandler.getErrorMessage(err)));
       }
@@ -220,7 +216,7 @@ exports.oauthCallback = function (strategy) {
           return res.redirect('/authentication/signin');
         }
 
-        if (!user.emailConfirmed || (user.corpCode && /^\d{6}|\d{8}$/.test(user.corpCode) === false)) {
+        if (!user.emailConfirmed || !user.corpCodeConfirmed || !user.telephoneConfirmed) {
           return res.redirect('/settings/profile?confirmed=false');
         }
 

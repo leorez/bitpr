@@ -153,6 +153,7 @@
       $http.post('/api/auth/signin', vm.credentials).success(function (response) {
         // If successful we assign the response to the global user model
         vm.authentication.user = response;
+        console.log(response);
         // And redirect to the previous or home page
         if ($state.previous.state.name === 'home') {
           $state.go('dashboard');
@@ -167,7 +168,9 @@
 
     // OAuth provider request
     function callOauthProvider(url) {
+      console.log('callOauthProvider');
       console.log($state.previous.href);
+      console.log(vm.authentication.user);
       if ($state.previous && $state.previous.href === '/')
         $state.previous.href = '/dashboard';
 

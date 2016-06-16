@@ -57,6 +57,12 @@
             <p class="help-block error-text" ng-message="required">전화번호는 필수입니다.</p>
           </div>
         </div>
+        <div ng-show="vm.user.telephoneConfirmed" class="alert alert-success" style="margin-top: 5px;">
+          <div>전화인증 완료되었습니다.</div>
+        </div>
+        <div ng-show="!vm.user.telephoneConfirmed" class="alert alert-danger" style="margin-top: 5px;">
+          <div>전화인증이 필요합니다. 입력하신 전화번로({{vm.user.telephone}})로 전화를 드리겠습니다.</div>
+        </div>
         <div class="form-group" show-errors>
           <label for="cellphone">휴대폰번호</label>
           <input type="text" id="cellphone" name="cellphone" class="form-control" ng-model="vm.user.cellphone" placeholder="휴대폰번호">

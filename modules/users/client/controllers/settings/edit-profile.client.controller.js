@@ -42,34 +42,42 @@
       });
     };
 
-    function getEmailConfirmed(callback) {
-      $http.post('/api/emailconfirmed', { email: vm.user.email }, { withCredentials: true }).success(function (response) {
+    function getUser(callback) {
+      $http.post('/api/userinfo', { email: vm.user.email }, { withCredentials: true }).success(function (response) {
         callback(null, response);
       }).error(function (err) {
         callback(err);
       });
     }
 
+    vm.isNotConfirmed = function () {
+      return (!vm.user.corpConfirmed || !vm.user.emailConfirmed || !vm.user.telephoneConfirmed);
+    };
+
     function updateConfirmMessage() {
-      getEmailConfirmed(function (err, response) {
+      if (!Authentication || !Authentication.user) return false;
+
+      getUser(function (err, user) {
         if (!err) {
-          vm.user.emailConfirmed = response.emailConfirmed;
-          console.log('emailConfirmed: ' + response.emailConfirmed);
-          var invalidCorpcode = (vm.user.corpCode && /^\d{6}|\d{8}$/.test(vm.user.corpCode) === false);
+          vm.user = Authentication.user = user;
+
+          var invalidCorpcode = !vm.user.corpCodeConfirmed;
           if (invalidCorpcode) {
             vm.user.corpCode = '';
           }
 
-          if (invalidCorpcode || !vm.user.emailConfirmed) {
+          if (invalidCorpcode || !vm.user.emailConfirmed || !vm.user.telephoneConfirmed) {
             if (vm.user.provider !== 'local')
               vm.message = vm.user.provider.toUpperCase() + ' 계정으로 로그인되었습니다. 정식으로 사용하시려면 ';
 
-            if (invalidCorpcode && !vm.user.emailConfirmed) {
-              vm.message += '이메일 및 상장코드 민증이 필요합니다.';
+            if (invalidCorpcode && !vm.user.emailConfirmed && !vm.user.telephoneConfirmed) {
+              vm.message += '이메일, 전화 및 상장코드 인증이 필요합니다.';
             } else if (!vm.user.emailConfirmed) {
               vm.message += '이메일 인증이 필요합니다.';
             } else if (invalidCorpcode) {
               vm.message += '상장코드 인증이 필요합니다.';
+            } else if (!vm.telephoneConfirmed) {
+              vm.message += '전화 인증이 필요합니다. 입력하신 전화번로(' + vm.user.telephone + ')로 전화를 드리겠습니다.';
             }
           } else {
             vm.message = '';

@@ -20,7 +20,7 @@ module.exports = function (app) {
   app.route('/api/auth/signout').get(users.signout);
   app.route('/ea/:key').get(users.emailauth);
   app.route('/ea/request').post(users.emailauthReq);
-  app.route('/api/emailconfirmed').post(users.emailConfirmed);
+  app.route('/api/userinfo').post(users.userInfo);
 
   // Setting the facebook oauth routes
   app.route('/api/auth/facebook').get(users.oauthCall('facebook', {

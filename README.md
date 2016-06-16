@@ -15,3 +15,20 @@
 ```bash
 $ sh ./scripts/generate-ssl-certs.sh
 ```
+## 인증
+* 상장코드인증
+* 이메일인증
+* 전화인증
+
+## 쇼셜미디어 연동
+### 파일
+* /modules/users/client/controllers/authentication.client.controller.js
+* /home/noruya/projects/bitpr/modules/users/server/routes/auth.server.routes.js
+* /home/noruya/projects/bitpr/modules/users/server/controllers/users/users.authentication.server.controller.js
+* app.route('/api/auth/kakao').get(users.oauthCall('kakao'));
+* app.route('/api/auth/kakao/callback').get(users.oauthCallback('kakao'));
+
+### 함수
+* oauthCall
+* oauthCallback
+* saveOAuthUserProfile

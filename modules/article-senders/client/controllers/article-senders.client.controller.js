@@ -148,35 +148,16 @@
       }
     }
 
+
     /*
-      dart 기업개황을 가져와서 자동제목달기
+      자동제목달기
      */
-    ArticleSendersMethodsService.dartCorpInfo(vm.user.corpCode, function (error, response) {
-      if (error) {
-        console.error('error: ' + JSON.stringify(error));
-        vm.user.corpInfo = {
-          crp_nm: '(주) 비트피알',
-          crp_nm_i: '비트피알',
-          adr: '서울시 마포구 독막로 331 22F(도화동, 마스터즈타워)',
-          hm_url: 'http://www.bitpr.kr'
-        };
-
-        if (vm.user.corpInfo.crp_nm_i && !vm.articleSender._id) {
-          vm.articleSender.title = autoTitle(vm.user.corpInfo.crp_nm_i);
-        }
-      } else {
-        console.log('success: ' + JSON.stringify(response));
-        vm.user.corpInfo = response.data;
-        if (!vm.articleSender._id)
-          vm.articleSender.title = autoTitle(response.data.crp_nm_i);
-      }
-    });
-
     function autoTitle(corpName) {
       var title = corpName + ' 보도자료';
       title += '(' + corpName + '에서 보도자료를 보내드립니다. 관심과 배려 부탁드립니다.)';
       return title;
     }
+    vm.articleSender.title = autoTitle(vm.user.corpInfo.crp_nm_i);
 
     /*
      ** imageRoot (/uploads/images) 를 기준으로 /images/{image-name}으로 이미지소스를 가져올수 있도록

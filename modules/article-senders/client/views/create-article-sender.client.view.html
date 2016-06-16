@@ -12,11 +12,14 @@
           </div>
         </div>
         <div class="col-sm-6">
-          <h2 class="mt0">{{vm.user.corpInfo.crp_nm}}</h2>
+          <h2 class="mt0">{{vm.user.corpInfo.crp_nm}}({{vm.user.corpInfo.corpCode}})</h2>
           <br><br>
           <ul>
-            <li>{{vm.user.corpInfo.adr}}</li>
-            <li>{{vm.user.corpInfo.hm_url}}</li>
+            <li>법인등록번호 : {{vm.user.corpInfo.crp_no}}</li>
+            <li>주소 : {{vm.user.corpInfo.adr}}</li>
+            <li>홈페이지 : {{vm.user.corpInfo.hm_url}}</li>
+            <li>전화번호 : {{vm.user.corpInfo.phn_no}}</li>
+            <li>설립일 : {{vm.user.corpInfo.est_dt}}</li>
           </ul>
         </div>
         <div class="col-sm-4">

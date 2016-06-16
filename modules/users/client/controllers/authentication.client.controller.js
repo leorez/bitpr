@@ -17,23 +17,23 @@
             /* ---------------------------------
               local test 용 (dart에 실서버에서만 api허용)
             ----------------------------------- */
-            $scope.success = true;
-            $scope.result = {
-              crp_nm: '(주) 비트피알',
-              crp_nm_i: '비트피알',
-              adr: '서울시 마포구 독막로 331 22F(도화동, 마스터즈타워)',
-              hm_url: 'http://www.bitpr.kr',
-              crp_no: '211-2345-23',
-              phn_no: '02-2134-5678',
-              est_dt: '20160601',
-              corpCode: $scope.corpCode
-            };
+            // $scope.success = true;
+            // $scope.result = {
+            //   crp_nm: '(주) 비트피알',
+            //   crp_nm_i: '비트피알',
+            //   adr: '서울시 마포구 독막로 331 22F(도화동, 마스터즈타워)',
+            //   hm_url: 'http://www.bitpr.kr',
+            //   crp_no: '211-2345-23',
+            //   phn_no: '02-2134-5678',
+            //   est_dt: '20160601',
+            //   corpCode: $scope.corpCode
+            // };
             /* ---------------------------------
              local test 용 (dart에 실서버에서만 api허용)
              ----------------------------------- */
 
-            // $scope.success = false;
-            // $scope.result.error = '인증에 실패하였습니다. 상장코드를 확인해 주세요.';
+            $scope.success = false;
+            $scope.result.error = '인증에 실패하였습니다. 상장코드를 확인해 주세요.';
           } else {
             $scope.success = true;
             delete $scope.result.error;

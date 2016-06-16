@@ -26,6 +26,7 @@ var config = require('./config/config'),
   moment = require('moment'),
   mail = require('./lib/mail'),
   process = require('process'),
+  path = require('path'),
   sms = require('./lib/cafe24.sms.js'),
   dart = require('./lib/dart'),
   request = require('request');
@@ -174,10 +175,10 @@ function sendArticle(article) {
       attachments: []
     };
 
-    mail.attachFile(sendMailOptions, article.file, dstRoot + '/docs/');
-    mail.attachFile(sendMailOptions, article.image1, dstRoot + '/images/');
-    mail.attachFile(sendMailOptions, article.image2, dstRoot + '/images/');
-    mail.attachFile(sendMailOptions, article.image3, dstRoot + '/images/');
+    if (article.file) mail.attachFile(sendMailOptions, path.basename(article.file), dstRoot + '/docs/');
+    if (article.image1) mail.attachFile(sendMailOptions, path.basename(article.image1), dstRoot + '/images/');
+    if (article.image2) mail.attachFile(sendMailOptions, path.basename(article.image2), dstRoot + '/images/');
+    if (article.image3) mail.attachFile(sendMailOptions, path.basename(article.image3), dstRoot + '/images/');
 
     mail.sendEmail(sendMailOptions, function (err, info) {
       if (!err) {

@@ -12,8 +12,8 @@ describe('Users E2E Tests:', function () {
   var user2 = {
     corpCode: '005931',
     displayName: '이순신',
-    email: 'testuser@gmail.com',
-    password: 'testtest!09AA'
+    email: 'test.user@test.com',
+    password: 'P@$$w0rd!!'
   };
 
   var signout = function () {
@@ -27,6 +27,16 @@ describe('Users E2E Tests:', function () {
     beforeEach(function () {
       browser.get('/authentication/signup');
     });
+
+    /*eslint-disable*/
+    it('상장코드를 찻기 (로컬에서는 IP가 차단되어 dart api를 사용할수 없으므로 mockup을 이용한다.) 테스트', function () {
+      element(by.buttonText('인증하기')).click();
+      element(by.model('corpCode')).clear();
+      element(by.model('corpCode')).sendKeys('000000', protractor.Key.ENTER);
+      expect(element(by.binding('result.corpCode')).getText()).toBe('000000');
+      element(by.buttonText('확인')).click();
+    });
+    /*eslint-disable*/
 
     // it('Should report missing email address', function () {
     //   // Enter Corp code
@@ -178,84 +188,84 @@ describe('Users E2E Tests:', function () {
     //   expect(element.all(by.css('.error-text')).get(0).getText()).toBe('암호는 특수문자를 포함해야합니다.');
     // });
 
-    it('Should Successfully register new user', function () {
-      // Enter Corp code
-      element(by.model('vm.credentials.corpCode')).sendKeys(user1.corpCode);
-      // Enter display Name
-      element(by.model('vm.credentials.displayName')).sendKeys(user1.displayName);
-      // Enter Email
-      element(by.model('vm.credentials.email')).sendKeys(user1.email);
-      // Enter Password
-      element(by.model('vm.credentials.password')).sendKeys(user1.password);
-      // Click Submit button
-      element(by.css('button[type="submit"]')).click();
-
-      browser.wait(function () {
-        return browser.getCurrentUrl().then(function (url) {
-          return /\/emailauth-info/.test(url);
-          // var pageOk = /\/emailauth-info/.test(url);
-          // if (pageOk) {
-          //   expect(element(by.binding('vm.email')).getText()).toBe('noruya@gmail.com');
-          // }
-          // return pageOk;
-        });
-      }, 10000);
-    });
-
-    it('Should report Email already exists', function () {
-      // Make sure user is signed out first
-      signout();
-      // Signup
-      browser.get('http://localhost:3001/authentication/signup');
-      // Enter Corp code
-      element(by.model('vm.credentials.corpCode')).sendKeys(user1.corpCode);
-      // Enter display Name
-      element(by.model('vm.credentials.displayName')).sendKeys(user2.displayName);
-      // Enter Email
-      element(by.model('vm.credentials.email')).sendKeys(user1.email);
-      // Enter Invalid Password
-      element(by.model('vm.credentials.password')).sendKeys(user2.password);
-      // Click Submit button
-      element(by.css('button[type=submit]')).click();
-      // Password Error
-      expect(element.all(by.css('strong')).get(0).getText()).toBe('Email already exists');
-    });
+    // it('Should Successfully register new user', function () {
+    //   // Enter Corp code
+    //   element(by.model('vm.credentials.corpCode')).sendKeys(user1.corpCode);
+    //   // Enter display Name
+    //   element(by.model('vm.credentials.displayName')).sendKeys(user1.displayName);
+    //   // Enter Email
+    //   element(by.model('vm.credentials.email')).sendKeys(user1.email);
+    //   // Enter Password
+    //   element(by.model('vm.credentials.password')).sendKeys(user1.password);
+    //   // Click Submit button
+    //   element(by.css('button[type="submit"]')).click();
+    //
+    //   browser.wait(function () {
+    //     return browser.getCurrentUrl().then(function (url) {
+    //       return /\/emailauth-info/.test(url);
+    //       // var pageOk = /\/emailauth-info/.test(url);
+    //       // if (pageOk) {
+    //       //   expect(element(by.binding('vm.email')).getText()).toBe('noruya@gmail.com');
+    //       // }
+    //       // return pageOk;
+    //     });
+    //   }, 10000);
+    // });
+    //
+    // it('Should report Email already exists', function () {
+    //   // Make sure user is signed out first
+    //   signout();
+    //   // Signup
+    //   browser.get('http://localhost:3001/authentication/signup');
+    //   // Enter Corp code
+    //   element(by.model('vm.credentials.corpCode')).sendKeys(user1.corpCode);
+    //   // Enter display Name
+    //   element(by.model('vm.credentials.displayName')).sendKeys(user2.displayName);
+    //   // Enter Email
+    //   element(by.model('vm.credentials.email')).sendKeys(user1.email);
+    //   // Enter Invalid Password
+    //   element(by.model('vm.credentials.password')).sendKeys(user2.password);
+    //   // Click Submit button
+    //   element(by.css('button[type=submit]')).click();
+    //   // Password Error
+    //   expect(element.all(by.css('strong')).get(0).getText()).toBe('Email already exists');
+    // });
   });
 
   describe('Signin Validation', function () {
 
-    it('Should report missing credentials', function () {
-      // Make sure user is signed out first
-      signout();
-      // Sign in
-      browser.get('http://localhost:3001/authentication/signin');
-      // Click Submit button
-      element(by.css('button[type="submit"]')).click();
-      // Username Error
-      expect(element.all(by.css('.error-text')).get(0).getText()).toBe('이메일주소를 입력하세요.');
-      // Password Error
-      expect(element.all(by.css('.error-text')).get(1).getText()).toBe('암호를 입력하세요.');
-    });
-
-    it('Verify that the user is logged in', function () {
-      // Make sure user is signed out first
-      signout();
-      // Sign in
-      browser.get('http://localhost:3001/authentication/signin');
-      // Enter UserName
-      element(by.model('vm.credentials.email')).sendKeys(user1.email);
-      // Enter Password
-      element(by.model('vm.credentials.password')).sendKeys(user1.password);
-      // Click Submit button
-      element(by.css('button[type="submit"]')).click();
-
-      browser.wait(function () {
-        return browser.getCurrentUrl().then(function (url) {
-          expect(/\/dashboard/.test(url)).toEqual(true);
-          return /\/dashboard/.test(url);
-        });
-      }, 10000);
-    });
+    // it('Should report missing credentials', function () {
+    //   // Make sure user is signed out first
+    //   signout();
+    //   // Sign in
+    //   browser.get('http://localhost:3001/authentication/signin');
+    //   // Click Submit button
+    //   element(by.css('button[type="submit"]')).click();
+    //   // Username Error
+    //   expect(element.all(by.css('.error-text')).get(0).getText()).toBe('이메일주소를 입력하세요.');
+    //   // Password Error
+    //   expect(element.all(by.css('.error-text')).get(1).getText()).toBe('암호를 입력하세요.');
+    // });
+    //
+    // it('Verify that the user is logged in', function () {
+    //   // Make sure user is signed out first
+    //   signout();
+    //   // Sign in
+    //   browser.get('http://localhost:3001/authentication/signin');
+    //   // Enter UserName
+    //   element(by.model('vm.credentials.email')).sendKeys(user2.email);
+    //   // Enter Password
+    //   element(by.model('vm.credentials.password')).sendKeys(user2.password);
+    //   // Click Submit button
+    //   element(by.css('button[type="submit"]')).click();
+    //
+    //   browser.wait(function () {
+    //     return browser.getCurrentUrl().then(function (url) {
+    //       expect(/\/dashboard/.test(url)).toEqual(true);
+    //       return /\/dashboard/.test(url);
+    //     });
+    //   }, 10000);
+    // });
 
   });
 
@@ -385,31 +395,19 @@ describe('Users E2E Tests:', function () {
   //   });
   // });
 
-  describe('Upload picture tests', function () {
-    beforeEach(function () {
-      browser.get('/settings/picture');
-    });
-
-    it('Should be able to upload picture', function () {
-      element(by.model('vm.file')).sendKeys('');
-      element(by.buttonText('올리기')).click();
-      
-    });
-  });
-
-  describe('Forgot password tests', function () {
-
-    beforeEach(function () {
-      signout();
-      browser.get('/password/forgot');
-    });
-
-    it('Should not be able to send email', function () {
-      element(by.model('vm.credentials.email')).sendKeys(user2.email);
-      element(by.css('button[type=submit]')).click();
-      expect(element.all(by.css('.text-danger')).get(0).getText()).toBe('입력하신 이메일 주소로 가입된 사용자가 없습니다.');
-    });
-  });
+  // describe('Forgot password tests', function () {
+  //
+  //   beforeEach(function () {
+  //     signout();
+  //     browser.get('/password/forgot');
+  //   });
+  //
+  //   it('Should not be able to send email', function () {
+  //     element(by.model('vm.credentials.email')).sendKeys(user2.email);
+  //     element(by.css('button[type=submit]')).click();
+  //     expect(element.all(by.css('.text-danger')).get(0).getText()).toBe('입력하신 이메일 주소로 가입된 사용자가 없습니다.');
+  //   });
+  // });
 
 
 });

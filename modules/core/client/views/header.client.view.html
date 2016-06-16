@@ -6,7 +6,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a ui-sref="home" class="navbar-brand">상장기업을 위한 "hts 기사전송 플랫폼"</a>
+    <a ui-sref="home" class="navbar-brand">BITPR</a>
   </div>
   <nav class="navbar-collapse" uib-collapse="!vm.isCollapsed" role="navigation">
     <ul class="nav navbar-nav" ng-if="vm.menu.shouldRender(vm.authentication.user);">
@@ -30,6 +30,7 @@
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right" ng-show="vm.authentication.user">
+      <a ng-show="vm.authentication.user && vm.authentication.user.roles.indexOf('guest') === -1" ng-click="vm.goCreateArticleSender()" class="btn btn-primary pull-left" style="margin-top: 7px;">새 보도자료 작성</a>
       <li class="dropdown" uib-dropdown>
         <a class="dropdown-toggle user-header-dropdown-toggle" uib-dropdown-toggle role="button">
           <img ng-src="{{vm.authentication.user.profileImageURL}}" alt="{{vm.authentication.user.displayName}}" class="header-profile-image" />
@@ -46,5 +47,7 @@
         </ul>
       </li>
     </ul>
+
+
   </nav>
 </div>

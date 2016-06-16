@@ -2,7 +2,8 @@
   <div class="page-header">
     <div class="row">
       <div class="col-md-6">
-        <h1 ng-bind="vm.user.username"></h1>
+        <button ui-sref="admin.users" class="btn btn-default pull-right">사용자 리스트</button>
+        <h1 >{{vm.user.corpInfo.crp_nm}} <span ng-bind="vm.user.corpCode"></span></h1>
       </div>
       <div class="col-md-4">
         <a class="btn btn-primary" ui-sref="admin.user-edit({userId: vm.user._id})">
@@ -17,33 +18,62 @@
 
   <div class="row">
     <div class="col-md-8">
+      <div ng-show="vm.user.corpCodeConfirmed" class="alert alert-info" style="margin-top: 5px;">
+        <div>기업명 : {{vm.user.corpInfo.crp_nm}}</div>
+        <div>상장코드 : {{vm.user.corpInfo.corpCode}}</div>
+        <div>주소 : {{vm.user.corpInfo.adr}}</div>
+        <div>홈페이지 : {{vm.user.corpInfo.hm_url}}</div>
+        <div>전화번호 : {{vm.user.corpInfo.phn_no}}</div>
+        <div>법인등록번호 : {{vm.user.corpInfo.crp_no}}</div>
+        <div>설립일 : {{vm.user.corpInfo.est_dt}}</div>
+      </div>
       <div class="row">
-        <div class="col-md-3"><strong>First Name</strong></div>
-        <div class="col-md-6" ng-bind="vm.user.firstName"></div>
+        <div class="col-md-3"><strong>이름</strong></div>
+        <div class="col-md-6" ng-bind="vm.user.displayName"></div>
       </div>
       <hr/>
       <div class="row">
-        <div class="col-md-3"><strong>Last Name</strong></div>
-        <div class="col-md-6" ng-bind="vm.user.lastName"></div>
-      </div>
-      <hr/>
-      <div class="row">
-        <div class="col-md-3"><strong>Email</strong></div>
+        <div class="col-md-3"><strong>이메일</strong></div>
         <div class="col-md-6" ng-bind="vm.user.email"></div>
       </div>
       <hr/>
       <div class="row">
-        <div class="col-md-3"><strong>Provider</strong></div>
+        <div class="col-md-3"><strong>전화</strong></div>
+        <div class="col-md-6" ng-bind="vm.user.telephone"></div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-md-3"><strong>휴대폰</strong></div>
+        <div class="col-md-6" ng-bind="vm.user.cellphone"></div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-md-3"><strong>상장코드인증</strong></div>
+        <div class="col-md-6" ng-bind="vm.user.corpCodeConfirmed"></div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-md-3"><strong>이메일인증</strong></div>
+        <div class="col-md-6" ng-bind="vm.user.emailConfirmed"></div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-md-3"><strong>전화인증</strong></div>
+        <div class="col-md-6" ng-bind="vm.user.telephoneConfirmed"></div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-md-3"><strong>가입경로</strong></div>
         <div class="col-md-6" ng-bind="vm.user.provider"></div>
       </div>
       <hr/>
       <div class="row">
-        <div class="col-md-3"><strong>Created</strong></div>
-        <div class="col-md-6" ng-bind="vm.user.created"></div>
+        <div class="col-md-3"><strong>가입일</strong></div>
+        <div class="col-md-6" ng-bind="vm.user.created | date : 'yyyy-MM-dd HH:mm:ss'"></div>
       </div>
       <hr/>
       <div class="row">
-        <div class="col-md-3"><strong>Roles</strong></div>
+        <div class="col-md-3"><strong>권한</strong></div>
         <div class="col-md-6" ng-bind="vm.user.roles"></div>
       </div>
     </div>

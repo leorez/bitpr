@@ -53,7 +53,7 @@
               if (rerender) {
                 ngModel.$render();
               }
-              
+
             });
           });
 
@@ -64,7 +64,7 @@
               el2,
               range,
               sel;
-            
+
             if (!!oldRender) {
               oldRender();
             }
@@ -94,7 +94,7 @@
               var range,
                 sel,
                 target;
-              
+
               target = e.toElement;
               if (target !== this && angular.element(target).attr('contenteditable') === 'false') {
                 range = document.createRange();

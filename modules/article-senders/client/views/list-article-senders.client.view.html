@@ -1,13 +1,12 @@
 <section>
   <div id="content-container" class="container">
-
     <div class="page-header">
-      <a ui-sref="article-senders.create" class="btn btn-primary pull-right">새 보도자료 작성</a>
       <h1>보도자료</h1>
     </div>
 
     <div>
       <p>예약 전송을 취소할 수 있으며, 전송된 날짜순으로 전송결과 및 현황을 제공해 드립니다.</p>
+
     </div>
 
     <div role="tabpanel">
@@ -49,7 +48,7 @@
           <div class="news-item" data-ng-repeat="item in vm.data.articleSenders">
             <div class="row">
               <div class="divider col-sm-8">
-                <h3><a ui-sref="article-senders.preview({articleSenderId: item._id})">{{item.title}}</a></h3>
+                <h3><a ui-sref="article-senders.preview({articleSenderId: item._id})" ng-bind-html="item.title"></a></h3>
                 <p><a ui-sref="article-senders.preview({articleSenderId: item._id})">{{item.content | summary}}</a></p>
                 <a ng-show="item.image1" href="" ng-click="vm.downloadImage(item.image1)"><img src="{{'/images/' + item.image1}}"></a>
                 <a ng-show="item.image2" href="" ng-click="vm.downloadImage(item.image2)"><img src="{{'/images/' + item.image2}}"></a>

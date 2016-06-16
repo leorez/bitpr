@@ -5,10 +5,11 @@
  */
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
+  path = require('path'),
   crypto = require('crypto'),
   validator = require('validator'),
   generatePassword = require('generate-password'),
-  owasp = require('owasp-password-strength-test');
+  owasp = require(path.resolve('./public/js/owasp-password-strength-test'));
 
 /**
  * A Validation function for local strategy properties
@@ -58,7 +59,15 @@ var UserSchema = new Schema({
     required: '이메일주소는 필수입니다.',
     validate: [validateLocalStrategyEmail, '형식에 맞지않는 이메일 주소입니다.']
   },
+  corpCodeConfirmed: {
+    type: Boolean,
+    default: false
+  },
   emailConfirmed: {
+    type: Boolean,
+    default: false
+  },
+  telephoneConfirmed: {
     type: Boolean,
     default: false
   },
@@ -82,9 +91,9 @@ var UserSchema = new Schema({
   roles: {
     type: [{
       type: String,
-      enum: ['user', 'admin']
+      enum: ['guest', 'user', 'admin']
     }],
-    default: ['user'],
+    default: ['guest'],
     required: 'Please provide at least one role'
   },
   updated: {
@@ -132,6 +141,7 @@ var UserSchema = new Schema({
     default: '',
     trim: true
   },
+  corpInfo: {},
   telephone: {
     type: String,
     default: '',

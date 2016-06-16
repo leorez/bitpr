@@ -1,0 +1,12 @@
+<div class="modal-header">
+  <h3 class="modal-title">보도자료 유형선택</h3>
+</div>
+<div class="modal-body">
+  <div ng-repeat="item in types">
+      <input type="radio" name="type" ng-click="select(item)" ng-checked="item === selected"> <span>{{item}}</span>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="ok()">확인</button>
+  <button class="btn btn-warning" type="button" ng-click="cancel()">취소</button>
+</div>

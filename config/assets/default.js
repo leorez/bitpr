@@ -10,7 +10,8 @@ module.exports = {
         'public/lib/ngprogress/ngProgress.css',
         'public/lib/ng-tags-input/ng-tags-input.css',
         'public/lib/ng-tags-input/ng-tags-input.bootstrap.css',
-        'public/lib/angular-material/angular-material.css'
+        'public/lib/angular-material/angular-material.css',
+        'public/lib/angular-inline-text-editor/ite.css'
         // endbower
       ],
       js: [
@@ -23,7 +24,7 @@ module.exports = {
         'public/lib/angular-ui-router/release/angular-ui-router.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
         'public/lib/angular-file-upload/dist/angular-file-upload.js',
-        'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
+        'public/js/owasp-password-strength-test.js',
         'public/lib/ngprogress/build/ngprogress.js',
         'public/lib/ng-tags-input/ng-tags-input.js',
         'public/lib/angular-aria/angular-aria.js',
@@ -35,6 +36,13 @@ module.exports = {
         'public/lib/ng-file-upload/ng-file-upload.js',
         'public/lib/highcharts/highcharts.js',
         'public/lib/highcharts/highcharts-more.js',
+        'public/lib/angular-inline-text-editor/ite.js',
+        'public/lib/rangy/rangy-core.js',
+        'public/lib/rangy/rangy-classapplier.js',
+        'public/lib/rangy/rangy-highlighter.js',
+        'public/lib/rangy/rangy-selectionsaverestore.js',
+        'public/lib/rangy/rangy-serializer.js',
+        'public/lib/rangy/rangy-textrange.js',
         'public/js/clear.js'
         // endbower
       ],

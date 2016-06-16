@@ -11,6 +11,7 @@ var _ = require('lodash'),
   mail = require(path.resolve('./lib/mail')),
   keygen = require('keygenerator'),
   uniquid = require('uniquid'),
+  coreServerController = require(path.resolve('./modules/core/server/controllers/core.server.controller')),
   User = mongoose.model('User');
 
 // URLs for which user can't be redirected on signin
@@ -71,19 +72,21 @@ exports.signup = function (req, res) {
 };
 
 /**
- * 이메일 인증여부
+ * 사용자정보
  */
-exports.emailConfirmed = function (req, res) {
+exports.userInfo = function (req, res) {
   if (!req.user) {
     return res.status(400).send({
       message: '로그인이 필요합니다.'
     });
   }
 
-  User.findOne({ email: req.body.email }, function (err, user) {
+  User.findOne({ _id: req.user._id }, function (err, user) {
     if (err) {
       res.status(400).send(err);
     } else {
+      user.password = undefined;
+      user.salt = undefined;
       res.json(user);
     }
   });
@@ -102,7 +105,6 @@ exports.emailauthReq = function (req, res) {
 
   var user = req.user;
   user = _.extend(user, req.body);
-  console.log(req.user);
 
   var key = keygen._();
   user.key = key;
@@ -127,43 +129,84 @@ exports.emailauthReq = function (req, res) {
  */
 exports.emailauth = function (req, res) {
   var key = req.params.key;
-  console.log(key);
   User.findOne({ key: key }, function (err, user) {
     if (err) {
       res.status(400).send(err);
     } else {
-      console.log(JSON.stringify(user));
       user.emailConfirmed = true;
       user.save(function (err) {
         if (err) {
           res.status(400).send(err);
           return;
         }
-        res.redirect(req.session.redirect_to || '/authentication/signin?result=success-signup');
+        res.redirect('/authentication/telephoneauth-info?telephone=' + user.telephone);
       });
     }
   });
 };
 
+function saveUser(srcUser, next) {
+  User.findOne({ _id: srcUser._id }, function (err, user) {
+    if (err) {
+      next(err);
+    } else {
+      user = _.extend(user, srcUser);
+      user.save(function (err) {
+        if (err) {
+          return next(err);
+        }
+        next();
+      });
+    }
+  });
+}
+
 /**
  * Signin after passport authentication
  */
 exports.signin = function (req, res, next) {
+  function loginUserResponse(user) {
+    req.login(user, function (err) {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        res.json(user);
+      }
+    });
+  }
+
   passport.authenticate('local', function (err, user, info) {
     if (err || !user) {
       res.status(400).send(info);
     } else {
-      // Remove sensitive data before login
-      user.password = undefined;
-      user.salt = undefined;
+      // 상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.
+      if (user.corpCodeConfirmed && user.corpCode) {
+        coreServerController.corpInfo(user.corpCode, function (corpInfo, error) {
+          if (!error) {
+            user.corpInfo = corpInfo;
+            saveUser(user, function (error) {
+              if (error) {
+                console.error(error);
+              }
+              console.log('상장코드가 존재하면 업체정보를 dart를 통해 업데이트한다.');
+              loginUserResponse(user);
+            });
 
-      req.login(user, function (err) {
-        if (err) {
-          res.status(400).send(err);
-        } else {
-          res.json(user);
-        }
-      });
+          } else {
+            // Remove sensitive data before login
+            user.password = undefined;
+            user.salt = undefined;
+
+            loginUserResponse(user);
+          }
+        });
+      } else {
+        // Remove sensitive data before login
+        user.password = undefined;
+        user.salt = undefined;
+
+        loginUserResponse(user);
+      }
     }
   })(req, res, next);
 };
@@ -202,7 +245,6 @@ exports.oauthCallback = function (strategy) {
     delete req.session.redirect_to;
 
     passport.authenticate(strategy, function (err, user, redirectURL) {
-      console.log('*** user = ' + user);
       if (err) {
         return res.redirect('/authentication/signin?err=' + encodeURIComponent(errorHandler.getErrorMessage(err)));
       }
@@ -214,7 +256,7 @@ exports.oauthCallback = function (strategy) {
           return res.redirect('/authentication/signin');
         }
 
-        if (!user.emailConfirmed || (user.corpCode && /^\d{6}|\d{8}$/.test(user.corpCode) === false)) {
+        if (!user.emailConfirmed || !user.corpCodeConfirmed || !user.telephoneConfirmed) {
           return res.redirect('/settings/profile?confirmed=false');
         }
 

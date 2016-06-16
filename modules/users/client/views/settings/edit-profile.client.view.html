@@ -1,6 +1,6 @@
 <section class="row">
   <div class="col-xs-offset-1 col-xs-10 col-md-offset-4 col-md-4">
-    <div ng-show="vm.message" class="text-center text-danger">
+    <div ng-show="vm.message" class="alert alert-warning">
       <strong>{{vm.message}}</strong>
     </div>
     <form name="vm.userForm" ng-submit="vm.updateUserProfile(vm.userForm.$valid)" class="signin" novalidate autocomplete="off">
@@ -8,23 +8,41 @@
         <div class="form-group" show-errors>
           <label for="email">이메일</label>
           <input type="email" id="email" name="email" class="form-control" ng-model="vm.user.email" placeholder="이메일" lowercase required>
-          <button ng-show="!vm.user.emailConfirmed" type="button" ng-click="vm.emailConfirm()">이메일 인증</button>
+          <button ng-show="!vm.user.emailConfirmed" type="button" ng-click="vm.emailConfirm()">이메일 인증및 변경</button>
           <div ng-messages="vm.userForm.email.$error" role="alert">
             <p class="help-block error-text" ng-message="required">이메일은 필수입니다.</p>
             <p class="help-block error-text" ng-message="email">이메일이 유효하지 않습니다.</p>
           </div>
         </div>
+        <div ng-show="vm.user.emailConfirmed" class="alert alert-success" style="margin-top: 5px;">
+          <div>이메일이 인증되었습니다.</div>
+        </div>
+        <div ng-show="!vm.user.emailConfirmed" class="alert alert-danger" style="margin-top: 5px;">
+          <div>이메일인증이 필요합니다.</div>
+        </div>
         <div class="form-group" show-errors>
           <label for="corpCode">상장코드</label>
-          <input type="text" id="corpCode" name="corpCode" class="form-control" ng-model="vm.user.corpCode" placeholder="상장코드" required>
+          <input type="text" id="corpCode" name="corpCode" class="form-control" ng-model="vm.user.corpCode" placeholder="상장코드" required readonly>
+          <button ng-show="vm.user.emailConfirmed && !vm.user.corpCodeConfirmed" type="button" ng-click="vm.authCorpCode()">상장코드 인증</button>
           <div ng-messages="vm.userForm.corpCode.$error" role="alert">
             <p class="help-block error-text" ng-message="required">상장코드는 필수입니다..</p>
           </div>
         </div>
-        <div class="form-group" ng-show="vm.user.corpName">
-          <label>기업명</label>
-          <p>{{ vm.user.corpName }}</p>
+        <div ng-show="vm.user.corpCodeConfirmed" class="alert alert-success" style="margin-top: 5px;">
+          <div>상장코드가 인증되었습니다.</div>
+          <hr>
+          <div>기업명 : {{vm.user.corpInfo.crp_nm}}</div>
+          <div>상장코드 : {{vm.user.corpInfo.corpCode}}</div>
+          <div>주소 : {{vm.user.corpInfo.adr}}</div>
+          <div>홈페이지 : {{vm.user.corpInfo.hm_url}}</div>
+          <div>전화번호 : {{vm.user.corpInfo.phn_no}}</div>
+          <div>법인등록번호 : {{vm.user.corpInfo.crp_no}}</div>
+          <div>설립일 : {{vm.user.corpInfo.est_dt}}</div>
         </div>
+        <div ng-show="!vm.user.corpCodeConfirmed" class="alert alert-danger" style="margin-top: 5px;">
+          <div>상장코드인증이 필요합니다.</div>
+        </div>
+        <div ng-show="vm.authCorpError" class="alert alert-danger">{{vm.authCorpError}}</div>
         <div class="form-group" show-errors>
           <label for="displayName">성명</label>
           <input type="text" id="displayName" name="displayName" class="form-control" ng-model="vm.user.displayName" placeholder="성명" required>
@@ -39,6 +57,12 @@
             <p class="help-block error-text" ng-message="required">전화번호는 필수입니다.</p>
           </div>
         </div>
+        <div ng-show="vm.user.telephoneConfirmed" class="alert alert-success" style="margin-top: 5px;">
+          <div>전화인증 완료되었습니다.</div>
+        </div>
+        <div ng-show="!vm.user.telephoneConfirmed" class="alert alert-danger" style="margin-top: 5px;">
+          <div>전화인증이 필요합니다. 입력하신 전화번로({{vm.user.telephone}})로 전화를 드리겠습니다.</div>
+        </div>
         <div class="form-group" show-errors>
           <label for="cellphone">휴대폰번호</label>
           <input type="text" id="cellphone" name="cellphone" class="form-control" ng-model="vm.user.cellphone" placeholder="휴대폰번호">
@@ -49,10 +73,10 @@
         <div class="text-center form-group">
           <button type="submit" class="btn btn-primary">저장</button>
         </div>
-        <div ng-show="vm.success" class="text-center text-success">
+        <div ng-show="vm.success" class="alert alert-success">
           <strong>{{vm.success}}</strong>
         </div>
-        <div ng-show="vm.error" class="text-center text-danger">
+        <div ng-show="vm.error" class="alert alert-danger">
           <strong ng-bind="vm.error"></strong>
         </div>
       </fieldset>

@@ -33,14 +33,17 @@
         controller: 'EditProfileController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Settings'
+          roles: ['guest', 'user', 'admin']
         }
       })
       .state('settings.config', {
         url: '/config',
         templateUrl: 'modules/users/client/views/settings/config.client.view.html',
         controller: 'SettingsController',
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        data: {
+          roles: ['guest', 'user', 'admin']
+        }
       })
       .state('settings.password', {
         url: '/password',
@@ -48,7 +51,7 @@
         controller: 'ChangePasswordController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Settings password'
+          roles: ['guest', 'user', 'admin']
         }
       })
       .state('settings.accounts', {
@@ -66,7 +69,7 @@
         controller: 'ChangeProfilePictureController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Settings picture'
+          roles: ['guest', 'user', 'admin']
         }
       })
       .state('authentication', {

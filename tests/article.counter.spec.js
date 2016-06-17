@@ -32,15 +32,19 @@
     corpName: '소리바다',
     firstName: 'test',
     lastName: 'user',
-    email: 'yhyoo74@naver.com',
+    email: 'test@test.com',
     username: 'testUser',
     displayName: '홍길동',
     password: 'P@$$w0rd!!',
     provider: 'local',
     telephone: '02-0987-6543',
     cellphone: '010-2187-3886',
+    roles: ['user'],
     crawlTimeHour: 10,
     crawlTimeMinutes: 0,
+    emailConfirmed: true,
+    corpCodeConfirmed: true,
+    telephoneConfirmed: true,
     keywords: 'keyword1, keyword2, keyword3'
   };
 
@@ -72,7 +76,7 @@
         console.log('function3');
         console.log(user);
 
-        var days = 10;
+        var days = 100;
         var keywords = user.keywords.split(',');
 
         var doneCnt = 0;

@@ -1,13 +1,15 @@
 'use strict';
 
+/**
+ * Module dependencies
+ */
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
-var CountDailySchema = new Schema({
-  created: {
-    type: Date,
-    default: Date.now
-  },
+/**
+ * DailyCount Schema
+ */
+var DailyCountSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
@@ -15,17 +17,16 @@ var CountDailySchema = new Schema({
   date: {
     type: String,
     trim: true,
-    required: '날짜는 필수입니다.'
+    default: ''
   },
   keyword: {
     type: String,
     trim: true,
-    required: '회사명은 필수사합입니다.'
+    default: ''
   },
-  total: {
+  count: {
     type: Number
   }
 });
 
-mongoose.model('CountDaily', CountDailySchema);
-
+mongoose.model('DailyCount', DailyCountSchema);

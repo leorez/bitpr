@@ -27,8 +27,26 @@ Fork는 새로운 버전으로 분기하여 독립적인 소스루트를 사용�
 $ sh ./scripts/generate-ssl-certs.sh
 ```
 
+## 서버
+
+
 ## 테스트하기
 
+```bash
+$ grunt testserver
+```
+
+```bash
+$ grunt watch
+```
+
+```bash
+$ grunt debug
+```
+
+```bash
+$ grunt prod
+```
 
 ## 인증
 * 상장코드인증
@@ -62,3 +80,9 @@ $ sh ./scripts/generate-ssl-certs.sh
 * [소셜미디어연동] 페이스북 연동테스트 (APP_ID를 받아서 테스트)
 
 
+## README to PDF
+
+```bash
+$ npm install -g markdown-pdf
+$ markdown-pdf README.md
+```

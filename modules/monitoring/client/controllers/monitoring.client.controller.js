@@ -5,9 +5,9 @@
     .module('monitoring')
     .controller('MonitoringController', MonitoringController);
 
-  MonitoringController.$inject = ['$mdDialog', '$scope', 'Authentication', 'CrawledArticles', 'ngProgressFactory', 'clipboard'];
+  MonitoringController.$inject = ['$http', '$mdDialog', '$scope', 'Authentication', 'CrawledArticles', 'ngProgressFactory', 'clipboard'];
 
-  function MonitoringController($mdDialog, $scope, Authentication, CrawledArticles, ngProgressFactory, clipboard) {
+  function MonitoringController($http, $mdDialog, $scope, Authentication, CrawledArticles, ngProgressFactory, clipboard) {
     var vm = this;
 
     vm.selected = [];
@@ -20,6 +20,7 @@
     vm.filter = 'All';
     vm.counts = {};
     vm.keyword = null;
+    vm.dashboardFilter = '일';
 
     vm.toggle = function (item, list) {
       var idx = list.indexOf(item);
@@ -45,6 +46,8 @@
 
     vm.crawledArticles = function (filter) {
       if (Authentication.user) {
+        showChart(vm.dashboardFilter);
+
         vm.progressbar.start();
         vm.filter = filter;
 
@@ -88,8 +91,6 @@
       }
     };
 
-
-    vm.dashboardFilter = '일';
 
     var countOptions = {
       chart: {
@@ -152,48 +153,106 @@
       series: []
     };
 
+    var dailyCounts = [];
+    var monthlyCounts = [];
+    var yearlyCounts = [];
+    var keywords = [];
+    var keywordStarts = [];
+    var dates = [];
+
+    function createChartData(datas, container) {
+      while (container.length) { container.pop(); }
+      keywords = [];
+      dates = [];
+      keywordStarts = [];
+
+      datas.forEach(function(data) {
+        if (dates.indexOf(data.date) === -1) {
+          dates.push(data.date);
+        }
+
+        if (keywords.indexOf(data.keyword) !== -1) {
+          for (var i = 0; i < container.length; ++i) {
+            var item = container[i];
+            if (item.name === data.keyword) {
+              item.data.push(data.count);
+              break;
+            }
+          }
+        } else {
+          console.log(data.keyword);
+
+          keywords.push(data.keyword);
+          keywordStarts.push({ keyword: data.keyword, date: data.date });
+          container.push({ name: data.keyword, data: [] });
+        }
+      });
+      console.log(dates);
+
+      /*
+       키워드별 시작일기준으로 이동하기
+       시작일이전에는 모두 0으로 채운다.
+       */
+      keywordStarts.forEach(function (item) {
+        var idx = dates.indexOf(item.date);
+        console.log(idx);
+        console.log(item.date);
+        var data;
+        for (var i = 0; i < container.length; ++i) {
+          var di = container[i];
+          if (di.name === item.keyword) {
+            data = di.data;
+            break;
+          }
+        }
+
+        for (var j = 0; j < idx; ++j) {
+          data.unshift(0);
+        }
+      });
+    }
+
+    function showChart(filter) {
+      console.log('getCounts');
+      if (filter === '일') {
+        $http.get('/api/daily-counts').then(function (res) {
+          createChartData(res.data, dailyCounts);
+          vm.chart(filter);
+        }, function (err) {
+          console.error(err);
+        });
+      } else if (filter === '월') {
+        $http.get('/api/monthly-counts').then(function (res) {
+          createChartData(res.data, monthlyCounts);
+          vm.chart(filter);
+        }, function (err) {
+          console.error(err);
+        });
+      } else if (filter === '년') {
+        $http.get('/api/yearly-counts').then(function (res) {
+          createChartData(res.data, yearlyCounts);
+          vm.chart(filter);
+        }, function (err) {
+          console.error(err);
+        });
+      }
+    }
+
     vm.chart = function (dashboardFilter) {
       vm.dashboardFilter = dashboardFilter;
 
       switch (dashboardFilter) {
         case '일':
-          countOptions.xAxis.categories = ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '1.20', '1.21', '1.22', '1.23', '1.24', '1.25', '1.26', '1.27', '1.28', '1.29', '1.30', '1.31', '2.1', '2.2', '2.3'];
-          countOptions.series = [{
-            name: '내 회사',
-            data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-          }, {
-            name: '경쟁사 A',
-            data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8, 3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-          }, {
-            name: '경쟁사 B',
-            data: [15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8, 3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8, 3.9, 4.2, 5.7, 8.5, 11.9]
-          }];
+          countOptions.xAxis.categories = dates;
+          countOptions.series = dailyCounts;
           break;
         case '월':
-          countOptions.xAxis.categories = ['2015.9', '2015.10', '2015.11', '2015.12', '2016.1', '2016.2', '2016.3', '2016.4', '2016.5', '2016.6', '2016.7', '2016.8'];
-          countOptions.series = [{
-            name: '내 회사',
-            data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-          }, {
-            name: '경쟁사 A',
-            data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-          }, {
-            name: '경쟁사 B',
-            data: [15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8, 3.9, 4.2, 5.7, 8.5, 11.9]
-          }];
+          countOptions.xAxis.categories = dates;
+          countOptions.series = monthlyCounts;
           break;
         case '연도':
-          countOptions.xAxis.categories = ['2010', '2011', '2012', '2013', '2014', '2015', '2016'];
-          countOptions.series = [{
-            name: '내 회사',
-            data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2]
-          }, {
-            name: '경쟁사 A',
-            data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0]
-          }, {
-            name: '경쟁사 B',
-            data: [15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-          }];
+          countOptions.xAxis.categories = dates;
+          countOptions.series = yearlyCounts;
           break;
       }
 
@@ -225,7 +284,6 @@
       /* eslint-disable */
     };
 
-    vm.chart(vm.dashboardFilter);
   }
 }());
 

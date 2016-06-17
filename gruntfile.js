@@ -352,6 +352,8 @@ module.exports = function (grunt) {
       telephone: '032-1234-5678',
       cellphone: '010-2187-3886',
       emailConfirmed: true,
+      corpCodeConfirmed: true,
+      telephoneConfirmed: true,
       roles: ['user', 'admin']
     };
 
